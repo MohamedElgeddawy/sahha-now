@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Search, Mic, Camera, ChevronDown, Heart, ShoppingCart, Gift, Menu } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -19,6 +18,7 @@ import { MicrophoneIcon } from "@/components/layout/icons/main-header-icons/Micr
 import { ImageSearchIcon } from "@/components/layout/icons/main-header-icons/ImageSearchIcon";
 import { ChevronDownIcon } from "@/components/layout/icons/main-header-icons/ChevronDownIcon";
 import { MenuIcon } from "@/components/layout/icons/main-header-icons/MenuIcon";
+import { ChevronDown, Search, Mic, Camera, Heart, ShoppingCart, Gift, Menu } from 'lucide-react';
 
 export function MainHeader() {
   const categories = [
@@ -33,9 +33,9 @@ export function MainHeader() {
   ];
 
   return (
-    <header className="bg-white border-b border-[#DADADA] sticky top-0 z-50 shadow-sm" dir="rtl">
-      <Container className="!bg-white !min-h-0">
-        <div className="h-20 flex items-center justify-between">
+    <header className="bg-white border-b border-[#DADADA] sticky top-[36px] z-50 shadow-sm w-full" dir="rtl">
+      <div className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-[108px] py-[8px]">
+        <div className="h-[64px] flex items-center justify-between">
           {/* Right Section - Logo */}
           <div className="flex-shrink-0 mr-4">
             <a href="/" className="flex items-center gap-3">
@@ -101,17 +101,16 @@ export function MainHeader() {
           </div>
 
           {/* Left Section - Action Icons */}
-          <div className="flex items-center gap-2 flex-shrink-0 ml-4">
-            <ActionButton icon={<Gift />} href="/gifts" />
-            <ActionButton icon={<ShoppingCart />} href="/cart" count={2} />
-            <ActionButton icon={<Heart />} href="/wishlist" count={5} />
-            
-            <Button variant="ghost" size="sm" className="md:hidden text-[#2C3E50]">
-              <Menu className="w-5 h-5" />
-            </Button>
+          <div className="flex items-center gap-6 flex-shrink-0 ml-4">
+            <ActionButton icon={<Gift className="w-6 h-6" />} href="/gifts" />
+            <ActionButton icon={<ShoppingCart className="w-6 h-6" />} href="/cart" count={0} />
+            <ActionButton icon={<Heart className="w-6 h-6" />} href="/wishlist" count={0} />
+            {/* <Button variant="ghost" size="icon" className="h-10 w-10 lg:hidden">
+              <Menu className="w-6 h-6" />
+            </Button> */}
           </div>
         </div>
-      </Container>
+      </div>
     </header>
   );
 }
@@ -126,11 +125,11 @@ function ActionButton({
   count?: number;
 }) {
   return (
-    <Button asChild variant="ghost" size="icon" className="relative h-12 w-12">
+    <Button asChild variant="ghost" size="icon" className="relative h-10 w-10 text-[#2C3E50] hover:bg-gray-100">
       <a href={href}>
         {icon}
         {count !== undefined && count > 0 && (
-          <span className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-green-600 text-xs font-bold text-white">
+          <span className="absolute top-0 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-green-600 text-xs font-bold text-white">
             {count}
           </span>
         )}
