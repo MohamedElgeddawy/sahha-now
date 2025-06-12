@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Cairo } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/header";
 import  Footer  from "@/components/layout/footer/footer";
 import { Container } from "@/components/layout/container";
 
-const inter = Inter({ subsets: ["latin"] });
+const cairo = Cairo({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Sahha Now",
@@ -19,7 +19,7 @@ export default function Layout({
 }) {
   return (
     <html lang="ar" dir="rtl">
-      <body className={`${inter.className} min-h-screen flex flex-col bg-gray-50`}>
+      <body className={`${cairo.className} min-h-screen flex flex-col bg-gray-50`}>
         <Header />
         <main className="flex-1">
           <Container>

@@ -20,10 +20,10 @@ export default function OTPVerificationPage() {
   // Check if phone number exists
   useEffect(() => {
     const storedPhoneNumber = sessionStorage.getItem('phoneNumber');
-    if (!storedPhoneNumber) {
-      router.push('/');
-      return;
-    }
+    // if (!storedPhoneNumber) {
+    //   router.push('/');
+    //   return;
+    // }
     setPhoneNumber(storedPhoneNumber);
     
     // Set countdown timer

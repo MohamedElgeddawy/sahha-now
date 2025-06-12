@@ -7,18 +7,17 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Container } from "@/components/layout/container";
 import { SahhaNowArabicLogo } from "@/components/layout/icons/brand-logos/SahhaNowArabicLogo";
 import { SahhaNowEnglishLogo } from "@/components/layout/icons/brand-logos/SahhaNowEnglishLogo";
-import { CartIcon } from "@/components/layout/icons/main-header-icons/CartIcon";
-import { GiftIcon } from "@/components/layout/icons/main-header-icons/GiftIcon";
-import { WishlistIcon } from "@/components/layout/icons/main-header-icons/WishlistIcon";
-import { SearchIcon } from "@/components/layout/icons/main-header-icons/SearchIcon";
-import { MicrophoneIcon } from "@/components/layout/icons/main-header-icons/MicrophoneIcon";
-import { ImageSearchIcon } from "@/components/layout/icons/main-header-icons/ImageSearchIcon";
-import { ChevronDownIcon } from "@/components/layout/icons/main-header-icons/ChevronDownIcon";
-import { MenuIcon } from "@/components/layout/icons/main-header-icons/MenuIcon";
-import { ChevronDown, Search, Mic, Camera, Heart, ShoppingCart, Gift, Menu } from 'lucide-react';
+import {
+  ChevronDown,
+  Search,
+  Mic,
+  Camera,
+  Heart,
+  ShoppingCart,
+  Gift,
+} from "lucide-react";
 
 export function MainHeader() {
   const categories = [
@@ -29,19 +28,25 @@ export function MainHeader() {
     { name: "العناية بالشعر", href: "/categories/hair-care" },
     { name: "العناية الشخصية", href: "/categories/personal-care" },
     { name: "الأدوية والعلاجات", href: "/categories/medicines" },
-    { name: "الفيتامينات والتغذية الصحية", href: "/categories/vitamins-nutrition" },
+    {
+      name: "الفيتامينات والتغذية الصحية",
+      href: "/categories/vitamins-nutrition",
+    },
   ];
 
   return (
-    <header className="bg-white border-b border-[#DADADA] sticky top-[36px] z-50 shadow-sm w-full" dir="rtl">
+    <header
+      className="bg-white border-b border-[#DADADA] sticky top-0 z-50 shadow-sm w-full"
+      dir="rtl"
+    >
       <div className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-[108px] py-[8px]">
         <div className="h-[64px] flex items-center justify-between">
           {/* Right Section - Logo */}
           <div className="flex-shrink-0 mr-4">
-            <a href="/" className="flex items-center gap-3">
+            <Link href="/" className="flex items-center gap-3">
               <SahhaNowArabicLogo />
               <SahhaNowEnglishLogo />
-            </a>
+            </Link>
           </div>
 
           {/* Center Section - Search Bar */}
@@ -50,8 +55,8 @@ export function MainHeader() {
               {/* Categories Dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button 
-                    variant="ghost" 
+                  <Button
+                    variant="ghost"
                     className="h-[48px] px-4 border border-[#DADADA] border-l-0 rounded-r-[8px] rounded-l-none flex items-center gap-2 hover:bg-gray-50 text-[16px] text-[#2C3E50] font-medium"
                   >
                     <span>الفئات</span>
@@ -61,12 +66,12 @@ export function MainHeader() {
                 <DropdownMenuContent align="start" className="w-56">
                   {categories.map((category) => (
                     <DropdownMenuItem key={category.href} asChild>
-                      <a 
+                      <Link
                         href={category.href}
                         className="w-full text-right py-2 px-4 hover:bg-gray-50 text-[#2C3E50] text-[16px]"
                       >
                         {category.name}
-                      </a>
+                      </Link>
                     </DropdownMenuItem>
                   ))}
                 </DropdownMenuContent>
@@ -80,31 +85,47 @@ export function MainHeader() {
                   className="flex-1 h-full border-0 focus-visible:ring-0 focus-visible:ring-offset-0 rounded-none text-[16px] text-[#2C3E50] placeholder:text-gray-400 py-3 px-6"
                 />
                 <div className="flex items-center gap-4 px-4 border-r border-[#DADADA]">
-                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-[#2C3E50]">
-                    <Camera className="w-5 h-5" />
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0 text-[#2C3E50]"
+                  >
+                    <Camera className="size-5" />
                   </Button>
-                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-[#2C3E50]">
-                    <Mic className="w-5 h-5" />
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0 text-[#2C3E50]"
+                  >
+                    <Mic className="size-5" />
                   </Button>
                 </div>
               </div>
 
               {/* Search Button */}
-              <Button 
-                variant="default" 
+              <Button
+                variant="default"
                 size="icon"
-                className="h-[48px] w-[48px] rounded-r-none rounded-l-[8px] bg-[#2C3E50] hover:bg-[#243342]"
+                className="size-[48px] rounded-r-none rounded-l-[8px] bg-[#2C3E50] hover:bg-[#243342]"
               >
-                <Search className="w-5 h-5" />
+                <Search className="size-5 text-white" />
               </Button>
             </div>
           </div>
 
           {/* Left Section - Action Icons */}
-          <div className="flex items-center gap-6 flex-shrink-0 ml-4">
-            <ActionButton icon={<Gift className="w-6 h-6" />} href="/gifts" />
-            <ActionButton icon={<ShoppingCart className="w-6 h-6" />} href="/cart" count={0} />
-            <ActionButton icon={<Heart className="w-6 h-6" />} href="/wishlist" count={0} />
+          <div className="flex items-center gap-6 shrink-0 ml-4">
+            <ActionButton icon={<Gift className="size-6" />} href="/gifts" />
+            <ActionButton
+              icon={<ShoppingCart className="size-6" />}
+              href="/cart"
+              count={0}
+            />
+            <ActionButton
+              icon={<Heart className="size-6" />}
+              href="/wishlist"
+              count={3}
+            />
             {/* <Button variant="ghost" size="icon" className="h-10 w-10 lg:hidden">
               <Menu className="w-6 h-6" />
             </Button> */}
@@ -125,15 +146,20 @@ function ActionButton({
   count?: number;
 }) {
   return (
-    <Button asChild variant="ghost" size="icon" className="relative h-10 w-10 text-[#2C3E50] hover:bg-gray-100">
-      <a href={href}>
+    <Button
+      asChild
+      variant="ghost"
+      size="icon"
+      className="relative text-[#2C3E50] hover:bg-gray-100"
+    >
+      <Link href={href}>
         {icon}
         {count !== undefined && count > 0 && (
           <span className="absolute top-0 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-green-600 text-xs font-bold text-white">
             {count}
           </span>
         )}
-      </a>
+      </Link>
     </Button>
   );
 }

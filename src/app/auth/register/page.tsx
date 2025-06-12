@@ -1,22 +1,22 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
-import { Apple, Chrome, Phone, User, Mail, Lock, Eye, EyeOff } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Card } from '@/components/ui/card';
+import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { Phone, User, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Card } from "@/components/ui/card";
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    phoneNumber: '',
-    password: '',
-    confirmPassword: '',
+    fullName: "",
+    email: "",
+    phoneNumber: "",
+    password: "",
+    confirmPassword: "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -26,8 +26,8 @@ export default function RegisterPage() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    if (name === 'phoneNumber') {
-      setFormData({ ...formData, [name]: value.replace(/\D/g, '') });
+    if (name === "phoneNumber") {
+      setFormData({ ...formData, [name]: value.replace(/\D/g, "") });
     } else {
       setFormData({ ...formData, [name]: value });
     }
@@ -35,58 +35,63 @@ export default function RegisterPage() {
 
   const validateForm = () => {
     if (!formData.fullName) {
-      toast.error('يرجى إدخال الاسم الكامل');
+      toast.error("يرجى إدخال الاسم الكامل");
       return false;
     }
-    
+
     if (!formData.email || !/\S+@\S+\.\S+/.test(formData.email)) {
-      toast.error('يرجى إدخال بريد إلكتروني صحيح');
+      toast.error("يرجى إدخال بريد إلكتروني صحيح");
       return false;
     }
-    
+
     if (!formData.phoneNumber || !/^5[0-9]{8}$/.test(formData.phoneNumber)) {
-      toast.error('يرجى إدخال رقم جوال صحيح');
+      toast.error("يرجى إدخال رقم جوال صحيح");
       return false;
     }
-    
+
     if (!formData.password || formData.password.length < 8) {
-      toast.error('يجب أن تتكون كلمة المرور من 8 أحرف على الأقل');
+      toast.error("يجب أن تتكون كلمة المرور من 8 أحرف على الأقل");
       return false;
     }
-    
+
     if (formData.password !== formData.confirmPassword) {
-      toast.error('كلمات المرور غير متطابقة');
+      toast.error("كلمات المرور غير متطابقة");
       return false;
     }
-    
+
     if (!agreeTerms) {
-      toast.error('يرجى الموافقة على الشروط والأحكام');
+      toast.error("يرجى الموافقة على الشروط والأحكام");
       return false;
     }
-    
+
     return true;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setIsLoading(true);
     try {
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      toast.success('تم إنشاء الحساب بنجاح');
-      
-        // Redirect to OTP verification
-      sessionStorage.setItem('phoneNumber', formData.phoneNumber);
-      router.push('/auth/otp-verification');
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
+      toast.success("تم إنشاء الحساب بنجاح");
+
+      // Redirect to OTP verification
+      sessionStorage.setItem("phoneNumber", formData.phoneNumber);
+      router.push("/auth/otp-verification");
     } catch (error) {
-      toast.error('حدث خطأ أثناء إنشاء الحساب');
+      toast.error("حدث خطأ أثناء إنشاء الحساب");
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleSocialLogin = (provider: "google" | "apple") => {
+    console.log(`${provider} login clicked`);
+    // Add social login logic here
   };
 
   return (
@@ -107,25 +112,73 @@ export default function RegisterPage() {
           </h1>
 
           {/* Social login buttons */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <div className="flex justify-center gap-6 mb-6">
             <Button
               variant="outline"
-              className="h-12 text-base font-medium border-2 hover:border-green-500 hover:bg-green-50"
+              className="w-[312px] h-[48px] text-base border border-[#DADADA] rounded-[8px] flex items-center justify-center gap-2 "
               type="button"
+              onClick={() => handleSocialLogin("google")}
             >
-              <Apple className="ml-2 h-5 w-5" />
-              <span>التسجيل عن طريق آبل</span>
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className="ml-2"
+              >
+                <rect width="24" height="24" fill="white" />
+                <path
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                  d="M23.04 12.2605C23.04 11.445 22.9668 10.6609 22.8309 9.9082H12V14.3566H18.1891C17.9225 15.7941 17.1123 17.0121 15.8943 17.8275V20.713H19.6109C21.7855 18.7109 23.04 15.7627 23.04 12.2605Z"
+                  fill="#4285F4"
+                />
+                <path
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                  d="M11.9999 23.5005C15.1049 23.5005 17.7081 22.4708 19.6108 20.7144L15.8942 17.829C14.8644 18.519 13.5472 18.9267 11.9999 18.9267C9.00467 18.9267 6.46945 16.9037 5.56513 14.1855H1.72308V17.1651C3.61536 20.9235 7.50445 23.5005 11.9999 23.5005Z"
+                  fill="#34A853"
+                />
+                <path
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                  d="M5.56523 14.1855C5.33523 13.4955 5.20455 12.7584 5.20455 12.0005C5.20455 11.2425 5.33523 10.5055 5.56523 9.81548V6.83594H1.72318C0.944318 8.38844 0.5 10.1448 0.5 12.0005C0.5 13.8562 0.944318 15.6125 1.72318 17.165L5.56523 14.1855Z"
+                  fill="#FBBC05"
+                />
+                <path
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                  d="M11.9999 5.07386C13.6883 5.07386 15.2042 5.65409 16.396 6.79364L19.6944 3.49523C17.7029 1.63955 15.0997 0.5 11.9999 0.5C7.50445 0.5 3.61536 3.07705 1.72308 6.83545L5.56513 9.815C6.46945 7.09682 9.00468 5.07386 11.9999 5.07386Z"
+                  fill="#EA4335"
+                />
+              </svg>
+              تسجيل الدخول عن طريق جوجل
             </Button>
+
             <Button
               variant="outline"
-              className="h-12 text-base font-medium border-2 hover:border-green-500 hover:bg-green-50"
+              className="w-[312px] h-[48px] text-base border border-[#DADADA] rounded-[8px] flex items-center justify-center gap-2 "
               type="button"
+              onClick={() => handleSocialLogin("apple")}
             >
-              <Chrome className="ml-2 h-5 w-5 text-blue-500" />
-              <span>التسجيل عن طريق جوجل</span>
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect width="24" height="24" fill="white" />
+                <path
+                  d="M19.2807 18.424C18.9328 19.2275 18.5211 19.9672 18.0441 20.6472C17.3939 21.5743 16.8615 22.216 16.4512 22.5724C15.8152 23.1573 15.1337 23.4568 14.404 23.4739C13.8801 23.4739 13.2483 23.3248 12.5129 23.0224C11.7751 22.7214 11.097 22.5724 10.4771 22.5724C9.82683 22.5724 9.12947 22.7214 8.38355 23.0224C7.6365 23.3248 7.03469 23.4824 6.57456 23.498C5.87478 23.5278 5.17728 23.2197 4.48105 22.5724C4.03669 22.1848 3.48087 21.5204 2.81503 20.5791C2.10063 19.5739 1.51329 18.4084 1.05317 17.0795C0.560384 15.6442 0.313354 14.2543 0.313354 12.9087C0.313354 11.3673 0.646418 10.0379 1.31354 8.92385C1.83784 8.029 2.53534 7.32312 3.40832 6.80493C4.2813 6.28674 5.22456 6.02267 6.24036 6.00578C6.79618 6.00578 7.52506 6.1777 8.43083 6.51559C9.33405 6.85462 9.914 7.02655 10.1683 7.02655C10.3584 7.02655 11.0026 6.82552 12.0948 6.42473C13.1277 6.05305 13.9994 5.89916 14.7135 5.95978C16.6485 6.11595 18.1023 6.87876 19.0691 8.25303C17.3385 9.30163 16.4824 10.7703 16.4995 12.6544C16.5151 14.122 17.0475 15.3432 18.0938 16.3129C18.568 16.7629 19.0975 17.1107 19.6867 17.3578C19.5589 17.7283 19.4241 18.0832 19.2807 18.424ZM14.8427 0.960131C14.8427 2.11039 14.4224 3.18439 13.5848 4.17847C12.574 5.36023 11.3513 6.04311 10.0254 5.93536C10.0086 5.79736 9.99876 5.65213 9.99876 5.49951C9.99876 4.39526 10.4795 3.21349 11.3331 2.24724C11.7593 1.75801 12.3014 1.35122 12.9587 1.02671C13.6146 0.707053 14.235 0.530273 14.8185 0.5C14.8356 0.653772 14.8427 0.807554 14.8427 0.960116V0.960131Z"
+                  fill="#2C3E50"
+                />
+              </svg>
+              تسجيل الدخول عن طريق آبل
             </Button>
           </div>
-          
+
           {/* Separator */}
           <div className="flex items-center my-6">
             <div className="flex-1 h-px bg-gray-200"></div>
@@ -135,7 +188,9 @@ export default function RegisterPage() {
 
           {/* Title */}
           <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">إنشاء حساب جديد</h2>
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">
+              إنشاء حساب جديد
+            </h2>
             <p className="text-gray-500 text-sm">
               أدخل البيانات التالية لإنشاء حساب جديد
             </p>
@@ -145,7 +200,10 @@ export default function RegisterPage() {
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Full Name */}
             <div className="space-y-1">
-              <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="fullName"
+                className="block text-sm font-medium text-gray-700"
+              >
                 الاسم الكامل
               </label>
               <div className="relative">
@@ -165,7 +223,10 @@ export default function RegisterPage() {
 
             {/* Email */}
             <div className="space-y-1">
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
                 البريد الإلكتروني
               </label>
               <div className="relative">
@@ -185,7 +246,10 @@ export default function RegisterPage() {
 
             {/* Phone Number */}
             <div className="space-y-1">
-              <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="phoneNumber"
+                className="block text-sm font-medium text-gray-700"
+              >
                 رقم الجوال
               </label>
               <div className="relative">
@@ -208,14 +272,17 @@ export default function RegisterPage() {
 
             {/* Password */}
             <div className="space-y-1">
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
                 كلمة المرور
               </label>
               <div className="relative">
                 <Input
                   id="password"
                   name="password"
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPassword ? "text" : "password"}
                   placeholder="أدخل كلمة المرور"
                   value={formData.password}
                   onChange={handleChange}
@@ -239,14 +306,17 @@ export default function RegisterPage() {
 
             {/* Confirm Password */}
             <div className="space-y-1">
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="confirmPassword"
+                className="block text-sm font-medium text-gray-700"
+              >
                 تأكيد كلمة المرور
               </label>
               <div className="relative">
                 <Input
                   id="confirmPassword"
                   name="confirmPassword"
-                  type={showConfirmPassword ? 'text' : 'password'}
+                  type={showConfirmPassword ? "text" : "password"}
                   placeholder="أعد إدخال كلمة المرور"
                   value={formData.confirmPassword}
                   onChange={handleChange}
@@ -277,7 +347,17 @@ export default function RegisterPage() {
                 className="data-[state=checked]:bg-green-500 data-[state=checked]:border-green-500 mt-1"
               />
               <label htmlFor="terms" className="text-sm text-gray-600">
-                أوافق على <Link href="/terms" className="text-green-500 hover:underline">الشروط والأحكام</Link> و <Link href="/privacy" className="text-green-500 hover:underline">سياسة الخصوصية</Link>
+                أوافق على{" "}
+                <Link href="/terms" className="text-green-500 hover:underline">
+                  الشروط والأحكام
+                </Link>{" "}
+                و{" "}
+                <Link
+                  href="/privacy"
+                  className="text-green-500 hover:underline"
+                >
+                  سياسة الخصوصية
+                </Link>
               </label>
             </div>
 
@@ -286,19 +366,22 @@ export default function RegisterPage() {
               className="w-full h-12 text-base font-semibold bg-green-500 hover:bg-green-600 text-white"
               disabled={isLoading}
             >
-              {isLoading ? 'جاري التسجيل...' : 'إنشاء حساب'}
+              {isLoading ? "جاري التسجيل..." : "إنشاء حساب"}
             </Button>
           </form>
 
           {/* Login link */}
           <div className="text-center mt-6">
             <p className="text-sm text-gray-500">
-          لديك حساب بالفعل؟{' '}
-              <Link href="/" className="font-medium text-green-500 hover:text-green-600 hover:underline">
-            تسجيل الدخول
-          </Link>
-        </p>
-      </div>
+              لديك حساب بالفعل؟{" "}
+              <Link
+                href="/"
+                className="font-medium text-green-500 hover:text-green-600 hover:underline"
+              >
+                تسجيل الدخول
+              </Link>
+            </p>
+          </div>
         </Card>
       </div>
     </div>

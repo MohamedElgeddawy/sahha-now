@@ -1,14 +1,13 @@
-/* src/app/globals.css */
-@import "tailwindcss/preflight";
+@import "tailwindcss";
 @tailwind utilities;
 
 @layer base {
   html {
     direction: rtl;
   }
-  
+
   body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   }
 }
 
