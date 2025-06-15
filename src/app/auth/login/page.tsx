@@ -3,11 +3,12 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { AuthLayout } from "@/components/auth/AuthLayout";
+import { SocialLoginButtons } from "@/components/auth/SocialLoginButtons";
+import { AuthSeparator } from "@/components/auth/AuthSeparator";
 
 export default function LoginPage() {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -17,229 +18,112 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-
     try {
-      // Add your authentication logic here
-      console.log("Login attempt:", { phoneNumber });
-
-      // Navigate to OTP page
+      // Simulate login logic
       setTimeout(() => {
         setIsLoading(false);
-        router.push("/otp");
-      }, 2000);
-    } catch (error) {
-      console.error("Login error:", error);
+        router.push("/auth/otp-verification");
+      }, 1000);
+    } catch {
       setIsLoading(false);
     }
   };
 
   const handleSocialLogin = (provider: "google" | "apple") => {
-    console.log(`${provider} login clicked`);
-    // Add social login logic here
+    // Social login logic
+    console.log(`Logging in with ${provider}`);
   };
 
   return (
-    <div className="min-h-screen bg-gray-50" dir="rtl">
-      {/* Main Content */}
-      <main className="flex-1 py-12">
-        <div className="max-w-7xl mx-auto px-4">
-          {/* Breadcrumb Navigation */}
-          <div className="flex items-center mb-6">
-            <Link href="/" className="text-[#2C3E50] hover:underline">
-              الرئيسية
-            </Link>
-            <span className="mx-2">›</span>
-            <span className="text-[#2C3E50]">حسابي</span>
+    <AuthLayout
+      title="" // Pass empty string to satisfy type requirement
+      description="" // Pass empty string to satisfy type requirement
+    >
+      {/* Social login section */}
+      <div className="w-full mb-6">
+        <h2 className="font-medium text-base text-[#2C3E50] mb-4 text-center">
+          يمكنك تسجيل الدخول عن طريق
+        </h2>
+        <div className="flex justify-center">
+          <SocialLoginButtons
+            onGoogle={() => handleSocialLogin("google")}
+            onApple={() => handleSocialLogin("apple")}
+            width={312}
+          />
+        </div>
+      </div>
+
+      <div className="flex flex-col items-center w-full">
+        <AuthSeparator />
+
+        {/* Login Form Container */}
+        <div className="w-full max-w-[400px] mx-auto mt-6">
+          {/* Form header */}
+          <div className="text-right mb-6">
+            <h3 className="font-semibold text-xl text-[#2C3E50] mb-2">
+              تسجيل الدخول إلى حسابك
+            </h3>
+            <p className="text-gray-600 text-sm">
+              أدخل رقم جوالك وسنرسل لك رمز تحقق لتسجيل الدخول.
+            </p>
           </div>
 
-          <div className="flex flex-col items-center justify-center">
-            {/* Page Title */}
-            <h2 className=" font-semibold text-base tracking-[0.5px] text-[#2C3E50] mb-6">
-              يمكنك تسجيل الدخول عن طريق
-            </h2>
-
-            {/* Social Login Buttons */}
-            <div className="flex justify-center gap-6 mb-6">
-              <Button
-                variant="outline"
-                className="w-[312px] h-[48px] text-base border border-[#DADADA] rounded-[8px] flex items-center justify-center gap-2 "
-                type="button"
-                onClick={() => handleSocialLogin("google")}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Phone input */}
+            <div className="space-y-2">
+              <label
+                htmlFor="phone"
+                className="block text-sm font-medium text-gray-700 text-right"
               >
-                <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="ml-2"
-                >
-                  <rect width="24" height="24" fill="white" />
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M23.04 12.2605C23.04 11.445 22.9668 10.6609 22.8309 9.9082H12V14.3566H18.1891C17.9225 15.7941 17.1123 17.0121 15.8943 17.8275V20.713H19.6109C21.7855 18.7109 23.04 15.7627 23.04 12.2605Z"
-                    fill="#4285F4"
-                  />
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M11.9999 23.5005C15.1049 23.5005 17.7081 22.4708 19.6108 20.7144L15.8942 17.829C14.8644 18.519 13.5472 18.9267 11.9999 18.9267C9.00467 18.9267 6.46945 16.9037 5.56513 14.1855H1.72308V17.1651C3.61536 20.9235 7.50445 23.5005 11.9999 23.5005Z"
-                    fill="#34A853"
-                  />
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M5.56523 14.1855C5.33523 13.4955 5.20455 12.7584 5.20455 12.0005C5.20455 11.2425 5.33523 10.5055 5.56523 9.81548V6.83594H1.72318C0.944318 8.38844 0.5 10.1448 0.5 12.0005C0.5 13.8562 0.944318 15.6125 1.72318 17.165L5.56523 14.1855Z"
-                    fill="#FBBC05"
-                  />
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M11.9999 5.07386C13.6883 5.07386 15.2042 5.65409 16.396 6.79364L19.6944 3.49523C17.7029 1.63955 15.0997 0.5 11.9999 0.5C7.50445 0.5 3.61536 3.07705 1.72308 6.83545L5.56513 9.815C6.46945 7.09682 9.00468 5.07386 11.9999 5.07386Z"
-                    fill="#EA4335"
-                  />
-                </svg>
-                تسجيل الدخول عن طريق جوجل
-              </Button>
-
-              <Button
-                variant="outline"
-                className="w-[312px] h-[48px] text-base border border-[#DADADA] rounded-[8px] flex items-center justify-center gap-2 "
-                type="button"
-                onClick={() => handleSocialLogin("apple")}
-              >
-                <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <rect width="24" height="24" fill="white" />
-                  <path
-                    d="M19.2807 18.424C18.9328 19.2275 18.5211 19.9672 18.0441 20.6472C17.3939 21.5743 16.8615 22.216 16.4512 22.5724C15.8152 23.1573 15.1337 23.4568 14.404 23.4739C13.8801 23.4739 13.2483 23.3248 12.5129 23.0224C11.7751 22.7214 11.097 22.5724 10.4771 22.5724C9.82683 22.5724 9.12947 22.7214 8.38355 23.0224C7.6365 23.3248 7.03469 23.4824 6.57456 23.498C5.87478 23.5278 5.17728 23.2197 4.48105 22.5724C4.03669 22.1848 3.48087 21.5204 2.81503 20.5791C2.10063 19.5739 1.51329 18.4084 1.05317 17.0795C0.560384 15.6442 0.313354 14.2543 0.313354 12.9087C0.313354 11.3673 0.646418 10.0379 1.31354 8.92385C1.83784 8.029 2.53534 7.32312 3.40832 6.80493C4.2813 6.28674 5.22456 6.02267 6.24036 6.00578C6.79618 6.00578 7.52506 6.1777 8.43083 6.51559C9.33405 6.85462 9.914 7.02655 10.1683 7.02655C10.3584 7.02655 11.0026 6.82552 12.0948 6.42473C13.1277 6.05305 13.9994 5.89916 14.7135 5.95978C16.6485 6.11595 18.1023 6.87876 19.0691 8.25303C17.3385 9.30163 16.4824 10.7703 16.4995 12.6544C16.5151 14.122 17.0475 15.3432 18.0938 16.3129C18.568 16.7629 19.0975 17.1107 19.6867 17.3578C19.5589 17.7283 19.4241 18.0832 19.2807 18.424ZM14.8427 0.960131C14.8427 2.11039 14.4224 3.18439 13.5848 4.17847C12.574 5.36023 11.3513 6.04311 10.0254 5.93536C10.0086 5.79736 9.99876 5.65213 9.99876 5.49951C9.99876 4.39526 10.4795 3.21349 11.3331 2.24724C11.7593 1.75801 12.3014 1.35122 12.9587 1.02671C13.6146 0.707053 14.235 0.530273 14.8185 0.5C14.8356 0.653772 14.8427 0.807554 14.8427 0.960116V0.960131Z"
-                    fill="#2C3E50"
-                  />
-                </svg>
-                تسجيل الدخول عن طريق آبل
-              </Button>
-            </div>
-
-            {/* Divider */}
-            <div className="relative w-[648px] my-6">
-              <div className="absolute inset-0 flex items-center">
-                <Separator className="w-full" />
-              </div>
-              <div className="relative flex justify-center text-sm uppercase">
-                <span className="bg-gray-50 px-3 text-gray-500 font-medium">
-                  أو
-                </span>
+                رقم الجوال
+              </label>
+              <div className="relative">
+                <Input
+                  id="phone"
+                  type="tel"
+                  dir="ltr"
+                  inputMode="numeric"
+                  placeholder="رجاء إدخال رقم الجوال"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  className="h-12 text-base text-right pl-16"
+                  required
+                />
+                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-sm text-gray-600">
+                  +966
+                </div>
               </div>
             </div>
 
-            {/* Login Container */}
-            <div className="w-[648px] bg-white border border-[#DADADA] rounded-[8px] p-8">
-              {/* Login Form Section */}
-              <div className="text-center mb-6">
-                <h3
-                  style={{
-                    fontWeight: 800,
-                    fontSize: "32px",
-                    lineHeight: "140%",
-                    letterSpacing: "0.5px",
-                    textAlign: "right",
-                  }}
-                  className="mx-auto"
-                >
-                  تسجيل الدخول إلى حسابك
-                </h3>
-                <p
-                  style={{
-                    fontWeight: 400,
-                    fontSize: "16px",
-                    lineHeight: "140%",
-                    letterSpacing: "0.5px",
-                    textAlign: "right",
-                  }}
-                  className="mx-auto text-gray-600"
-                >
-                  أدخل رقم جوالك وسنرسل لك رمز تحقق لتسجيل الدخول.
-                </p>
-              </div>
-
-              {/* Login Form */}
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="space-y-2">
-                  <Label
-                    htmlFor="phone"
-                    className="block text-sm font-medium text-gray-700 text-right "
-                  >
-                    رقم الجوال
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      id="phone"
-                      type="tel"
-                      dir="ltr"
-                      inputMode="numeric"
-                      placeholder="رجاء إدخال رقم الجوال"
-                      value={phoneNumber}
-                      onChange={(e) => setPhoneNumber(e.target.value)}
-                      className="h-12 text-base text-right pl-16"
-                      required
-                    />
-                    <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-sm text-gray-600">
-                      +966
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-2 justify-start">
-                  <Checkbox id="remember" className="border-gray-400" />
-                  <label htmlFor="remember" className="text-sm  text-gray-600">
-                    تذكرني
-                  </label>
-                </div>
-
-                {/* Submit Button */}
-                <div className="flex justify-center">
-                  <Button
-                    type="submit"
-                    className="w-[184px] h-[48px] text-base text-white bg-green-600 hover:bg-green-700 active:bg-green-800 transition-colors  rounded-lg border-0"
-                    disabled={isLoading}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      if (!isLoading) {
-                        router.push("/otp");
-                      }
-                    }}
-                  >
-                    {isLoading ? "جاري الإرسال..." : "أرسل رمز التحقق"}
-                  </Button>
-                </div>
-
-                {/* Sign Up Link */}
-                <div className="text-center pt-4">
-                  <p className="text-gray-600  text-[16px]">
-                    ليس لديك حساب؟{" "}
-                    <Link
-                      href="/signup"
-                      className="text-blue-600 hover:text-blue-800 font-medium hover:underline transition-colors decoration-blue-600"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        router.push("/signup");
-                      }}
-                    >
-                      أنشئ حساب الآن
-                    </Link>
-                  </p>
-                </div>
-              </form>
+            {/* Remember me */}
+            <div className="flex items-center gap-2 justify-start">
+              <Checkbox id="remember" className="border-gray-400" />
+              <label htmlFor="remember" className="text-sm text-gray-600">
+                تذكرني
+              </label>
             </div>
+            {/* Submit button */}
+            <Button
+              type="submit"
+              className="w-full h-12 bg-green-600 hover:bg-green-700 text-white rounded-lg text-base font-medium mt-6"
+              disabled={isLoading}
+            >
+              {isLoading ? "جاري الإرسال..." : "أرسل رمز التحقق"}
+            </Button>
+          </form>
+
+          {/* Register link */}
+          <div className="text-center mt-4 text-sm">
+            <span className="text-[#2C3E50]">ليس لديك حساب؟ </span>
+            <Link
+              href="/auth/register"
+              className="text-blue-600 hover:underline font-medium"
+            >
+              أنشئ حساب الآن
+            </Link>
           </div>
         </div>
-      </main>
-    </div>
+      </div>
+    </AuthLayout>
   );
 }
