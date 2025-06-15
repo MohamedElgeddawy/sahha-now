@@ -2,13 +2,9 @@
 @tailwind utilities;
 
 @layer base {
-  html {
-    direction: rtl;
-  }
+ 
 
-  body {
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  }
+
 }
 
 :root {

@@ -1,56 +1,64 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import { Phone, User, Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Card } from "@/components/ui/card";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { AuthLayout } from "@/components/auth/AuthLayout";
+import { SocialLoginButtons } from "@/components/auth/SocialLoginButtons";
+import { AuthSeparator } from "@/components/auth/AuthSeparator";
+import { toast } from "sonner";
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
     fullName: "",
-    email: "",
     phoneNumber: "",
+    email: "",
+    age: "",
     password: "",
     confirmPassword: "",
   });
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    if (name === "phoneNumber") {
-      setFormData({ ...formData, [name]: value.replace(/\D/g, "") });
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const validateForm = () => {
-    if (!formData.fullName) {
-      toast.error("يرجى إدخال الاسم الكامل");
+    if (!formData.fullName.trim()) {
+      toast.error("يرجى إدخال الاسم");
       return false;
     }
 
-    if (!formData.email || !/\S+@\S+\.\S+/.test(formData.email)) {
-      toast.error("يرجى إدخال بريد إلكتروني صحيح");
+    if (!formData.phoneNumber.trim()) {
+      toast.error("يرجى إدخال رقم الهاتف");
       return false;
     }
 
-    if (!formData.phoneNumber || !/^5[0-9]{8}$/.test(formData.phoneNumber)) {
-      toast.error("يرجى إدخال رقم جوال صحيح");
+    if (!formData.email.trim()) {
+      toast.error("يرجى إدخال البريد الإلكتروني");
+      return false;
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      toast.error("البريد الإلكتروني غير صحيح");
       return false;
     }
 
-    if (!formData.password || formData.password.length < 8) {
-      toast.error("يجب أن تتكون كلمة المرور من 8 أحرف على الأقل");
+    if (!formData.age.trim()) {
+      toast.error("يرجى إدخال العمر");
+      return false;
+    }
+
+    if (!formData.password) {
+      toast.error("يرجى إدخال كلمة المرور");
+      return false;
+    } else if (formData.password.length < 8) {
+      toast.error("كلمة المرور يجب أن تكون 8 أحرف على الأقل");
       return false;
     }
 
@@ -60,7 +68,7 @@ export default function RegisterPage() {
     }
 
     if (!agreeTerms) {
-      toast.error("يرجى الموافقة على الشروط والأحكام");
+      toast.error("يرجى الموافقة على الشروط والأحكام وسياسة الخصوصية");
       return false;
     }
 
@@ -77,313 +85,198 @@ export default function RegisterPage() {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
-      toast.success("تم إنشاء الحساب بنجاح");
-
-      // Redirect to OTP verification
+      // Store phone number for OTP verification
       sessionStorage.setItem("phoneNumber", formData.phoneNumber);
+
+      toast.success("تم إرسال رمز التحقق بنجاح");
+
+      // Navigate to OTP verification
       router.push("/auth/otp-verification");
-    } catch (error) {
-      toast.error("حدث خطأ أثناء إنشاء الحساب");
+    } catch (error: unknown) {
+      // Log the error and show a toast message
+      console.error("Registration error:", error);
+      toast.error(
+        error instanceof Error ? error.message : "حدث خطأ أثناء إنشاء الحساب"
+      );
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleSocialLogin = (provider: "google" | "apple") => {
-    console.log(`${provider} login clicked`);
-    // Add social login logic here
+    // Social login logic
+    console.log(`Registering with ${provider}`);
   };
 
   return (
-    <div className="flex-1 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <div className="mb-4 flex items-center justify-between">
-          <div className="text-sm text-gray-500 flex items-center gap-1">
-            <span>الرئيسية</span>
-            <span className="mx-1">&lt;</span>
-            <span>حسابي</span>
-          </div>
-          <div className="text-lg font-bold text-green-600">صحة ناو</div>
+    // <AuthLayout
+    //   title="تسجيل حساب جديد"
+    //   description="أدخل البيانات التالية وسنرسل لك رمز تحقق لإنشاء حساب جديد."
+    // >
+    <AuthLayout
+      title="" // Pass empty string to satisfy type requirement
+      description="" // Pass empty string to satisfy type requirement
+    >
+      {/* Social login section */}
+      <div className="w-full">
+        <h2 className="font-semibold text-base tracking-[0.5px] text-[#2C3E50] mb-6 text-center">
+          يمكنك تسجيل الدخول عن طريق
+        </h2>
+        <div className="flex justify-center">
+          <SocialLoginButtons
+            onGoogle={() => handleSocialLogin("google")}
+            onApple={() => handleSocialLogin("apple")}
+            width={312}
+          />
         </div>
+      </div>
 
-        <Card className="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
-          <h1 className="text-xl font-bold text-center text-gray-800 mb-6">
-            يمكنك التسجيل عن طريق
-          </h1>
-
-          {/* Social login buttons */}
-          <div className="flex justify-center gap-6 mb-6">
-            <Button
-              variant="outline"
-              className="w-[312px] h-[48px] text-base border border-[#DADADA] rounded-[8px] flex items-center justify-center gap-2 "
-              type="button"
-              onClick={() => handleSocialLogin("google")}
-            >
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="ml-2"
-              >
-                <rect width="24" height="24" fill="white" />
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M23.04 12.2605C23.04 11.445 22.9668 10.6609 22.8309 9.9082H12V14.3566H18.1891C17.9225 15.7941 17.1123 17.0121 15.8943 17.8275V20.713H19.6109C21.7855 18.7109 23.04 15.7627 23.04 12.2605Z"
-                  fill="#4285F4"
-                />
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M11.9999 23.5005C15.1049 23.5005 17.7081 22.4708 19.6108 20.7144L15.8942 17.829C14.8644 18.519 13.5472 18.9267 11.9999 18.9267C9.00467 18.9267 6.46945 16.9037 5.56513 14.1855H1.72308V17.1651C3.61536 20.9235 7.50445 23.5005 11.9999 23.5005Z"
-                  fill="#34A853"
-                />
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M5.56523 14.1855C5.33523 13.4955 5.20455 12.7584 5.20455 12.0005C5.20455 11.2425 5.33523 10.5055 5.56523 9.81548V6.83594H1.72318C0.944318 8.38844 0.5 10.1448 0.5 12.0005C0.5 13.8562 0.944318 15.6125 1.72318 17.165L5.56523 14.1855Z"
-                  fill="#FBBC05"
-                />
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M11.9999 5.07386C13.6883 5.07386 15.2042 5.65409 16.396 6.79364L19.6944 3.49523C17.7029 1.63955 15.0997 0.5 11.9999 0.5C7.50445 0.5 3.61536 3.07705 1.72308 6.83545L5.56513 9.815C6.46945 7.09682 9.00468 5.07386 11.9999 5.07386Z"
-                  fill="#EA4335"
-                />
-              </svg>
-              تسجيل الدخول عن طريق جوجل
-            </Button>
-
-            <Button
-              variant="outline"
-              className="w-[312px] h-[48px] text-base border border-[#DADADA] rounded-[8px] flex items-center justify-center gap-2 "
-              type="button"
-              onClick={() => handleSocialLogin("apple")}
-            >
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <rect width="24" height="24" fill="white" />
-                <path
-                  d="M19.2807 18.424C18.9328 19.2275 18.5211 19.9672 18.0441 20.6472C17.3939 21.5743 16.8615 22.216 16.4512 22.5724C15.8152 23.1573 15.1337 23.4568 14.404 23.4739C13.8801 23.4739 13.2483 23.3248 12.5129 23.0224C11.7751 22.7214 11.097 22.5724 10.4771 22.5724C9.82683 22.5724 9.12947 22.7214 8.38355 23.0224C7.6365 23.3248 7.03469 23.4824 6.57456 23.498C5.87478 23.5278 5.17728 23.2197 4.48105 22.5724C4.03669 22.1848 3.48087 21.5204 2.81503 20.5791C2.10063 19.5739 1.51329 18.4084 1.05317 17.0795C0.560384 15.6442 0.313354 14.2543 0.313354 12.9087C0.313354 11.3673 0.646418 10.0379 1.31354 8.92385C1.83784 8.029 2.53534 7.32312 3.40832 6.80493C4.2813 6.28674 5.22456 6.02267 6.24036 6.00578C6.79618 6.00578 7.52506 6.1777 8.43083 6.51559C9.33405 6.85462 9.914 7.02655 10.1683 7.02655C10.3584 7.02655 11.0026 6.82552 12.0948 6.42473C13.1277 6.05305 13.9994 5.89916 14.7135 5.95978C16.6485 6.11595 18.1023 6.87876 19.0691 8.25303C17.3385 9.30163 16.4824 10.7703 16.4995 12.6544C16.5151 14.122 17.0475 15.3432 18.0938 16.3129C18.568 16.7629 19.0975 17.1107 19.6867 17.3578C19.5589 17.7283 19.4241 18.0832 19.2807 18.424ZM14.8427 0.960131C14.8427 2.11039 14.4224 3.18439 13.5848 4.17847C12.574 5.36023 11.3513 6.04311 10.0254 5.93536C10.0086 5.79736 9.99876 5.65213 9.99876 5.49951C9.99876 4.39526 10.4795 3.21349 11.3331 2.24724C11.7593 1.75801 12.3014 1.35122 12.9587 1.02671C13.6146 0.707053 14.235 0.530273 14.8185 0.5C14.8356 0.653772 14.8427 0.807554 14.8427 0.960116V0.960131Z"
-                  fill="#2C3E50"
-                />
-              </svg>
-              تسجيل الدخول عن طريق آبل
-            </Button>
-          </div>
-
-          {/* Separator */}
-          <div className="flex items-center my-6">
-            <div className="flex-1 h-px bg-gray-200"></div>
-            <span className="mx-4 text-gray-400 text-sm">أو</span>
-            <div className="flex-1 h-px bg-gray-200"></div>
-          </div>
-
-          {/* Title */}
-          <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">
-              إنشاء حساب جديد
-            </h2>
-            <p className="text-gray-500 text-sm">
-              أدخل البيانات التالية لإنشاء حساب جديد
+      <div className="flex flex-col items-center w-full">
+        <AuthSeparator />
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-6 w-full max-w-[592px] mx-auto"
+        >
+          {/* Form header */}
+          <div className="space-y-2 mb-6 text-right">
+            <h3 className="font-semibold text-xl text-[#2C3E50]">
+              تسجيل حساب جديد
+            </h3>
+            <p className="text-gray-600 text-sm">
+              أدخل البيانات التالية وسنرسل لك رمز تحقق لإنشاء حساب جديد.
             </p>
           </div>
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Name and Phone in a row */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Full Name */}
-            <div className="space-y-1">
+            <div className="space-y-2">
               <label
                 htmlFor="fullName"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-gray-700 text-right"
               >
-                الاسم الكامل
+                الاسم
               </label>
-              <div className="relative">
-                <Input
-                  id="fullName"
-                  name="fullName"
-                  type="text"
-                  placeholder="أدخل اسمك الكامل"
-                  value={formData.fullName}
-                  onChange={handleChange}
-                  className="pr-12 h-12 text-base border-2 focus:border-green-500"
-                  required
-                />
-                <User className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-              </div>
-            </div>
-
-            {/* Email */}
-            <div className="space-y-1">
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
-              >
-                البريد الإلكتروني
-              </label>
-              <div className="relative">
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="أدخل بريدك الإلكتروني"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="pr-12 h-12 text-base border-2 focus:border-green-500"
-                  required
-                />
-                <Mail className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-              </div>
+              <Input
+                id="fullName"
+                name="fullName"
+                type="text"
+                placeholder="برجاء إدخال الاسم"
+                value={formData.fullName}
+                onChange={handleChange}
+                className="h-12 text-base text-right"
+                required
+              />
             </div>
 
             {/* Phone Number */}
-            <div className="space-y-1">
+            <div className="space-y-2">
               <label
                 htmlFor="phoneNumber"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-gray-700 text-right"
               >
-                رقم الجوال
+                رقم الهاتف
               </label>
               <div className="relative">
                 <Input
                   id="phoneNumber"
                   name="phoneNumber"
                   type="tel"
-                  placeholder="يرجى إدخال رقم الجوال"
+                  dir="ltr"
+                  inputMode="numeric"
+                  placeholder="برجاء إدخال رقم الهاتف"
                   value={formData.phoneNumber}
                   onChange={handleChange}
-                  className="pr-12 h-12 text-base border-2 focus:border-green-500"
+                  className="h-12 text-base text-right pl-16"
                   required
                 />
-                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-medium">
+                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-sm text-gray-600">
                   +966
                 </div>
-                <Phone className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
               </div>
             </div>
-
-            {/* Password */}
-            <div className="space-y-1">
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
-              >
-                كلمة المرور
-              </label>
-              <div className="relative">
-                <Input
-                  id="password"
-                  name="password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="أدخل كلمة المرور"
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="pr-12 h-12 text-base border-2 focus:border-green-500"
-                  required
-                />
-                <Lock className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute left-3 top-1/2 -translate-y-1/2"
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-5 w-5 text-gray-400" />
-                  ) : (
-                    <Eye className="h-5 w-5 text-gray-400" />
-                  )}
-                </button>
-              </div>
-            </div>
-
-            {/* Confirm Password */}
-            <div className="space-y-1">
-              <label
-                htmlFor="confirmPassword"
-                className="block text-sm font-medium text-gray-700"
-              >
-                تأكيد كلمة المرور
-              </label>
-              <div className="relative">
-                <Input
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  type={showConfirmPassword ? "text" : "password"}
-                  placeholder="أعد إدخال كلمة المرور"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  className="pr-12 h-12 text-base border-2 focus:border-green-500"
-                  required
-                />
-                <Lock className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-                <button
-                  type="button"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute left-3 top-1/2 -translate-y-1/2"
-                >
-                  {showConfirmPassword ? (
-                    <EyeOff className="h-5 w-5 text-gray-400" />
-                  ) : (
-                    <Eye className="h-5 w-5 text-gray-400" />
-                  )}
-                </button>
-              </div>
-            </div>
-
-            {/* Terms */}
-            <div className="flex items-start gap-2">
-              <Checkbox
-                id="terms"
-                checked={agreeTerms}
-                onCheckedChange={(checked) => setAgreeTerms(checked === true)}
-                className="data-[state=checked]:bg-green-500 data-[state=checked]:border-green-500 mt-1"
-              />
-              <label htmlFor="terms" className="text-sm text-gray-600">
-                أوافق على{" "}
-                <Link href="/terms" className="text-green-500 hover:underline">
-                  الشروط والأحكام
-                </Link>{" "}
-                و{" "}
-                <Link
-                  href="/privacy"
-                  className="text-green-500 hover:underline"
-                >
-                  سياسة الخصوصية
-                </Link>
-              </label>
-            </div>
-
-            <Button
-              type="submit"
-              className="w-full h-12 text-base font-semibold bg-green-500 hover:bg-green-600 text-white"
-              disabled={isLoading}
-            >
-              {isLoading ? "جاري التسجيل..." : "إنشاء حساب"}
-            </Button>
-          </form>
-
-          {/* Login link */}
-          <div className="text-center mt-6">
-            <p className="text-sm text-gray-500">
-              لديك حساب بالفعل؟{" "}
-              <Link
-                href="/"
-                className="font-medium text-green-500 hover:text-green-600 hover:underline"
-              >
-                تسجيل الدخول
-              </Link>
-            </p>
           </div>
-        </Card>
+
+          {/* Email and Age in a row */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Email */}
+            <div className="space-y-2">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 text-right"
+              >
+                البريد الإلكتروني
+              </label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="برجاء إدخال البريد الإلكتروني"
+                value={formData.email}
+                onChange={handleChange}
+                className="h-12 text-base text-right"
+                required
+              />
+            </div>
+
+            {/* Age */}
+            <div className="space-y-2">
+              <label
+                htmlFor="age"
+                className="block text-sm font-medium text-gray-700 text-right"
+              >
+                العمر
+              </label>
+              <Input
+                id="age"
+                name="age"
+                type="number"
+                placeholder="برجاء إدخال العمر"
+                value={formData.age}
+                onChange={handleChange}
+                className="h-12 text-base text-right"
+                required
+              />
+            </div>
+          </div>
+
+          {/* Terms Checkbox */}
+          <div className="flex items-center gap-2">
+            <Checkbox
+              id="terms"
+              checked={agreeTerms}
+              onCheckedChange={(checked) => setAgreeTerms(checked === true)}
+              className="border-gray-400 data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
+            />
+            <label htmlFor="terms" className="text-sm text-gray-600">
+              أوافق على{" "}
+              <Link href="/terms" className="text-green-600 hover:underline">
+                الشروط والأحكام
+              </Link>{" "}
+              و{" "}
+              <Link href="/privacy" className="text-green-600 hover:underline">
+                سياسة الخصوصية
+              </Link>
+            </label>
+          </div>
+
+          <Button
+            type="submit"
+            className="w-full h-12 bg-green-600 hover:bg-green-700 text-white rounded-[8px] text-base font-semibold"
+            disabled={isLoading || !agreeTerms}
+          >
+            {isLoading ? "جاري التسجيل..." : "إنشاء حساب"}
+          </Button>
+          <div className="text-center mt-4">
+            <Link
+              href="/auth/login"
+              className="text-green-600 hover:underline text-sm font-medium"
+            >
+              لديك حساب بالفعل؟ سجل الدخول الآن
+            </Link>
+          </div>
+        </form>
       </div>
-    </div>
+    </AuthLayout>
   );
 }
