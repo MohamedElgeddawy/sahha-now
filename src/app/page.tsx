@@ -1,9 +1,17 @@
-'use client';
+"use client";
+
+import HeroSection from "@/components/HeroSection";
+import ProductCarousel from "@/components/products/ProductCarousel";
+import { featuredProducts } from "@/lib/mock-data";
 
 export default function HomePage() {
   return (
-    <div className="flex-1 flex items-center justify-center p-4">
-     
-    </div>
+    <main className="flex-1 flex flex-col">
+      <HeroSection />
+      <ProductCarousel
+        title="لا تفوت عروض هذا الأسبوع"
+        products={featuredProducts}
+      />
+    </main>
   );
 }

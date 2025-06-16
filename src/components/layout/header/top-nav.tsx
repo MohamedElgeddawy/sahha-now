@@ -8,7 +8,7 @@ import { LanguageIcon } from "@/components/icons/top-icons/LanguageIcon";
 export function TopNav() {
   return (
     <div className="bg-[#f5f5f5] border-b border-[#DADADA] w-full" dir="rtl">
-      <div className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-[108px]">
+      <div className="container mx-auto px-4">
         <nav className="flex items-center justify-between h-[36px]">
           {/* Right Group */}
           <div className="flex items-center gap-4">

@@ -1,23 +1,27 @@
 import Link from "next/link";
-import {
-  FaApple,
-  FaGooglePlay,
-  FaYoutube,
-  FaFacebookF,
-  FaTwitter,
-  FaInstagram,
-  FaLinkedinIn,
-} from "react-icons/fa";
+// import {
+//   FaApple,
+//   FaGooglePlay,
+//   FaYoutube,
+//   FaFacebookF,
+//   FaTwitter,
+//   FaInstagram,
+//   FaLinkedinIn,
+// } from "react-icons/fa";
+import facebook from "../../../public/icons/social/facebook.svg";
+import instagram from "../../../public/icons/social/instagram.svg";
+import twitter from "../../../public/icons/social/twitter.svg";
+import youtube from "../../../public/icons/social/youtube.svg";
+import linkedin from "../../../public/icons/social/linkedin.svg";
+import apple from "../../../public/icons/social/apple.svg";
 
 import { SahhaNowArabicLogo } from "@/components/layout/icons/brand-logos/SahhaNowArabicLogo";
+import Image from "next/image";
 
 export default function Footer() {
   return (
-    <footer
-      className="bg-[#F8F9FA] text-[#2C3E50] pt-6 pb-4 mt-16 font-[Cairo]"
-      dir="rtl"
-    >
-      <div className="max-w-7xl mx-auto px-4">
+    <footer className="bg-[#F8F9FA] text-[#2C3E50] pt-6 pb-4 mt-16 font-[Cairo]">
+      <div className="container mx-auto px-4">
         {/* Footer columns - 3 columns */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
           {/* من نحن */}
@@ -145,69 +149,106 @@ export default function Footer() {
         </div>
 
         {/* Copyright and footer bottom */}
-        <div className="pt-6 border-t border-gray-300">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6 md:gap-12 h-24">
-            {/* Right: App download buttons */}
-            <div className="flex gap-3 order-1">
-              {/* Google Play Button */}
-              <Link href="#" className="block">
-                <div className="bg-black text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-800 transition-colors min-w-[140px]">
-                  <FaGooglePlay className="text-xl" />
-                  <div className="text-right">
-                    <div className="text-xs text-gray-300">Get it on</div>
-                    <div className="text-sm font-medium">Google Play</div>
+        <div className="border-t pt-2.5 border-gray-300">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="flex flex-wrap gap-x-12 gap-y-2 items-center">
+              <div className="flex gap-3 order-1">
+                {/* Google Play Button */}
+                <Link href="#" className="block">
+                  <div className="bg-black text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-800 transition-colors min-w-[140px]">
+                    <Image
+                      src={"/icons/social/google-play.svg"}
+                      alt="google play"
+                      width={20}
+                      height={20}
+                    />
+                    <div className="text-right">
+                      <div className="text-xs text-gray-300">Get it on</div>
+                      <div className="text-sm font-medium">Google Play</div>
+                    </div>
                   </div>
-                </div>
-              </Link>
+                </Link>
 
-              {/* App Store Button */}
-              <Link href="#" className="block">
-                <div className="bg-black text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-800 transition-colors min-w-[140px]">
-                  <FaApple className="text-2xl" />
-                  <div className="text-right">
-                    <div className="text-xs text-gray-300">Download on the</div>
-                    <div className="text-sm font-medium">App Store</div>
+                {/* App Store Button */}
+                <Link href="#" className="block">
+                  <div className="bg-black text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-800 transition-colors min-w-[140px]">
+                    <Image
+                      src={"/icons/social/apple.svg"}
+                      alt="apple"
+                      width={20}
+                      height={20}
+                    />
+                    <div className="text-right">
+                      <div className="text-xs text-gray-300">
+                        Download on the
+                      </div>
+                      <div className="text-sm font-medium">App Store</div>
+                    </div>
                   </div>
-                </div>
-              </Link>
-            </div>
+                </Link>
+              </div>
 
-            {/* Center: Social Media Icons in specific order */}
-            <div className="flex items-center gap-4 order-2">
-              <Link
-                href="#"
-                className="text-gray-500 hover:text-green-600 transition-colors"
-              >
-                <FaLinkedinIn className="text-xl" />
-              </Link>
-              <Link
-                href="#"
-                className="text-gray-500 hover:text-green-600 transition-colors"
-              >
-                <FaInstagram className="text-xl" />
-              </Link>
-              <Link
-                href="#"
-                className="text-gray-500 hover:text-green-600 transition-colors"
-              >
-                <FaTwitter className="text-xl" />
-              </Link>
-              <Link
-                href="#"
-                className="text-gray-500 hover:text-green-600 transition-colors"
-              >
-                <FaFacebookF className="text-xl" />
-              </Link>
-              <Link
-                href="#"
-                className="text-gray-500 hover:text-green-600 transition-colors"
-              >
-                <FaYoutube className="text-xl" />
-              </Link>
+              <div className="flex items-center gap-4 order-2">
+                <Link
+                  href="#"
+                  className="text-gray-500 hover:text-green-600 transition-colors"
+                >
+                  <Image
+                    src={"/icons/social/linkedin.svg"}
+                    alt="linkedin"
+                    width={24}
+                    height={24}
+                  />
+                </Link>
+                <Link
+                  href="#"
+                  className="text-gray-500 hover:text-green-600 transition-colors"
+                >
+                  <Image
+                    src={"/icons/social/instagram.svg"}
+                    alt="instagram"
+                    width={24}
+                    height={24}
+                  />
+                </Link>
+                <Link
+                  href="#"
+                  className="text-gray-500 hover:text-green-600 transition-colors"
+                >
+                  <Image
+                    src={"/icons/social/twitter.svg"}
+                    alt="twitter"
+                    width={24}
+                    height={24}
+                  />
+                </Link>
+                <Link
+                  href="#"
+                  className="text-gray-500 hover:text-green-600 transition-colors"
+                >
+                  <Image
+                    src={"/icons/social/facebook.svg"}
+                    alt="facebook"
+                    width={24}
+                    height={24}
+                  />
+                </Link>
+                <Link
+                  href="#"
+                  className="text-gray-500 hover:text-green-600 transition-colors"
+                >
+                  <Image
+                    src={"/icons/social/youtube.svg"}
+                    alt="youtube"
+                    width={24}
+                    height={24}
+                  />
+                </Link>
+              </div>
             </div>
 
             {/* Left: Copyright and Logo */}
-            <div className="flex items-center gap-4 order-3">
+            <div className="flex items-center gap-4">
               <div className="text-gray-600">
                 <p>© 2025 جميع الحقوق محفوظة لـ صحة ناو</p>
               </div>

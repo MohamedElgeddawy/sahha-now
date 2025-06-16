@@ -35,12 +35,9 @@ export function MainHeader() {
   ];
 
   return (
-    <header
-      className="bg-white border-b border-[#DADADA] sticky top-0 z-50 shadow-sm w-full"
-      dir="rtl"
-    >
-      <div className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-[108px] py-[8px]">
-        <div className="h-[64px] flex items-center justify-between">
+    <header className="bg-white border-b border-[#DADADA] sticky top-0 z-50 shadow-sm w-full">
+      <div className="container mx-auto px-4 py-4">
+        <div className="flex items-center justify-between">
           {/* Right Section - Logo */}
           <div className="flex-shrink-0 mr-4">
             <Link href="/" className="flex items-center gap-3">

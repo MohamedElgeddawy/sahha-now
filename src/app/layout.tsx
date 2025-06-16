@@ -15,13 +15,9 @@ export const metadata: Metadata = {
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ar" dir="rtl">
-      <body
-        className={`${cairo.className} min-h-screen flex flex-col bg-gray-50`}
-      >
+      <body className={`${cairo.className} min-h-screen flex flex-col`}>
         <Header />
-        <main className="flex-1">
-          <Container>{children}</Container>
-        </main>
+        <Container>{children}</Container>
         <Footer />
       </body>
     </html>
