@@ -1,12 +1,16 @@
+
 "use client";
 
 import { useState } from "react";
 import { TabButton } from "@/components/ui/TabButton";
-import { RatingStars } from "@/components/ui/RatingStars";
 import { ProductSpecs } from "./ProductSpecs";
 import { ReviewItem } from "./ReviewItem";
 
-export function ProductTabs() {
+export function ProductTabs({}: {
+  description: string;
+  specifications: any[];
+  reviews: any[];
+}) {
   const [activeTab, setActiveTab] = useState("description");
 
   // Temporary data - replace with actual product data
@@ -85,4 +89,4 @@ export function ProductTabs() {
       <div className="mt-6">{renderTabContent()}</div>
     </div>
   );
-} 
+}

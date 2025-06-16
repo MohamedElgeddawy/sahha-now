@@ -1,20 +1,4 @@
 import Link from "next/link";
-// import {
-//   FaApple,
-//   FaGooglePlay,
-//   FaYoutube,
-//   FaFacebookF,
-//   FaTwitter,
-//   FaInstagram,
-//   FaLinkedinIn,
-// } from "react-icons/fa";
-import facebook from "../../../public/icons/social/facebook.svg";
-import instagram from "../../../public/icons/social/instagram.svg";
-import twitter from "../../../public/icons/social/twitter.svg";
-import youtube from "../../../public/icons/social/youtube.svg";
-import linkedin from "../../../public/icons/social/linkedin.svg";
-import apple from "../../../public/icons/social/apple.svg";
-
 import { SahhaNowArabicLogo } from "@/components/layout/icons/brand-logos/SahhaNowArabicLogo";
 import Image from "next/image";
 

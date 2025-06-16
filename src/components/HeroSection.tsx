@@ -13,12 +13,12 @@ export default function HeroSection() {
   return (
     <section className="relative mb-28 flex flex-col md:flex-row items-center justify-between bg-[#f8fafc] rounded-3xl p-12 w-full min-h-[500px]">
       {/* Background Image */}
-        <Image
-          src="/images/hero-image-bg.png"
-          alt=""
-          fill
-          className="object-cover opacity-20 z-0"
-        />
+      <Image
+        src="/images/hero-image-bg.png"
+        alt=""
+        fill
+        className="object-cover opacity-20 z-0"
+      />
 
       {/* Text Content */}
       <div className="relative z-10 flex-1 flex flex-col items-start gap-4">
@@ -49,7 +49,7 @@ export default function HeroSection() {
         />
       </div>
       {/* Categories */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-[calc(100%-300px)] flex *:flex-1 gap-4 z-20">
+      <div className="md:absolute md:bottom-0 md:left-1/2 md:-translate-x-1/2 md:translate-y-1/2 md:w-[calc(100%-300px)] flex *:flex-1 gap-4 z-20">
         <CategoryCard
           icon={<Image src={MotherChildCareIcon} alt="Mother & Child Care" />}
           label="العناية بالأم والطفل"

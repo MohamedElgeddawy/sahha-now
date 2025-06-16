@@ -76,10 +76,10 @@ export default function ProductCarousel({
                 "size-8 cursor-pointer rounded-full flex items-center justify-center",
                 canScrollPrev
                   ? "bg-green-600 text-white"
-                  : "bg-white text-slate-400 border border-gray-200"
+                  : "bg-gray-500 text-white border border-gray-200"
               )}
             >
-              <ChevronRight />
+              <ChevronRight strokeWidth={4} />
             </Button>
             <Button
               size={"icon"}
@@ -89,10 +89,10 @@ export default function ProductCarousel({
                 "size-8 cursor-pointer rounded-full flex items-center justify-center",
                 canScrollNext
                   ? "bg-green-600 text-white"
-                  : "bg-white text-slate-400 border border-gray-200"
+                  : "bg-gray-500 text-white border border-gray-200"
               )}
             >
-              <ChevronLeft />
+              <ChevronLeft strokeWidth={4} />
             </Button>
           </div>
         </div>

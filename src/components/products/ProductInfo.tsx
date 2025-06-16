@@ -9,7 +9,7 @@ import { RatingStars } from "@/components/ui/RatingStars";
 import { ShareButtons } from "@/components/ui/ShareButtons";
 import { Heart } from "lucide-react";
 
-export function ProductInfo() {
+export function ProductInfo({}: { product: any }) {
   const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);

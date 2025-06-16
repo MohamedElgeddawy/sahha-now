@@ -2,12 +2,31 @@ import Image from "next/image";
 import Link from "next/link";
 import { RatingStars } from "@/components/ui/RatingStars";
 
-export function RelatedProducts() {
+export function RelatedProducts({}: {
+  categoryId: string;
+  currentProductId: string;
+}) {
   // Temporary data - replace with actual related products
   const relatedProducts = [
     {
       id: 1,
       name: "منتج مشابه 1",
+      relatedProducts: [
+        {
+          id: 1,
+          name: "منتج مشابه 1",
+          price: 149.99,
+          rating: 4.5,
+          image: "/images/product-1.jpg",
+        },
+        {
+          id: 2,
+          name: "منتج مشابه 2",
+          price: 199.99,
+          rating: 4.0,
+          image: "/images/product-2.jpg",
+        },
+      ],
       price: 149.99,
       rating: 4.5,
       image: "/images/product-1.jpg",
@@ -15,6 +34,22 @@ export function RelatedProducts() {
     {
       id: 2,
       name: "منتج مشابه 2",
+      relatedProducts: [
+        {
+          id: 1,
+          name: "منتج مشابه 1",
+          price: 149.99,
+          rating: 4.5,
+          image: "/images/product-1.jpg",
+        },
+        {
+          id: 2,
+          name: "منتج مشابه 2",
+          price: 199.99,
+          rating: 4.0,
+          image: "/images/product-2.jpg",
+        },
+      ],
       price: 199.99,
       rating: 4.0,
       image: "/images/product-2.jpg",
@@ -24,14 +59,46 @@ export function RelatedProducts() {
       name: "منتج مشابه 3",
       price: 179.99,
       rating: 4.8,
-      image: "/images/product-3.jpg",
+      image: "/images/product-2.jpg",
+      relatedProducts: [
+        {
+          id: 1,
+          name: "منتج مشابه 1",
+          price: 149.99,
+          rating: 4.5,
+          image: "/images/product-1.jpg",
+        },
+        {
+          id: 2,
+          name: "منتج مشابه 2",
+          price: 199.99,
+          rating: 4.0,
+          image: "/images/product-2.jpg",
+        },
+      ],
     },
     {
       id: 4,
       name: "منتج مشابه 4",
       price: 129.99,
       rating: 4.2,
-      image: "/images/product-4.jpg",
+      image: "/images/product-1.jpg",
+      relatedProducts: [
+        {
+          id: 1,
+          name: "منتج مشابه 1",
+          price: 149.99,
+          rating: 4.5,
+          image: "/images/product-1.jpg",
+        },
+        {
+          id: 2,
+          name: "منتج مشابه 2",
+          price: 199.99,
+          rating: 4.0,
+          image: "/images/product-2.jpg",
+        },
+      ],
     },
   ];
 
@@ -62,7 +129,7 @@ export function RelatedProducts() {
                   <span className="text-lg font-bold text-green-600">
                     {product.price} ج.م
                   </span>
-                  <RatingStars rating={product.rating} size="sm" />
+                  <RatingStars rating={product.rating} />
                 </div>
               </div>
             </div>
