@@ -6,12 +6,14 @@ interface AuthLayoutProps {
   children: ReactNode;
   title: string;
   description?: ReactNode;
+  aboveCard?: ReactNode;
 }
 
 export const AuthLayout = ({
   children,
   title,
   description,
+  aboveCard,
 }: AuthLayoutProps) => {
   return (
     <div className="min-h-screen bg-[#F8F9FA] py-6 px-4" dir="rtl">
@@ -46,6 +48,9 @@ export const AuthLayout = ({
               </div>
             )}
           </div>
+
+          {/* Content above card */}
+          {aboveCard && <div className="mb-8">{aboveCard}</div>}
 
           {/* Card */}
           <div className="bg-white border border-[#DADADA] rounded-[8px] shadow-sm p-8">
