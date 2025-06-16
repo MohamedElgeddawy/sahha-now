@@ -6,23 +6,31 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { AuthLayout } from "@/components/auth/AuthLayout";
+import { verifyOtp } from "@/lib/api/auth";
 
 export default function OTPVerificationPage() {
   const [otp, setOtp] = useState<string[]>(Array(6).fill(""));
   const [isLoading, setIsLoading] = useState(false);
-  const [resendTimer, setResendTimer] = useState(60);
+  const [resendTimer, setResendTimer] = useState(30);
   const router = useRouter();
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const [phoneNumber, setPhoneNumber] = useState<string | null>(null);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   // Check if phone number exists
   useEffect(() => {
     const storedPhoneNumber = sessionStorage.getItem("phoneNumber");
-    // if (!storedPhoneNumber) {
-    //   router.push('/');
-    //   return;
-    // }
-    setPhoneNumber(storedPhoneNumber);
+
+    // If no phone number in session, check localStorage (for remember me)
+    const rememberedPhone = localStorage.getItem("phoneNumber");
+
+    if (!storedPhoneNumber && !rememberedPhone) {
+      router.replace("/auth/login");
+      return;
+    }
+
+    setPhoneNumber(storedPhoneNumber || rememberedPhone);
+    setIsInitialized(true);
 
     // Set countdown timer
     const timer = setInterval(() => {
@@ -38,17 +46,40 @@ export default function OTPVerificationPage() {
     return () => clearInterval(timer);
   }, [router]);
 
+  // Don't render anything until we check the session
+  if (!isInitialized) {
+    return null;
+  }
+
   // Handle OTP input change
   const handleOtpChange = (index: number, value: string) => {
-    if (value.length > 1) return;
+    // Only allow numbers
+    if (!/^\d*$/.test(value)) return;
 
-    const newOtp = [...otp];
-    newOtp[index] = value;
-    setOtp(newOtp);
+    if (value.length > 1) {
+      // If pasting multiple numbers
+      const numbers = value.split("").slice(0, 6);
+      const newOtp = [...otp];
+      numbers.forEach((num, idx) => {
+        if (idx + index < 6) {
+          newOtp[idx + index] = num;
+        }
+      });
+      setOtp(newOtp);
 
-    // Auto-focus next input
-    if (value && index < 5 && inputRefs.current[index + 1]) {
-      inputRefs.current[index + 1]?.focus();
+      // Focus the next empty input or the last input
+      const nextIndex = Math.min(index + numbers.length, 5);
+      inputRefs.current[nextIndex]?.focus();
+    } else {
+      // Single number input
+      const newOtp = [...otp];
+      newOtp[index] = value;
+      setOtp(newOtp);
+
+      // Auto-focus next input
+      if (value && index < 5) {
+        inputRefs.current[index + 1]?.focus();
+      }
     }
   };
 
@@ -57,8 +88,19 @@ export default function OTPVerificationPage() {
     index: number,
     e: React.KeyboardEvent<HTMLInputElement>
   ) => {
-    if (e.key === "Backspace" && !otp[index] && index > 0) {
-      inputRefs.current[index - 1]?.focus();
+    if (e.key === "Backspace") {
+      if (!otp[index] && index > 0) {
+        // If current input is empty, move to previous input
+        const newOtp = [...otp];
+        newOtp[index - 1] = "";
+        setOtp(newOtp);
+        inputRefs.current[index - 1]?.focus();
+      } else {
+        // Clear current input
+        const newOtp = [...otp];
+        newOtp[index] = "";
+        setOtp(newOtp);
+      }
     }
   };
 
@@ -72,23 +114,20 @@ export default function OTPVerificationPage() {
       return;
     }
 
+    if (!phoneNumber) {
+      toast.error("رقم الهاتف غير موجود");
+      return;
+    }
+
     setIsLoading(true);
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-
-      // Check if this is a password reset flow
-      const isResetPassword = sessionStorage.getItem("resetPassword");
-
+      await verifyOtp(phoneNumber, otpValue);
       toast.success("تم التحقق بنجاح");
-
-      if (isResetPassword) {
-        router.push("/auth/reset-password");
-      } else {
-        router.push("/");
-      }
-    } catch {
-      toast.error("رمز التحقق غير صحيح");
+      router.push("/");
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "رمز التحقق غير صحيح"
+      );
     } finally {
       setIsLoading(false);
     }
@@ -98,77 +137,67 @@ export default function OTPVerificationPage() {
   const handleResend = async () => {
     if (resendTimer > 0) return;
 
-    setResendTimer(60);
+    setResendTimer(30);
     toast.success("تم إرسال رمز جديد");
   };
 
   return (
     <AuthLayout
       title="أدخل رمز التحقق المرسل إلى جوالك"
-      description={`لقد أرسلنا رمز تحقق مكون من 6 أرقام إلى الرقم: +966 ${
-        phoneNumber || ""
-      }`}
+      description={
+        phoneNumber
+          ? `لقد أرسلنا رمز تحقق مكون من 6 أرقام إلى الرقم: +966${phoneNumber}`
+          : undefined
+      }
     >
-      <div className="flex flex-col items-center w-full">
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-8 w-full max-w-[382px] mx-auto"
-        >
-          <div className="flex justify-center gap-3">
-            {otp.map((digit, index) => (
-              <Input
-                key={index}
-                ref={(el) => {
-                  inputRefs.current[index] = el;
-                }}
-                type="text"
-                inputMode="numeric"
-                pattern="[0-9]*"
-                maxLength={1}
-                value={digit}
-                onChange={(e) => handleOtpChange(index, e.target.value)}
-                onKeyDown={(e) => handleKeyDown(index, e)}
-                className="w-11 h-12 text-center text-lg font-bold border-gray-300 rounded-md focus:border-green-500 focus:ring-green-500"
-                required
-              />
-            ))}
-          </div>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* OTP inputs */}
+        <div className="flex justify-center gap-3 mb-8">
+          {otp.map((digit, index) => (
+            <Input
+              key={index}
+              ref={(el) => {
+                inputRefs.current[index] = el;
+              }}
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
+              maxLength={6}
+              value={digit}
+              onChange={(e) => handleOtpChange(index, e.target.value)}
+              onKeyDown={(e) => handleKeyDown(index, e)}
+              className="w-[52px] h-[52px] text-center text-lg font-bold border-gray-300 rounded-lg focus:border-green-500 focus:ring-green-500"
+              required
+            />
+          ))}
+        </div>
 
-          <Button
-            type="submit"
-            className="w-full h-12 text-base font-semibold bg-green-600 hover:bg-green-700 text-white rounded-[8px]"
-            disabled={isLoading}
+        <div className="text-center text-sm text-gray-500 mb-6">
+          لم يصلك الرمز؟{" "}
+          <button
+            type="button"
+            onClick={handleResend}
+            disabled={resendTimer > 0}
+            className={`font-medium ${
+              resendTimer > 0
+                ? "text-gray-400"
+                : "text-green-600 hover:text-green-700 hover:underline"
+            }`}
           >
-            {isLoading ? (
-              <>
-                <span className="mr-2">جاري التحقق...</span>
-              </>
-            ) : (
-              "تحقق وأكمل التسجيل"
-            )}
-          </Button>
+            {resendTimer > 0
+              ? `إعادة الإرسال خلال ${resendTimer} ثانية`
+              : "إعادة إرسال الرمز"}
+          </button>
+        </div>
 
-          <div className="text-center mt-4">
-            <p className="text-sm text-gray-500">
-              لم يصلك الرمز؟{" "}
-              <button
-                type="button"
-                onClick={handleResend}
-                disabled={resendTimer > 0}
-                className={`font-medium ${
-                  resendTimer > 0
-                    ? "text-gray-400"
-                    : "text-green-600 hover:text-green-700 hover:underline"
-                }`}
-              >
-                {resendTimer > 0
-                  ? `إعادة الإرسال (${resendTimer})`
-                  : "إعادة إرسال الرمز"}
-              </button>
-            </p>
-          </div>
-        </form>
-      </div>
+        <Button
+          type="submit"
+          className="w-full h-12 bg-green-600 hover:bg-green-700 text-white rounded-lg text-base font-semibold"
+          disabled={isLoading}
+        >
+          {isLoading ? "جاري التحقق..." : "تحقق وأكمل التسجيل"}
+        </Button>
+      </form>
     </AuthLayout>
   );
 }
