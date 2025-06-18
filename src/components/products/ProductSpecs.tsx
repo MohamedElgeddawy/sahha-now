@@ -1,4 +1,4 @@
-export function ProductSpecs() {
+/*export function ProductSpecs() {
   // Temporary data - replace with actual product specifications
   const specs = [
     { label: "الماركة", value: "Brand Name" },
@@ -28,4 +28,4 @@ export function ProductSpecs() {
       </table>
     </div>
   );
-}
+}*/

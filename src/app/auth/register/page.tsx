@@ -106,7 +106,7 @@ export default function RegisterPage() {
             dir="ltr"
             inputMode="numeric"
             error={errors.phoneNumber}
-            leftElement="+20"
+            leftElement="+966"
             {...register("phoneNumber")}
           />
         </div>

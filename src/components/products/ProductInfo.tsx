@@ -2,126 +2,251 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { QuantitySelector } from "@/components/ui/QuantitySelector";
-import { ColorSwatch } from "@/components/ui/ColorSwatch";
-import { SizeSelector } from "@/components/ui/SizeSelector";
-import { RatingStars } from "@/components/ui/RatingStars";
-import { ShareButtons } from "@/components/ui/ShareButtons";
-import { Heart } from "lucide-react";
+import { Star, Truck, Info, MessageSquare } from "lucide-react";
+import { cn } from "@/lib/utils";
+import type { Product } from "@/lib/mock-data";
+import { VisaIcon } from "@/components/icons/payment/VisaIcon";
+import { MasterCardIcon } from "@/components/icons/payment/MasterCardIcon";
+import { MadaIcon } from "@/components/icons/payment/MadaIcon";
+import { TamaraIcon } from "@/components/icons/payment/TamaraIcon";
+import { TabbyIcon } from "@/components/icons/payment/TabbyIcon";
 
-export function ProductInfo({}: { product: any }) {
+interface ProductInfoProps {
+  product: Product;
+}
+
+export function ProductInfo({ product }: ProductInfoProps) {
   const [quantity, setQuantity] = useState(1);
-  const [selectedColor, setSelectedColor] = useState<string | null>(null);
-  const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [showQuestionForm, setShowQuestionForm] = useState(false);
+  const [questionForm, setQuestionForm] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    message: "",
+  });
 
-  // Temporary data - replace with actual product data
-  const product = {
-    name: "اسم المنتج",
-    price: 199.99,
-    oldPrice: 249.99,
-    rating: 4.5,
-    reviewsCount: 120,
-    description: "وصف قصير للمنتج يظهر هنا ويمكن أن يكون في سطرين.",
-    colors: [
-      { name: "أحمر", value: "#FF0000" },
-      { name: "أزرق", value: "#0000FF" },
-      { name: "أخضر", value: "#00FF00" },
-    ],
-    sizes: ["S", "M", "L", "XL", "XXL"],
-    stock: 50,
-  };
-
-  const handleAddToCart = () => {
-    // Add to cart logic
-    console.log("Adding to cart:", {
-      quantity,
-      selectedColor,
-      selectedSize,
-    });
+  const handleQuestionSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Question submitted:", questionForm);
+    setShowQuestionForm(false);
   };
 
   return (
     <div className="space-y-6">
-      {/* Title and Rating */}
-      <div className="space-y-2">
-        <h1 className="text-2xl font-bold text-[#2C3E50]">{product.name}</h1>
-        <div className="flex items-center gap-4">
-          <RatingStars rating={product.rating} />
-          <span className="text-sm text-gray-500">
-            ({product.reviewsCount} تقييم)
-          </span>
+      <div className="flex items-center justify-between">
+        {/* Title */}
+        <h1 className="text-2xl  text-gray-900">{product.arabicTitle}</h1>
+        <div className="text-sm text-gray-500">رقم المنتج: ({product.id})</div>
+      </div>
+      {/* Rating and Stock */}
+      <div className="flex items-center justify-between">
+        {/* Brand Label */}
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-gray-600">العلامة التجارية:</span>
+          <span className="text-sm text-gray-900">جارنييه</span>
+        </div>
+
+        <div className="flex items-center gap-1">
+          {Array(5)
+            .fill(0)
+            .map((_, i) => (
+              <Star
+                key={i}
+                className={cn("size-4", {
+                  "text-yellow-400 fill-yellow-400": i < product.rating,
+                  "text-gray-300 fill-gray-300": i >= product.rating,
+                })}
+              />
+            ))}
+          <span className="text-sm text-gray-500">({product.reviewCount})</span>
+        </div>
+        <span className="text-sm text-green-600 font-medium">متوفر</span>
+
+        <div className="flex items-center gap-1 text-sm text-gray-500">
+          <span>تم البيع 18 مرة خلال اليوم</span>
+          <Info className="h-4 w-4" />
         </div>
       </div>
-
+      {/* Divider */}
+      <div className="h-[1px] w-full bg-[#E0E0E0]" />
       {/* Price */}
-      <div className="flex items-center gap-3">
-        <span className="text-2xl font-bold text-green-600">
-          {product.price} ج.م
-        </span>
-        {product.oldPrice && (
-          <span className="text-lg text-gray-400 line-through">
-            {product.oldPrice} ج.م
-          </span>
-        )}
+      <div className="flex items-center justify-between ">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <span className="text-2xl font-bold text-green-600">
+              {product.price}
+            </span>
+            <span className="text-sm font-medium  text-green-600">ر.س</span>
+          </div>
+          {product.originalPrice > product.price && (
+            <div className="flex items-center gap-1">
+              <span className="text-base text-gray-400 line-through">
+                {product.originalPrice}
+              </span>
+              <span className="text-sm text-gray-400">ر.س</span>
+            </div>
+          )}
+        </div>
+        <div className="flex items-center gap-2 bg-[#F2FBF6] rounded-lg px-3 py-1">
+          <span className="text-[#27AE60] text-sm">20 نقطة</span>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path
+              d="M13.3332 4L5.99984 11.3333L2.6665 8"
+              stroke="#27AE60"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </div>
       </div>
 
       {/* Description */}
       <p className="text-gray-600">{product.description}</p>
 
-      {/* Color Selection */}
-      <div className="space-y-3">
-        <span className="block font-medium">اللون</span>
-        <div className="flex gap-2">
-          {product.colors.map((color) => (
-            <ColorSwatch
-              key={color.value}
-              color={color}
-              isSelected={selectedColor === color.value}
-              onSelect={() => setSelectedColor(color.value)}
-            />
-          ))}
-        </div>
-      </div>
-
-      {/* Size Selection */}
-      <div className="space-y-3">
-        <span className="block font-medium">المقاس</span>
-        <div className="flex gap-2">
-          {product.sizes.map((size) => (
-            <SizeSelector
-              key={size}
-              size={size}
-              isSelected={selectedSize === size}
-              onSelect={() => setSelectedSize(size)}
-            />
-          ))}
-        </div>
-      </div>
-
       {/* Quantity and Add to Cart */}
       <div className="flex items-center gap-4">
-        <QuantitySelector
-          quantity={quantity}
-          onIncrease={() => setQuantity((q) => Math.min(q + 1, product.stock))}
-          onDecrease={() => setQuantity((q) => Math.max(q - 1, 1))}
-        />
-        <Button
-          onClick={handleAddToCart}
-          className="flex-1 h-12 bg-green-600 hover:bg-green-700"
-        >
-          أضف إلى السلة
-        </Button>
-        <Button
-          variant="outline"
-          size="icon"
-          className="h-12 w-12 border-gray-200"
-        >
-          <Heart className="h-6 w-6" />
+        <div className="flex items-center border border-gray-200 rounded-md">
+          <button
+            onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+            className="px-3 py-2 text-gray-600 hover:text-gray-900"
+          >
+            -
+          </button>
+          <span className="px-3 py-2 text-gray-900 min-w-[40px] text-center">
+            {quantity}
+          </span>
+          <button
+            onClick={() => setQuantity((q) => Math.min(product.stock, q + 1))}
+            className="px-3 py-2 text-gray-600 hover:text-gray-900"
+          >
+            +
+          </button>
+        </div>
+        <Button className="flex-1 bg-[#FF9B07] text-white hover:bg-[#F08C00] h-[42px]">
+          اضف لعربة التسوق س- {(product.price * quantity).toFixed(2)} ر.س
         </Button>
       </div>
 
-      {/* Share Buttons */}
-      <ShareButtons />
+      <div className="flex items-center justify-between ">
+        {/* Free Shipping */}
+        <div className="flex items-center gap-2 text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">
+          <Truck className="h-5 w-5 -scale-x-100" />
+          <div>
+            <span>توصيل مجاني للطلبات أعلى من </span>
+            <span className="font-medium">375 ر.س</span>
+          </div>
+        </div>
+
+        {/* Ask Question Section */}
+        <div className="space-y-4">
+          <button
+            onClick={() => setShowQuestionForm(!showQuestionForm)}
+            className="flex items-center gap-2 text-[#2D9CDB] hover:text-[#1E88C5] transition-colors"
+          >
+            <MessageSquare className="h-5 w-5" />
+            <span className="text-sm">ترغب فى طرح سؤال؟</span>
+          </button>
+
+          {showQuestionForm && (
+            <form
+              onSubmit={handleQuestionSubmit}
+              className="space-y-4 bg-gray-50 p-4 rounded-lg"
+            >
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  الاسم*
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={questionForm.name}
+                  onChange={(e) =>
+                    setQuestionForm({ ...questionForm, name: e.target.value })
+                  }
+                  placeholder="يرجاء إدخال الاسم"
+                  className="w-full p-2 border border-gray-300 rounded-md focus:ring-[#2D9CDB] focus:border-[#2D9CDB]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  رقم هاتف
+                </label>
+                <input
+                  type="tel"
+                  value={questionForm.phone}
+                  onChange={(e) =>
+                    setQuestionForm({ ...questionForm, phone: e.target.value })
+                  }
+                  placeholder="يرجاء إدخال رقم هاتفك"
+                  className="w-full p-2 border border-gray-300 rounded-md focus:ring-[#2D9CDB] focus:border-[#2D9CDB]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  البريد الإلكتروني*
+                </label>
+                <input
+                  type="email"
+                  required
+                  value={questionForm.email}
+                  onChange={(e) =>
+                    setQuestionForm({ ...questionForm, email: e.target.value })
+                  }
+                  placeholder="يرجاء إدخال البريد الإلكتروني"
+                  className="w-full p-2 border border-gray-300 rounded-md focus:ring-[#2D9CDB] focus:border-[#2D9CDB]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  الرسالة
+                </label>
+                <textarea
+                  value={questionForm.message}
+                  onChange={(e) =>
+                    setQuestionForm({
+                      ...questionForm,
+                      message: e.target.value,
+                    })
+                  }
+                  placeholder="يرجاء إدخال رسالتك"
+                  rows={4}
+                  className="w-full p-2 border border-gray-300 rounded-md focus:ring-[#2D9CDB] focus:border-[#2D9CDB]"
+                />
+              </div>
+
+              <Button type="submit" className="bg-[#27AE60] hover:bg-[#219653]">
+                إرسال
+              </Button>
+            </form>
+          )}
+        </div>
+      </div>
+      {/* Divider after Question Section */}
+      <div className="h-[1px] w-full bg-[#E0E0E0]" />
+
+      {/* Payment Methods */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <span className="text-sm text-gray-600">طرق الدفع المتاحة</span>
+          <div className="flex items-center gap-2">
+            <VisaIcon />
+            <MasterCardIcon />
+            <MadaIcon />
+          </div>
+        </div>
+        {/* <div className="flex items-center justify-between">
+          <span className="text-sm text-gray-600">يمكنك التقسيط بواسطة</span>
+          <div className="flex items-center gap-2">
+            <TamaraIcon />
+            <span className="text-gray-400 mx-1">أو</span>
+            <TabbyIcon />
+          </div>
+        </div> */}
+      </div>
     </div>
   );
 }

@@ -98,7 +98,7 @@ export default function LoginPage() {
           <FormField
             label="رقم الجوال"
             placeholder="رجاء إدخال رقم الجوال"
-            type="tel"
+              type="tel"
             dir="ltr"
             inputMode="numeric"
             error={errors.phoneNumber}
@@ -118,7 +118,7 @@ export default function LoginPage() {
               تذكرني
             </label>
           </div>
-
+          
           <Button
             type="submit"
             className="w-full h-12 bg-green-600 hover:bg-green-700 text-white rounded-lg text-base font-medium mt-6"
@@ -131,8 +131,8 @@ export default function LoginPage() {
         {/* Register link */}
         <div className="text-center mt-4 text-sm">
           <span className="text-[#2C3E50]">ليس لديك حساب؟ </span>
-          <Link
-            href="/auth/register"
+          <Link 
+            href="/auth/register" 
             className="text-blue-600 hover:underline font-medium"
           >
             أنشئ حساب الآن

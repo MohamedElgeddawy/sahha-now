@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useState } from "react";
-import Image from "next/image";
+import { useEffect, useState } from "react";
 import {
   Carousel,
   CarouselApi,
@@ -10,21 +9,9 @@ import {
 } from "@/components/ui/carousel";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { ChevronLeft, ChevronRight, Star } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import ProductCard from "./ProductCard";
-
-interface Product {
-  id: string;
-  title: string;
-  arabicTitle: string;
-  category: string;
-  image: string;
-  price: number;
-  originalPrice: number;
-  discount: number;
-  rating: number;
-  reviewCount: number;
-}
+import type { Product } from "@/lib/mock-data";
 
 interface ProductCarouselProps {
   title?: string;
@@ -33,7 +20,7 @@ interface ProductCarouselProps {
 }
 
 export default function ProductCarousel({
-  title,
+  title = "اكتشف منتجات أخرى قد تهمك",
   products,
   className,
 }: ProductCarouselProps) {
@@ -62,57 +49,54 @@ export default function ProductCarousel({
   }, [api]);
 
   return (
-    <div className={cn("w-full p-4", className)}>
-      {title && (
-        <div className="flex justify-between items-center mb-6 px-4">
-          <h2 className="text-2xl font-bold text-slate-700">{title}</h2>
+    <div className={cn("w-full", className)}>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-medium text-[#475569]">{title}</h2>
 
-          <div className="flex space-x-1">
-            <Button
-              size={"icon"}
-              onClick={() => api?.scrollPrev()}
-              disabled={!canScrollPrev}
-              className={cn(
-                "size-8 cursor-pointer rounded-full flex items-center justify-center",
-                canScrollPrev
-                  ? "bg-green-600 text-white"
-                  : "bg-gray-500 text-white border border-gray-200"
-              )}
-            >
-              <ChevronRight strokeWidth={4} />
-            </Button>
-            <Button
-              size={"icon"}
-              onClick={() => api?.scrollNext()}
-              disabled={!canScrollNext}
-              className={cn(
-                "size-8 cursor-pointer rounded-full flex items-center justify-center",
-                canScrollNext
-                  ? "bg-green-600 text-white"
-                  : "bg-gray-500 text-white border border-gray-200"
-              )}
-            >
-              <ChevronLeft strokeWidth={4} />
-            </Button>
-          </div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => api?.scrollPrev()}
+            disabled={!canScrollPrev}
+            className={cn(
+              "w-8 h-8 flex items-center justify-center rounded-full border border-gray-200",
+              canScrollPrev
+                ? "hover:bg-gray-50 text-gray-600"
+                : "opacity-50 cursor-not-allowed text-gray-400"
+            )}
+          >
+            <ChevronRight className="h-5 w-5" />
+          </button>
+          <button
+            onClick={() => api?.scrollNext()}
+            disabled={!canScrollNext}
+            className={cn(
+              "w-8 h-8 flex items-center justify-center rounded-full border border-gray-200",
+              canScrollNext
+                ? "hover:bg-gray-50 text-gray-600"
+                : "opacity-50 cursor-not-allowed text-gray-400"
+            )}
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </button>
         </div>
-      )}
+      </div>
 
       <Carousel
         setApi={setApi}
         opts={{
           align: "start",
+          loop: true,
           direction: "rtl",
         }}
         className="w-full"
       >
-        <CarouselContent>
+        <CarouselContent className="-ml-4">
           {products.map((product) => (
             <CarouselItem
               key={product.id}
-              className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/5 pe-4 ps-0"
+              className="pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
             >
-              <ProductCard {...{ product }} />
+              <ProductCard product={product} />
             </CarouselItem>
           ))}
         </CarouselContent>

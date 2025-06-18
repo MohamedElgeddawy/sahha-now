@@ -1,39 +1,41 @@
-import { RatingStars } from "@/components/ui/RatingStars";
+import { Star } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface ReviewItemProps {
-  review: {
-    id: number;
-    userName: string;
-    rating: number;
-    date: string;
-    comment: string;
-  };
+  userName: string;
+  rating: number;
+  date: string;
+  comment: string;
 }
 
-export function ReviewItem({ review }: ReviewItemProps) {
-  const formattedDate = new Date(review.date).toLocaleDateString("ar-EG", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-
+export function ReviewItem({
+  userName,
+  rating,
+  date,
+  comment,
+}: ReviewItemProps) {
   return (
-    <div className="border-b border-gray-200 pb-6">
-      <div className="flex items-center justify-between mb-2">
+    <div className="space-y-3 border-b border-gray-100 pb-4">
+      <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
-            <span className="text-green-600 font-medium">
-              {review.userName.charAt(0)}
-            </span>
-          </div>
-          <div>
-            <h4 className="font-medium text-gray-900">{review.userName}</h4>
-            <p className="text-sm text-gray-500">{formattedDate}</p>
+          <span className="font-medium text-gray-900">{userName}</span>
+          <div className="flex items-center gap-1">
+            {Array(5)
+              .fill(0)
+              .map((_, i) => (
+                <Star
+                  key={i}
+                  className={cn("size-4", {
+                    "text-yellow-400 fill-yellow-400": i < rating,
+                    "text-gray-300 fill-gray-300": i >= rating,
+                  })}
+                />
+              ))}
           </div>
         </div>
-        <RatingStars rating={review.rating} size="sm" />
+        <span className="text-sm text-gray-500">{date}</span>
       </div>
-      <p className="text-gray-700">{review.comment}</p>
+      <p className="text-gray-600">{comment}</p>
     </div>
   );
-} 
+}
