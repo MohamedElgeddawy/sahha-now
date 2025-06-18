@@ -17,7 +17,6 @@ import { register as registerApi } from "@/lib/api/auth";
 
 export default function RegisterPage() {
   const {
-   
     handleSubmit,
     formState: { isSubmitting },
     control,
@@ -193,11 +192,19 @@ export default function RegisterPage() {
           />
           <label htmlFor="terms" className="text-sm text-gray-600">
             أوافق على{" "}
-            <Link href="/terms" className="text-green-600 hover:underline">
+            <Link
+              prefetch
+              href="/terms"
+              className="text-green-600 hover:underline"
+            >
               الشروط والأحكام
             </Link>{" "}
             و{" "}
-            <Link href="/privacy" className="text-green-600 hover:underline">
+            <Link
+              prefetch
+              href="/privacy"
+              className="text-green-600 hover:underline"
+            >
               سياسة الخصوصية
             </Link>
           </label>
@@ -213,6 +220,7 @@ export default function RegisterPage() {
 
         <div className="text-center mt-4">
           <Link
+            prefetch
             href="/auth/login"
             className="text-green-600 hover:underline text-sm font-medium"
           >

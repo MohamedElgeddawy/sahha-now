@@ -138,6 +138,7 @@ export default function LoginPage() {
           <span className="text-[#2C3E50]">ليس لديك حساب؟ </span>
           <Link
             href="/auth/register"
+            prefetch
             className="text-blue-600 hover:underline font-medium"
           >
             أنشئ حساب الآن

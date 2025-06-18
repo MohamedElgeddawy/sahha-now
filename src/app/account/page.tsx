@@ -25,17 +25,17 @@ export default function AccountPage() {
           </h2>
           <ul className="space-y-3">
             <li>
-              <Link href="#" className="text-gray-600 hover:text-green-600">
+              <Link prefetch href="#" className="text-gray-600 hover:text-green-600">
                 تسجل بعد الحقوق
               </Link>
             </li>
             <li>
-              <Link href="#" className="text-gray-600 hover:text-green-600">
+              <Link prefetch href="#" className="text-gray-600 hover:text-green-600">
                 سياسة الخصوصية
               </Link>
             </li>
             <li>
-              <Link href="#" className="text-gray-600 hover:text-green-600">
+              <Link prefetch href="#" className="text-gray-600 hover:text-green-600">
                 تواجد معنا
               </Link>
             </li>
@@ -50,7 +50,7 @@ export default function AccountPage() {
             <ul className="space-y-2 text-sm">
               {["من أخذ", "الشروط والذكاء", "سياسة الخصوصية", "تواجد معنا"].map((item, index) => (
                 <li key={index}>
-                  <Link href="#" className="text-gray-600 hover:text-green-600">
+                  <Link prefetch href="#" className="text-gray-600 hover:text-green-600">
                     {item}
                   </Link>
                 </li>
@@ -64,7 +64,7 @@ export default function AccountPage() {
             <ul className="space-y-2 text-sm">
               {["المرجع", "الماركات", "جميع الشالت", "المتجدات الجديدة"].map((item, index) => (
                 <li key={index}>
-                  <Link href="#" className="text-gray-600 hover:text-green-600">
+                  <Link prefetch href="#" className="text-gray-600 hover:text-green-600">
                     {item}
                   </Link>
                 </li>
@@ -78,7 +78,7 @@ export default function AccountPage() {
             <ul className="space-y-2 text-sm">
               {["الرئيس", "حدة", "العدام", "خرينك النورج"].map((item, index) => (
                 <li key={index}>
-                  <Link href="#" className="text-gray-600 hover:text-green-600">
+                  <Link prefetch href="#" className="text-gray-600 hover:text-green-600">
                     {item}
                   </Link>
                 </li>
@@ -94,6 +94,7 @@ export default function AccountPage() {
           {["من نحن", "الشروط والتحكم", "سياسة الحكومية", "تواصل معنا"].map((link, index) => (
             <Link 
               key={index} 
+              prefetch
               href="#"
               className="text-gray-500 hover:text-green-600 hover:underline"
             >

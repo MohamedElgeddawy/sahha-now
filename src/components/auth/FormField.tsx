@@ -20,7 +20,7 @@ export function FormField({
   ...props
 }: FormFieldProps) {
   return (
-    <div dir={props?.dir} className="space-y-2">
+    <div className="space-y-2">
       <label
         htmlFor={name}
         className="block text-sm font-medium text-gray-700 text-right"
@@ -29,7 +29,7 @@ export function FormField({
       </label>
       <div className="relative">
         {startElement && (
-          <div className="absolute w-fit ltr:left-3 rtl:right-3 top-1/2 transform -translate-y-1/2 text-sm text-gray-600">
+          <div className="absolute w-fit rtl:left-3 ltr:right-3 top-1/2 transform -translate-y-1/2 text-sm text-gray-600">
             {startElement}
           </div>
         )}

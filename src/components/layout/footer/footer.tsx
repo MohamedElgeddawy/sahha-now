@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#F8F9FA] text-[#2C3E50] pt-6 pb-4 mt-16 font-[Cairo]">
+    <footer className="bg-[#F8F9FA] text-[#2C3E50] pt-24 pb-4">
       <div className="container mx-auto px-4">
         {/* Footer columns - 3 columns */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
@@ -16,6 +16,7 @@ export default function Footer() {
             <ul className="space-y-3 text-gray-600">
               <li>
                 <Link
+                  prefetch
                   href="#"
                   className="hover:text-green-600 transition-colors block"
                 >
@@ -24,6 +25,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
+                  prefetch
                   href="#"
                   className="hover:text-green-600 transition-colors block"
                 >
@@ -32,6 +34,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
+                  prefetch
                   href="#"
                   className="hover:text-green-600 transition-colors block"
                 >
@@ -40,6 +43,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
+                  prefetch
                   href="#"
                   className="hover:text-green-600 transition-colors block"
                 >
@@ -57,6 +61,7 @@ export default function Footer() {
             <ul className="space-y-3 text-gray-600">
               <li>
                 <Link
+                  prefetch
                   href="#"
                   className="hover:text-green-600 transition-colors block"
                 >
@@ -65,6 +70,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
+                  prefetch
                   href="#"
                   className="hover:text-green-600 transition-colors block"
                 >
@@ -73,6 +79,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
+                  prefetch
                   href="#"
                   className="hover:text-green-600 transition-colors block"
                 >
@@ -81,6 +88,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
+                  prefetch
                   href="#"
                   className="hover:text-green-600 transition-colors block"
                 >
@@ -98,6 +106,7 @@ export default function Footer() {
             <ul className="space-y-3 text-gray-600">
               <li>
                 <Link
+                  prefetch
                   href="#"
                   className="hover:text-green-600 transition-colors block"
                 >
@@ -106,6 +115,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
+                  prefetch
                   href="#"
                   className="hover:text-green-600 transition-colors block"
                 >
@@ -114,6 +124,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
+                  prefetch
                   href="#"
                   className="hover:text-green-600 transition-colors block"
                 >
@@ -122,6 +133,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
+                  prefetch
                   href="#"
                   className="hover:text-green-600 transition-colors block"
                 >
@@ -138,7 +150,7 @@ export default function Footer() {
             <div className="flex flex-wrap gap-x-12 gap-y-2 items-center">
               <div className="flex gap-3 order-1">
                 {/* Google Play Button */}
-                <Link href="#" className="block">
+                <Link prefetch href="#" className="block">
                   <div className="bg-black text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-800 transition-colors min-w-[140px]">
                     <Image
                       src={"/icons/social/google-play.svg"}
@@ -154,7 +166,7 @@ export default function Footer() {
                 </Link>
 
                 {/* App Store Button */}
-                <Link href="#" className="block">
+                <Link prefetch href="#" className="block">
                   <div className="bg-black text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-800 transition-colors min-w-[140px]">
                     <Image
                       src={"/icons/social/apple.svg"}
@@ -174,6 +186,7 @@ export default function Footer() {
 
               <div className="flex items-center gap-4 order-2">
                 <Link
+                  prefetch
                   href="#"
                   className="text-gray-500 hover:text-green-600 transition-colors"
                 >
@@ -185,6 +198,7 @@ export default function Footer() {
                   />
                 </Link>
                 <Link
+                  prefetch
                   href="#"
                   className="text-gray-500 hover:text-green-600 transition-colors"
                 >
@@ -196,6 +210,7 @@ export default function Footer() {
                   />
                 </Link>
                 <Link
+                  prefetch
                   href="#"
                   className="text-gray-500 hover:text-green-600 transition-colors"
                 >
@@ -207,6 +222,7 @@ export default function Footer() {
                   />
                 </Link>
                 <Link
+                  prefetch
                   href="#"
                   className="text-gray-500 hover:text-green-600 transition-colors"
                 >
@@ -218,6 +234,7 @@ export default function Footer() {
                   />
                 </Link>
                 <Link
+                  prefetch
                   href="#"
                   className="text-gray-500 hover:text-green-600 transition-colors"
                 >
@@ -237,7 +254,7 @@ export default function Footer() {
                 <p>© 2025 جميع الحقوق محفوظة لـ صحة ناو</p>
               </div>
               <div className="flex-shrink-0">
-                <Link href="/" className="flex items-center">
+                <Link prefetch href="/" className="flex items-center">
                   <SahhaNowArabicLogo />
                 </Link>
               </div>

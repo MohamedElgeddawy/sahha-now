@@ -13,6 +13,7 @@ type Props = {
 const ProductCard = ({ product }: Props) => {
   return (
     <Link
+      prefetch
       href={`/products/${product.id}`}
       className="group block bg-white rounded-lg border border-gray-100 p-4"
     >

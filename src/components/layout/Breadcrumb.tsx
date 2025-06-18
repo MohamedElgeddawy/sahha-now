@@ -20,6 +20,7 @@ export function Breadcrumb({ items }: BreadcrumbProps) {
               <span className="font-medium">{item.label}</span>
             ) : (
               <Link
+                prefetch
                 href={item.href}
                 className="hover:text-green-600 transition-colors"
               >

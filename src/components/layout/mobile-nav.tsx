@@ -85,6 +85,7 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
                   {category.links.map((link, linkIndex) => (
                     <li key={linkIndex}>
                       <Link
+                        prefetch
                         href="#"
                         className="text-gray-600 hover:text-green-500"
                         onClick={onClose}
@@ -101,6 +102,7 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
 
         <div className="p-4 border-t border-gray-200">
           <Link
+            prefetch
             href="/branches"
             className="flex items-center gap-2 text-gray-700 hover:text-green-500 mb-4"
             onClick={onClose}
@@ -109,6 +111,7 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
             <span>فروعنا</span>
           </Link>
           <Link
+            prefetch
             href="/contact"
             className="flex items-center gap-2 text-gray-700 hover:text-green-500"
             onClick={onClose}

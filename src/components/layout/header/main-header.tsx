@@ -40,7 +40,11 @@ export function MainHeader() {
         <div className="flex items-center justify-between">
           {/* Right Section - Logo */}
           <div className="flex-shrink-0 mr-4">
-            <Link href="/" className="flex items-center gap-3">
+            <Link
+              prefetch
+              href="/"
+              className="flex items-center gap-3"
+            >
               <SahhaNowArabicLogo />
               <SahhaNowEnglishLogo />
             </Link>
@@ -64,6 +68,7 @@ export function MainHeader() {
                   {categories.map((category) => (
                     <DropdownMenuItem key={category.href} asChild>
                       <Link
+                        prefetch
                         href={category.href}
                         className="w-full text-right py-2 px-4 hover:bg-gray-50 text-[#2C3E50] text-[16px]"
                       >
@@ -149,7 +154,7 @@ function ActionButton({
       size="icon"
       className="relative text-[#2C3E50] hover:bg-gray-100"
     >
-      <Link href={href}>
+      <Link prefetch href={href}>
         {icon}
         {count !== undefined && count > 0 && (
           <span className="absolute top-0 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-green-600 text-xs font-bold text-white">

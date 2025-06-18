@@ -15,7 +15,10 @@ export const metadata: Metadata = {
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ar" dir="rtl">
-      <body className={`${cairo.className} min-h-screen flex flex-col`}>
+      <body
+        suppressHydrationWarning
+        className={`${cairo.className} min-h-screen flex flex-col`}
+      >
         <Header />
         <Container>{children}</Container>
         <Footer />

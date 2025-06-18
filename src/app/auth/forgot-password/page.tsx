@@ -97,6 +97,7 @@ export default function ForgotPasswordPage() {
 
           <div className="text-center mt-4">
             <Link
+              prefetch
               href="/auth/login"
               className="text-green-600 hover:underline text-sm font-medium"
             >

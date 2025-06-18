@@ -17,10 +17,10 @@ export function RelatedProducts({ products }: RelatedProductsProps) {
         </h2>
         <div className="flex items-center gap-2">
           <button className="p-1 rounded-full border border-gray-200 hover:bg-gray-50">
-            <ChevronRight className="h-5 w-5 text-gray-600" />
+            <ChevronRight className="size-5 text-gray-600" />
           </button>
           <button className="p-1 rounded-full border border-gray-200 hover:bg-gray-50">
-            <ChevronLeft className="h-5 w-5 text-gray-600" />
+            <ChevronLeft className="size-5 text-gray-600" />
           </button>
         </div>
       </div>
@@ -28,6 +28,7 @@ export function RelatedProducts({ products }: RelatedProductsProps) {
       <div className="grid grid-cols-4 gap-6">
         {products.map((product) => (
           <Link
+            prefetch
             key={product.id}
             href={`/products/${product.id}`}
             className="group"

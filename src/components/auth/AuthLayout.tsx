@@ -1,4 +1,5 @@
 // components/auth/AuthLayout.jsx
+import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { ReactNode } from "react";
 
@@ -16,20 +17,22 @@ export const AuthLayout = ({
   aboveCard,
 }: AuthLayoutProps) => {
   return (
-    <div className="min-h-screen bg-[#F8F9FA] py-6 px-4" dir="rtl">
+    <div className="min-h-screen bg-[#F8F9FA] py-6 px-4">
       <div className="max-w-[1224px] mx-auto">
         {/* Breadcrumb */}
         <div className="mb-8">
           <nav className="text-[#2C3E50]">
-            <ol className="flex items-center">
+            <ul className="flex items-center">
               <li>
-                <Link href="/" className="hover:text-green-600">
+                <Link prefetch href="/" className="hover:text-green-600">
                   الرئيسية
                 </Link>
               </li>
-              <li className="mx-2">&lt;</li>
+              <li className="mx-2">
+                <ChevronLeft className="ltr:rotate-180 size-4" />
+              </li>
               <li className="font-medium">حسابي</li>
-            </ol>
+            </ul>
           </nav>
         </div>
 

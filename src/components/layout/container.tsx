@@ -10,7 +10,7 @@ export function Container({ children, className }: ContainerProps) {
   return (
     <main
       className={cn(
-        "mx-auto flex-1 container px-4",
+        "mx-auto flex-1 bg-[#F8F9FA] container px-4",
         className
       )}
     >
