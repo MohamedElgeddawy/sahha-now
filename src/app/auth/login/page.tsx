@@ -9,17 +9,16 @@ import { AuthLayout } from "@/components/auth/AuthLayout";
 import { SocialLoginButtons } from "@/components/auth/SocialLoginButtons";
 import { AuthSeparator } from "@/components/auth/AuthSeparator";
 import { FormField } from "@/components/auth/FormField";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { login as loginApi } from "@/lib/api/auth";
 import { toast } from "sonner";
+import { Controller, useForm } from "react-hook-form";
 
 const loginSchema = z.object({
   mobile: z
     .string()
-    //.min(9, "رقم الهاتف يجب أن يكون 9 أرقام على الأقل")
-    //.max(9, "رقم الهاتف يجب أن يكون 9 أرقام")
+
     .regex(/^[0-9]+$/, "رقم الهاتف يجب أن يحتوي على أرقام فقط"),
 });
 
@@ -29,10 +28,14 @@ export default function LoginPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { isSubmitting },
+    control,
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     mode: "all",
+    defaultValues: {
+      mobile: "",
+    },
   });
 
   const [rememberMe, setRememberMe] = useState(false);
@@ -95,15 +98,17 @@ export default function LoginPage() {
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <FormField
-            label="رقم الجوال"
-            placeholder="رجاء إدخال رقم الجوال"
-            type="tel"
-            dir="ltr"
-            inputMode="numeric"
-            error={errors.mobile}
-            endElement="+966"
-            {...register("mobile")}
+          <Controller
+            control={control}
+            name="mobile"
+            render={({ field, fieldState: { error } }) => (
+              <FormField
+                label="رقم الجوال"
+                placeholder="رجاء إدخال رقم الجوال"
+                error={error}
+                {...field}
+              />
+            )}
           />
 
           {/* Remember me */}

@@ -1,27 +1,39 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { AuthLayout } from "@/components/auth/AuthLayout";
 import { verifyOtp } from "@/lib/api/auth";
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { OtpFormData, otpSchema } from "@/lib/schemas/auth";
 
 export default function OTPVerificationPage() {
-  const [otp, setOtp] = useState<string[]>(Array(6).fill(""));
-  const [isLoading, setIsLoading] = useState(false);
   const [resendTimer, setResendTimer] = useState(30);
   const router = useRouter();
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const [mobile, setPhoneNumber] = useState<string | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
+
+  const {
+    control,
+    handleSubmit,
+    formState: { isSubmitting },
+    setValue,
+    watch,
+  } = useForm<OtpFormData>({
+    resolver: zodResolver(otpSchema),
+    defaultValues: {
+      otp: "",
+      mobile: "",
+    },
+  });
 
   // Check if phone number exists
   useEffect(() => {
     const storedPhoneNumber = sessionStorage.getItem("mobile");
-
-    // If no phone number in session, check localStorage (for remember me)
     const rememberedPhone = localStorage.getItem("mobile");
 
     if (!storedPhoneNumber && !rememberedPhone) {
@@ -29,7 +41,9 @@ export default function OTPVerificationPage() {
       return;
     }
 
-    setPhoneNumber(storedPhoneNumber || rememberedPhone);
+    const phone = storedPhoneNumber || rememberedPhone;
+    setPhoneNumber(phone);
+    setValue("mobile", phone || "");
     setIsInitialized(true);
 
     // Set countdown timer
@@ -44,99 +58,28 @@ export default function OTPVerificationPage() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [router]);
+  }, [router, setValue]);
 
   // Don't render anything until we check the session
   if (!isInitialized) {
     return null;
   }
 
-  // Handle OTP input change
-  const handleOtpChange = (index: number, value: string) => {
-    // Only allow numbers
-    if (!/^\d*$/.test(value)) return;
-
-    if (value.length > 1) {
-      // If pasting multiple numbers
-      const numbers = value.split("").slice(0, 6);
-      const newOtp = [...otp];
-      numbers.forEach((num, idx) => {
-        if (idx + index < 6) {
-          newOtp[idx + index] = num;
-        }
-      });
-      setOtp(newOtp);
-
-      // Focus the next empty input or the last input
-      const nextIndex = Math.min(index + numbers.length, 5);
-      inputRefs.current[nextIndex]?.focus();
-    } else {
-      // Single number input
-      const newOtp = [...otp];
-      newOtp[index] = value;
-      setOtp(newOtp);
-
-      // Auto-focus next input
-      if (value && index < 5) {
-        inputRefs.current[index + 1]?.focus();
-      }
-    }
-  };
-
-  // Handle backspace
-  const handleKeyDown = (
-    index: number,
-    e: React.KeyboardEvent<HTMLInputElement>
-  ) => {
-    if (e.key === "Backspace") {
-      if (!otp[index] && index > 0) {
-        // If current input is empty, move to previous input
-        const newOtp = [...otp];
-        newOtp[index - 1] = "";
-        setOtp(newOtp);
-        inputRefs.current[index - 1]?.focus();
-      } else {
-        // Clear current input
-        const newOtp = [...otp];
-        newOtp[index] = "";
-        setOtp(newOtp);
-      }
-    }
-  };
-
-  // Handle form submission
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const otpValue = otp.join("");
-    if (otpValue.length !== 6) {
-      toast.error("يرجى إدخال رمز التحقق كاملاً");
-      return;
-    }
-
-    if (!mobile) {
-      toast.error("رقم الهاتف غير موجود");
-      return;
-    }
-
-    setIsLoading(true);
+  const onSubmit = async (data: OtpFormData) => {
     try {
-      await verifyOtp({ mobile, otp: otpValue });
+      await verifyOtp(data);
       toast.success("تم التحقق بنجاح");
       router.push("/");
     } catch (error) {
       toast.error(
         error instanceof Error ? error.message : "رمز التحقق غير صحيح"
       );
-    } finally {
-      setIsLoading(false);
     }
   };
 
   // Handle resend OTP
   const handleResend = async () => {
     if (resendTimer > 0) return;
-
     setResendTimer(30);
     toast.success("تم إرسال رمز جديد");
   };
@@ -150,26 +93,69 @@ export default function OTPVerificationPage() {
           : undefined
       }
     >
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* OTP inputs */}
         <div className="flex justify-center gap-3 mb-8">
-          {otp.map((digit, index) => (
-            <Input
-              key={index}
-              ref={(el) => {
-                inputRefs.current[index] = el;
-              }}
-              type="text"
-              inputMode="numeric"
-              pattern="[0-9]*"
-              maxLength={6}
-              value={digit}
-              onChange={(e) => handleOtpChange(index, e.target.value)}
-              onKeyDown={(e) => handleKeyDown(index, e)}
-              className="w-[52px] h-[52px] text-center text-lg font-bold border-gray-300 rounded-lg focus:border-green-500 focus:ring-green-500"
-              required
-            />
-          ))}
+          <Controller
+            control={control}
+            name="otp"
+            render={({ field: { onChange, value }, fieldState: { error } }) => (
+              <div className="flex flex-col items-center gap-2 w-full">
+                <div className="flex justify-center gap-3">
+                  {Array(6)
+                    .fill(0)
+                    .map((_, index) => (
+                      <Input
+                        key={index}
+                        type="text"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
+                        maxLength={1}
+                        value={value[index] || ""}
+                        onChange={(e) => {
+                          const newValue =
+                            value.slice(0, index) +
+                            e.target.value +
+                            value.slice(index + 1);
+                          onChange(newValue);
+
+                          // Auto-focus next input
+                          if (e.target.value && index < 5) {
+                            const nextInput =
+                              e.target.parentElement?.nextElementSibling?.querySelector(
+                                "input"
+                              );
+                            if (nextInput) nextInput.focus();
+                          }
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === "Backspace") {
+                            if (!value[index] && index > 0) {
+                              // If current input is empty, move to previous input
+                              const prevInput =
+                                e.currentTarget.parentElement?.previousElementSibling?.querySelector(
+                                  "input"
+                                );
+                              if (prevInput) prevInput.focus();
+                            }
+                            const newValue =
+                              value.slice(0, index) +
+                              "" +
+                              value.slice(index + 1);
+                            onChange(newValue);
+                          }
+                        }}
+                        className="w-[52px] h-[52px] text-center text-lg font-bold border-gray-300 rounded-lg focus:border-green-500 focus:ring-green-500"
+                        required
+                      />
+                    ))}
+                </div>
+                {error && (
+                  <span className="text-sm text-red-500">{error.message}</span>
+                )}
+              </div>
+            )}
+          />
         </div>
 
         <div className="text-center text-sm text-gray-500 mb-6">
@@ -193,9 +179,9 @@ export default function OTPVerificationPage() {
         <Button
           type="submit"
           className="w-full h-12 bg-green-600 hover:bg-green-700 text-white rounded-lg text-base font-semibold"
-          disabled={isLoading}
+          disabled={isSubmitting}
         >
-          {isLoading ? "جاري التحقق..." : "تحقق وأكمل التسجيل"}
+          {isSubmitting ? "جاري التحقق..." : "تحقق وأكمل التسجيل"}
         </Button>
       </form>
     </AuthLayout>

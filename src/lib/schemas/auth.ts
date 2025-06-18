@@ -14,5 +14,14 @@ export const loginSchema = z.object({
     .regex(/^01[0125][0-9]{8}$/, "رقم الهاتف غير صحيح"),
 });
 
+export const otpSchema = z.object({
+  otp: z
+    .string()
+    .length(6, "رمز التحقق يجب أن يكون 6 أرقام")
+    .regex(/^\d+$/, "رمز التحقق يجب أن يحتوي على أرقام فقط"),
+  mobile: z.string(),
+});
+
 export type RegisterFormData = z.infer<typeof registerSchema>;
 export type LoginFormData = z.infer<typeof loginSchema>;
+export type OtpFormData = z.infer<typeof otpSchema>;

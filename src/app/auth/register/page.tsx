@@ -24,6 +24,9 @@ export default function RegisterPage() {
   } = useForm<RegisterFormData>({
     mode: "all",
     resolver: zodResolver(registerSchema),
+    defaultValues: { 
+      mobile: ""
+    }
   });
 
   const [agreeTerms, setAgreeTerms] = useState(false);
