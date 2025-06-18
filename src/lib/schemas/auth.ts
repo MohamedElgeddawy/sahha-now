@@ -1,18 +1,16 @@
-import * as z from "zod";
+import { z } from "zod";
 
 export const registerSchema = z.object({
-  fullName: z.string(),
-  phoneNumber: z.string(),
-
+  fullname: z.string(),
+  mobile: z.string(),
   email: z.string().email("البريد الإلكتروني غير صحيح"),
-  age: z.number(),
+  age: z.number().min(18, "يجب أن يكون العمر أكبر من 18 سنة"),
 });
 
 export const loginSchema = z.object({
-  phoneNumber: z
+  mobile: z
     .string()
-    .min(11, "رقم الهاتف يجب أن يكون 11 رقم")
-    .max(11, "رقم الهاتف يجب أن يكون 11 رقم")
+    .length(11, "رقم الهاتف يجب أن يكون 11 رقم")
     .regex(/^01[0125][0-9]{8}$/, "رقم الهاتف غير صحيح"),
 });
 

@@ -9,7 +9,7 @@ import { AuthLayout } from "@/components/auth/AuthLayout";
 import { SocialLoginButtons } from "@/components/auth/SocialLoginButtons";
 import { AuthSeparator } from "@/components/auth/AuthSeparator";
 import { toast } from "sonner";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RegisterFormData, registerSchema } from "@/lib/schemas/auth";
 import { FormField } from "@/components/auth/FormField";
@@ -17,10 +17,12 @@ import { register as registerApi } from "@/lib/api/auth";
 
 export default function RegisterPage() {
   const {
-    register,
+   
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { isSubmitting },
+    control,
   } = useForm<RegisterFormData>({
+    mode: "all",
     resolver: zodResolver(registerSchema),
   });
 
@@ -37,8 +39,7 @@ export default function RegisterPage() {
       await registerApi(data);
 
       // Store phone number for OTP verification
-      sessionStorage.setItem("phoneNumber", data.phoneNumber);
-
+      sessionStorage.setItem("mobile", data.mobile);
       toast.success("تم إرسال رمز التحقق بنجاح");
 
       // Navigate to OTP verification
@@ -92,41 +93,71 @@ export default function RegisterPage() {
 
         {/* Name and Phone in a row */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <FormField
-            label="الاسم"
-            placeholder="برجاء إدخال الاسم"
-            error={errors.fullName}
-            {...register("fullName")}
+          <Controller
+            control={control}
+            name="fullname"
+            render={({ field, fieldState: { error } }) => (
+              <FormField
+                label="الاسم"
+                placeholder="برجاء إدخال الاسم"
+                error={error}
+                {...field}
+              />
+            )}
           />
 
-          <FormField
-            label="رقم الهاتف"
-            placeholder="برجاء إدخال رقم الهاتف"
-            type="tel"
-            dir="ltr"
-            inputMode="numeric"
-            error={errors.phoneNumber}
-            leftElement="+966"
-            {...register("phoneNumber")}
+          <Controller
+            control={control}
+            name="mobile"
+            render={({ field, fieldState: { error } }) => (
+              <FormField
+                label="رقم الهاتف"
+                placeholder="برجاء إدخال رقم الهاتف"
+                type="tel"
+                dir="ltr"
+                inputMode="numeric"
+                error={error}
+                startElement="+966"
+                {...field}
+              />
+            )}
           />
         </div>
 
         {/* Email and Age in a row */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <FormField
-            label="البريد الإلكتروني"
-            placeholder="برجاء إدخال البريد الإلكتروني"
-            type="email"
-            error={errors.email}
-            {...register("email")}
+          <Controller
+            control={control}
+            name="email"
+            render={({ field, fieldState: { error } }) => (
+              <FormField
+                label="البريد الإلكتروني"
+                placeholder="برجاء إدخال البريد الإلكتروني"
+                type="email"
+                error={error}
+                {...field}
+              />
+            )}
           />
 
-          <FormField
-            label="العمر"
-            placeholder="برجاء إدخال العمر"
-            type="number"
-            error={errors.age}
-            {...register("age")}
+          <Controller
+            control={control}
+            name="age"
+            render={({
+              field: { onChange, ...field },
+              fieldState: { error },
+            }) => (
+              <FormField
+                label="العمر"
+                placeholder="برجاء إدخال العمر"
+                type="number"
+                error={error}
+                {...field}
+                onChange={(e) => {
+                  onChange(Number(e.currentTarget.value));
+                }}
+              />
+            )}
           />
         </div>
 

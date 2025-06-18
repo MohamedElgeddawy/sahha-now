@@ -14,15 +14,15 @@ export default function OTPVerificationPage() {
   const [resendTimer, setResendTimer] = useState(30);
   const router = useRouter();
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
-  const [phoneNumber, setPhoneNumber] = useState<string | null>(null);
+  const [mobile, setPhoneNumber] = useState<string | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
 
   // Check if phone number exists
   useEffect(() => {
-    const storedPhoneNumber = sessionStorage.getItem("phoneNumber");
+    const storedPhoneNumber = sessionStorage.getItem("mobile");
 
     // If no phone number in session, check localStorage (for remember me)
-    const rememberedPhone = localStorage.getItem("phoneNumber");
+    const rememberedPhone = localStorage.getItem("mobile");
 
     if (!storedPhoneNumber && !rememberedPhone) {
       router.replace("/auth/login");
@@ -114,14 +114,14 @@ export default function OTPVerificationPage() {
       return;
     }
 
-    if (!phoneNumber) {
+    if (!mobile) {
       toast.error("رقم الهاتف غير موجود");
       return;
     }
 
     setIsLoading(true);
     try {
-      await verifyOtp(phoneNumber, otpValue);
+      await verifyOtp({ mobile, otp: otpValue });
       toast.success("تم التحقق بنجاح");
       router.push("/");
     } catch (error) {
@@ -145,8 +145,8 @@ export default function OTPVerificationPage() {
     <AuthLayout
       title="أدخل رمز التحقق المرسل إلى جوالك"
       description={
-        phoneNumber
-          ? `لقد أرسلنا رمز تحقق مكون من 6 أرقام إلى الرقم: +966${phoneNumber}`
+        mobile
+          ? `لقد أرسلنا رمز تحقق مكون من 6 أرقام إلى الرقم: +966${mobile}`
           : undefined
       }
     >
