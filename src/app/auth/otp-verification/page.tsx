@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { AuthLayout } from "@/components/auth/AuthLayout";
-import { verifyOtp } from "@/lib/api/auth";
+import { login } from "@/lib/api/auth";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { OtpFormData, otpSchema } from "@/lib/schemas/auth";
@@ -58,7 +58,7 @@ export default function OTPVerificationPage() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [router, setValue]);
+  }, []);
 
   // Don't render anything until we check the session
   if (!isInitialized) {
@@ -67,7 +67,10 @@ export default function OTPVerificationPage() {
 
   const onSubmit = async (data: OtpFormData) => {
     try {
-      await verifyOtp(data);
+      const res = await login({ ...data });
+      localStorage.setItem("accessToken", res.accessToken);
+      localStorage.setItem("refreshToken", res.refreshToken);
+      
       toast.success("تم التحقق بنجاح");
       router.push("/");
     } catch (error) {
@@ -145,7 +148,7 @@ export default function OTPVerificationPage() {
                             onChange(newValue);
                           }
                         }}
-                        className="w-[52px] h-[52px] text-center text-lg font-bold border-gray-300 rounded-lg focus:border-green-500 focus:ring-green-500"
+                        className="size-20 text-center !text-xl font-bold border-gray-300 rounded-lg focus:border-green-500 focus:ring-green-500"
                         required
                       />
                     ))}

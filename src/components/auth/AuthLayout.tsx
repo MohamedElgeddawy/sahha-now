@@ -18,7 +18,7 @@ export const AuthLayout = ({
 }: AuthLayoutProps) => {
   return (
     <div className="min-h-screen bg-[#F8F9FA] py-6 px-4">
-      <div className="max-w-[1224px] mx-auto">
+      <div className="container mx-auto">
         {/* Breadcrumb */}
         <div className="mb-8">
           <nav className="text-[#2C3E50]">

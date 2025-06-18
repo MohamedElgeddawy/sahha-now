@@ -9,7 +9,12 @@ export async function verifyOtp(data: { mobile: string; otp: string }) {
   const response = await sahhaInstance.post(`auth/verify-otp`, data);
   return response.data;
 }
-export async function login(data: { mobile: string }) {
+
+export async function generateOtp(data: { mobile: string }) {
+  const response = await sahhaInstance.post(`auth/otp/send`, data);
+  return response.data;
+}
+export async function login(data: { mobile: string; otp: string }) {
   const response = await sahhaInstance.post(`auth/login`, data);
   return response.data;
 }
@@ -19,9 +24,11 @@ export async function forgotPassword(data: { mobile: string }) {
   return response.data;
 }
 
-export async function resetPassword(
-  data: { mobile: string; otp: string; newPassword: string }
-) {
+export async function resetPassword(data: {
+  mobile: string;
+  otp: string;
+  newPassword: string;
+}) {
   const response = await sahhaInstance.post(`auth/reset-password`, data);
   return response.data;
 }

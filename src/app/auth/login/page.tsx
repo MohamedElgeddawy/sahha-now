@@ -11,7 +11,7 @@ import { AuthSeparator } from "@/components/auth/AuthSeparator";
 import { FormField } from "@/components/auth/FormField";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { login as loginApi } from "@/lib/api/auth";
+import { generateOtp, login as loginApi } from "@/lib/api/auth";
 import { toast } from "sonner";
 import { Controller, useForm } from "react-hook-form";
 
@@ -43,7 +43,7 @@ export default function LoginPage() {
 
   const onSubmit = async (data: LoginFormData) => {
     try {
-      await loginApi({ mobile: data.mobile });
+      await generateOtp({ mobile: data.mobile });
 
       if (rememberMe) {
         localStorage.setItem("mobile", data.mobile);
@@ -106,6 +106,9 @@ export default function LoginPage() {
                 label="رقم الجوال"
                 placeholder="رجاء إدخال رقم الجوال"
                 startElement="+966"
+                type="number"
+                inputMode="numeric"
+                dir="ltr"
                 error={error}
                 {...field}
               />

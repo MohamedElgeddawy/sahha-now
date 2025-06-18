@@ -5,16 +5,21 @@ import { AccountIcon } from "@/components/icons/top-icons/AccountIcon";
 import { BranchesIcon } from "@/components/icons/top-icons/BranchesIcon";
 import { AppDownloadIcon } from "@/components/icons/top-icons/AppDownloadIcon";
 import { LanguageIcon } from "@/components/icons/top-icons/LanguageIcon";
-import { useLocalStorage } from "usehooks-ts";
+import { useReadLocalStorage, useIsClient } from "usehooks-ts";
 export function TopNav() {
-  const [accessToken] = useLocalStorage("accessToken", "");
+  const isClient = useIsClient();
+  const accessToken = useReadLocalStorage("accessToken", {
+    deserializer(value) {
+      return value ? JSON.stringify(value) : "";
+    },
+  });
   return (
     <div className="bg-[#f5f5f5] border-b border-[#DADADA] w-full" dir="rtl">
       <div className="container mx-auto px-4">
         <nav className="flex items-center justify-between h-[36px]">
           {/* Right Group */}
           <div className="flex items-center gap-4">
-            {accessToken ? (
+            {isClient && accessToken ? (
               <NavItem
                 href="/account"
                 icon={<AccountIcon className="size-4" />}
