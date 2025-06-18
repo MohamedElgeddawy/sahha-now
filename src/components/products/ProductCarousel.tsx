@@ -11,18 +11,20 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import ProductCard from "./ProductCard";
-import type { Product } from "@/lib/mock-data";
+import type { Product } from "@/lib/api/products";
 
 interface ProductCarouselProps {
   title?: string;
   products: Product[];
   className?: string;
+  isLoading?: boolean;
 }
 
 export default function ProductCarousel({
   title = "اكتشف منتجات أخرى قد تهمك",
   products,
   className,
+  isLoading = false,
 }: ProductCarouselProps) {
   const [api, setApi] = useState<CarouselApi | null>(null);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
@@ -48,6 +50,12 @@ export default function ProductCarousel({
     };
   }, [api]);
 
+  // Create skeleton product array for loading state
+  const skeletonProducts = Array(4)
+    .fill(null)
+    .map((_, i) => ({ id: `skeleton-${i}` }));
+  const displayProducts = isLoading ? skeletonProducts : products;
+
   return (
     <div className={cn("w-full", className)}>
       <div className="flex justify-between items-center mb-6">
@@ -56,11 +64,11 @@ export default function ProductCarousel({
         <div className="flex items-center gap-2">
           <button
             onClick={() => api?.scrollPrev()}
-            disabled={!canScrollPrev}
+            disabled={!canScrollPrev || isLoading}
             className={cn(
               "w-8 h-8 flex items-center justify-center rounded-full border border-gray-200",
-              canScrollPrev
-                ? "hover:bg-gray-50 text-gray-600"
+              canScrollPrev && !isLoading
+                ? "bg-green-600 hover:bg-green-700 text-white"
                 : "opacity-50 cursor-not-allowed text-gray-400"
             )}
           >
@@ -68,11 +76,11 @@ export default function ProductCarousel({
           </button>
           <button
             onClick={() => api?.scrollNext()}
-            disabled={!canScrollNext}
+            disabled={!canScrollNext || isLoading}
             className={cn(
               "w-8 h-8 flex items-center justify-center rounded-full border border-gray-200",
-              canScrollNext
-                ? "hover:bg-gray-50 text-gray-600"
+              canScrollNext && !isLoading
+                ? "bg-green-600 hover:bg-green-700 text-white"
                 : "opacity-50 cursor-not-allowed text-gray-400"
             )}
           >
@@ -85,18 +93,17 @@ export default function ProductCarousel({
         setApi={setApi}
         opts={{
           align: "start",
-          loop: true,
           direction: "rtl",
         }}
         className="w-full"
       >
         <CarouselContent className="-ml-4">
-          {products.map((product) => (
+          {displayProducts.map((product) => (
             <CarouselItem
               key={product.id}
               className="pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
             >
-              <ProductCard product={product} />
+              <ProductCard product={product} isLoading={isLoading} />
             </CarouselItem>
           ))}
         </CarouselContent>

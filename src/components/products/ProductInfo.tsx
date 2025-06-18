@@ -4,12 +4,12 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Star, Truck, Info, MessageSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { Product } from "@/lib/mock-data";
 import { VisaIcon } from "@/components/icons/payment/VisaIcon";
 import { MasterCardIcon } from "@/components/icons/payment/MasterCardIcon";
 import { MadaIcon } from "@/components/icons/payment/MadaIcon";
 import { TamaraIcon } from "@/components/icons/payment/TamaraIcon";
 import { TabbyIcon } from "@/components/icons/payment/TabbyIcon";
+import { Product } from "@/lib/api/products";
 
 interface ProductInfoProps {
   product: Product;
@@ -35,7 +35,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         {/* Title */}
-        <h1 className="text-2xl  text-gray-900">{product.arabicTitle}</h1>
+        <h1 className="text-2xl  text-gray-900">{product.name}</h1>
         <div className="text-sm text-gray-500">رقم المنتج: ({product.id})</div>
       </div>
       {/* Rating and Stock */}
@@ -53,12 +53,16 @@ export function ProductInfo({ product }: ProductInfoProps) {
               <Star
                 key={i}
                 className={cn("size-4", {
-                  "text-yellow-400 fill-yellow-400": i < product.rating,
-                  "text-gray-300 fill-gray-300": i >= product.rating,
+                  "text-yellow-400 fill-yellow-400":
+                    i < parseInt(product.averageRating),
+                  "text-gray-300 fill-gray-300":
+                    i >= parseInt(product.averageRating),
                 })}
               />
             ))}
-          <span className="text-sm text-gray-500">({product.reviewCount})</span>
+          <span className="text-sm text-gray-500">
+            ({product?._count?.reviews || 0})
+          </span>
         </div>
         <span className="text-sm text-green-600 font-medium">متوفر</span>
 
@@ -78,10 +82,10 @@ export function ProductInfo({ product }: ProductInfoProps) {
             </span>
             <span className="text-sm font-medium  text-green-600">ر.س</span>
           </div>
-          {product.originalPrice > product.price && (
+          {product.price && product.price > (product.price || 0) && (
             <div className="flex items-center gap-1">
               <span className="text-base text-gray-400 line-through">
-                {product.originalPrice}
+                {product.price}
               </span>
               <span className="text-sm text-gray-400">ر.س</span>
             </div>
@@ -117,14 +121,16 @@ export function ProductInfo({ product }: ProductInfoProps) {
             {quantity}
           </span>
           <button
-            onClick={() => setQuantity((q) => Math.min(product.stock, q + 1))}
+            // onClick={() =>
+            // setQuantity((q) => Math.min(parseInt(product.stock!) || 0, q + 1))
+            // }
             className="px-3 py-2 text-gray-600 hover:text-gray-900"
           >
             +
           </button>
         </div>
         <Button className="flex-1 bg-[#FF9B07] text-white hover:bg-[#F08C00] h-[42px]">
-          اضف لعربة التسوق س- {(product.price * quantity).toFixed(2)} ر.س
+          اضف لعربة التسوق س- {(Number(product.price) || 0) * quantity} ر.س
         </Button>
       </div>
 

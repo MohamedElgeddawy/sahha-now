@@ -5,6 +5,7 @@ import { Header } from "@/components/layout/header";
 import Footer from "@/components/layout/footer/footer";
 import { Container } from "@/components/layout/container";
 import { Toaster } from "sonner";
+import Providers from "@/components/layout/providers";
 
 const cairo = Cairo({ subsets: ["latin"] });
 
@@ -20,10 +21,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         suppressHydrationWarning
         className={`${cairo.className} min-h-screen flex flex-col`}
       >
-        <Toaster richColors />
-        <Header />
-        <Container>{children}</Container>
-        <Footer />
+        <Providers>
+          <Toaster richColors />
+          <Header />
+          <Container>{children}</Container>
+          <Footer />
+        </Providers>
       </body>
     </html>
   );

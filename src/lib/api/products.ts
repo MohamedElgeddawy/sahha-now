@@ -1,67 +1,70 @@
+import sahhaInstance from "./sahhaInstance";
+
 export interface Product {
   id: string;
+  createdAt: string;
+  updatedAt: string;
   name: string;
+  sku: string | null;
   description: string;
-  price: number;
-  oldPrice?: number;
-  images: string[];
-  category: string;
+  price: string;
+  discount: string;
+  averageRating: string;
+  isFavourite: boolean;
+  brandId: string;
   categoryId: string;
-  categorySlug: string;
-  specifications: {
-    label: string;
-    value: string;
-  }[];
-  reviews: {
-    id: number;
-    userName: string;
-    rating: number;
-    date: string;
-    comment: string;
-  }[];
-  stock: number;
-  colors?: {
+  media: any[];
+  brand: {
+    id: string;
+    createdAt: string;
+    updatedAt: string;
     name: string;
-    value: string;
-  }[];
-  sizes?: string[];
+    isBestBrand: boolean;
+    logoUrl: string | null;
+    logoKey: string | null;
+    logoFileName: string | null;
+  };
+  category: string | null;
+  _count: {
+    reviews: number;
+    favourites: number;
+  };
 }
 
-export async function fetchProduct(id: string): Promise<Product> {
-  // Temporary mock data - replace with actual API call
-  return {
-    id,
-    name: "اسم المنتج",
-    description: "وصف المنتج",
-    price: 199.99,
-    oldPrice: 249.99,
-    images: [
-      "/images/product-1.jpg",
-      "/images/product-2.jpg",
-      "/images/product-3.jpg",
-      "/images/product-4.jpg",
-    ],
-    category: "الفئة",
-    categoryId: "1",
-    categorySlug: "category-1",
-    specifications: [
-      { label: "الماركة", value: "Brand Name" },
-      { label: "الموديل", value: "Model XYZ" },
-    ],
-    reviews: [
-      {
-        id: 1,
-        userName: "أحمد محمد",
-        rating: 5,
-        date: "2024-03-15",
-        comment: "منتج رائع وجودة ممتازة",
-      },
-    ],
-    stock: 50,
-    colors: [
-      { name: "أحمر", value: "#FF0000" },
-      { name: "أزرق", value: "#0000FF" },
-    ],
-    sizes: ["S", "M", "L", "XL"],
-  };
-} 
+// export interface ProductsResponse {
+//   products: Product[];
+//   totalCount: number;
+//   currentPage: number;
+//   totalPages: number;
+// }
+
+export interface ProductFilters {
+  page?: number;
+  limit?: number;
+  category?: string;
+  search?: string;
+  sort?: string;
+  minPrice?: number;
+  maxPrice?: number;
+}
+
+export async function fetchProducts(
+  filters: ProductFilters = {}
+): Promise<Product[]> {
+  try {
+    const response = await sahhaInstance.get("/products", { params: filters });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    throw error;
+  }
+}
+
+export async function fetchProduct(id: string) {
+  try {
+    const response = await sahhaInstance.get(`/products/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching product ${id}:`, error);
+  }
+}

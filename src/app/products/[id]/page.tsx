@@ -7,7 +7,8 @@ import { ProductInfo } from "@/components/products/ProductInfo";
 import { ProductTabs } from "@/components/products/ProductTabs";
 import ProductCarousel from "@/components/products/ProductCarousel";
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
-import { featuredProducts } from "@/lib/mock-data";
+import { useFeaturedProducts, useProduct } from "@/lib/hooks/use-products";
+import { Product } from "@/lib/api/products";
 
 export default function ProductPage({
   params,
@@ -15,19 +16,9 @@ export default function ProductPage({
   params: Promise<{ id: string }>;
 }) {
   const resolvedParams = use(params);
-  // For now, we'll use the mock data directly
-  const product = featuredProducts.find((p) => p.id === resolvedParams.id);
-
-  if (!product) {
-    return <div>Product not found</div>;
-  }
-
-  // Get related products (excluding current product)
-  const relatedProducts = featuredProducts
-    .filter(
-      (p) => p.category === product.category && p.id !== resolvedParams.id
-    )
-    .slice(0, 8); // Show up to 8 related products for carousel
+  const { data: product, isLoading } = useProduct(resolvedParams.id);
+  const { data: featuredProducts, isLoading: featuredProductsLoading } =
+    useFeaturedProducts();
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -35,24 +26,27 @@ export default function ProductPage({
         items={[
           { label: "الرئيسية", href: "/" },
           { label: "المنتجات", href: "/products" },
-          { label: product.category, href: `/category/${resolvedParams.id}` },
-          { label: product.arabicTitle, href: "#" },
+          {
+            label: product?.category || "",
+            href: `/category/${resolvedParams.id}`,
+          },
+          { label: product?.name || "", href: "#" },
         ]}
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
-        <ProductGallery images={product.images} />
-        <ProductInfo product={product} />
+        {/* <ProductGallery images={product?.media || []} /> */}
+        <ProductInfo product={product || ({} as Product)} />
       </div>
 
       <div className="mt-12">
-        <ProductTabs product={product} />
+        <ProductTabs product={product || ({} as Product)} />
       </div>
 
       <div className="mt-16">
         <ProductCarousel
-          title="لا تفوت عروض هذا الأسبوع"
-          products={featuredProducts}
+          title="اكتشف منتجات أخرى قد تهمك"
+          products={featuredProducts || []}
         />
       </div>
     </div>

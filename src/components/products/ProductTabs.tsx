@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Star, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ReviewItem } from "./ReviewItem";
-import type { Product } from "@/lib/mock-data";
+import { Product } from "@/lib/api/products";
 
 interface ProductTabsProps {
   product: Product;
@@ -26,14 +26,14 @@ export function ProductTabs({ product }: ProductTabsProps) {
 
   // Calculate rating percentages
   const ratingCounts: Record<RatingKey, number> = {
-    5: product.reviews.filter((r) => r.rating === 5).length,
-    4: product.reviews.filter((r) => r.rating === 4).length,
-    3: product.reviews.filter((r) => r.rating === 3).length,
-    2: product.reviews.filter((r) => r.rating === 2).length,
-    1: product.reviews.filter((r) => r.rating === 1).length,
+    5: product?._count?.reviews || 0,
+    4: product?._count?.reviews || 0,
+    3: product?._count?.reviews || 0,
+    2: product?._count?.reviews || 0,
+    1: product?._count?.reviews || 0,
   };
 
-  const totalReviews = product.reviews.length;
+  const totalReviews = product?._count?.reviews || 0;
 
   return (
     <div className="w-full" dir="rtl">
@@ -71,7 +71,7 @@ export function ProductTabs({ product }: ProductTabsProps) {
 
         {activeTab === "specifications" && (
           <div className="space-y-4 text-right">
-            {product.specifications.map((spec, index) => (
+            {/* {product?.specifications?.map((spec, index) => (
               <div
                 key={index}
                 className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0"
@@ -79,14 +79,14 @@ export function ProductTabs({ product }: ProductTabsProps) {
                 <span className="text-gray-600">{spec.label}</span>
                 <span className="font-medium text-gray-900">{spec.value}</span>
               </div>
-            ))}
+            ))} */}
           </div>
         )}
 
         {activeTab === "shipping" && (
           <div className="prose prose-sm max-w-none text-right">
             <p className="text-gray-600 leading-relaxed">
-            {/* {product.shippingPolicy || "سياسة الشحن والإرجاع ستظهر هنا"} */}
+              {/* {product.shippingPolicy || "سياسة الشحن والإرجاع ستظهر هنا"} */}
             {product.description || "سياسة الشحن والإرجاع ستظهر هنا"}
             </p>
           </div>
@@ -99,7 +99,7 @@ export function ProductTabs({ product }: ProductTabsProps) {
               {/* Overall Rating */}
               <div className="text-center">
                 <div className="text-4xl font-bold text-green-600">
-                  {product.rating.toFixed(1)}
+                  {parseInt(product.averageRating).toFixed(1)}
                 </div>
                 <div className="flex items-center justify-center gap-1 my-2">
                   {Array(5)
@@ -109,13 +109,13 @@ export function ProductTabs({ product }: ProductTabsProps) {
                         key={i}
                         className={cn("size-5", {
                           "text-[#FFA726] fill-[#FFA726]":
-                            i < Math.floor(product.rating),
+                            i < Math.floor(parseInt(product.averageRating)),
                           "text-gray-300 fill-gray-300":
-                            i >= Math.ceil(product.rating),
+                            i >= Math.ceil(parseInt(product.averageRating)),
                           // For partial stars
                           "text-[#FFA726]":
-                            i === Math.floor(product.rating) &&
-                            product.rating % 1 > 0,
+                            i === Math.floor(parseInt(product.averageRating)) &&
+                            parseInt(product.averageRating) % 1 > 0,
                         })}
                       />
                     ))}
@@ -157,15 +157,17 @@ export function ProductTabs({ product }: ProductTabsProps) {
 
             {/* Reviews List */}
             <div className="space-y-6">
-              {product.reviews.map((review) => (
-                <ReviewItem
-                  key={review.id}
-                  userName={review.userName}
-                  rating={review.rating}
-                  date={review.date}
-                  comment={review.comment}
-                />
-              ))}
+              {product?._count?.reviews
+              // .map((review) => (
+              //   <ReviewItem
+              //     key={review.id}
+              //     userName={review.userName}
+              //     rating={review.rating}
+              //     date={review.date}
+              //     comment={review.comment}
+              //   />
+              // ))
+              }
             </div>
 
             {/* Add Review Form */}

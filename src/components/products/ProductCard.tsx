@@ -3,14 +3,37 @@ import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 import { Star } from "lucide-react";
 import Image from "next/image";
-import { Product } from "@/lib/mock-data";
+import { Product } from "@/lib/api/products";
 import Link from "next/link";
 
 type Props = {
-  product: Product;
+  product: Partial<Product>;
+  isLoading?: boolean;
 };
 
-const ProductCard = ({ product }: Props) => {
+const ProductCard = ({ product, isLoading = false }: Props) => {
+  // Render skeleton UI when loading
+  if (isLoading) {
+    return (
+      <div className="block bg-white rounded-lg border border-gray-100 p-4 animate-pulse">
+        <div className="aspect-square rounded-lg overflow-hidden bg-gray-200" />
+        <div className="mt-4 space-y-3">
+          <div className="h-3 bg-gray-200 rounded w-1/3" />
+          <div className="h-4 bg-gray-200 rounded w-full" />
+          <div className="h-4 bg-gray-200 rounded w-full" />
+          <div className="h-3 bg-gray-200 rounded w-1/4" />
+          <div className="h-5 bg-gray-200 rounded w-1/3" />
+          <div className="h-10 bg-gray-200 rounded w-full" />
+        </div>
+      </div>
+    );
+  }
+
+  // Return early if product is missing required data
+  // if (!product.id || !product.name || !product.media) {
+  //   return null;
+  // }
+
   return (
     <Link
       prefetch
@@ -19,14 +42,14 @@ const ProductCard = ({ product }: Props) => {
     >
       <div className="relative aspect-square rounded-lg overflow-hidden bg-white">
         {/* Discount Badge */}
-        {product.discount > 0 && (
+        {product.discount && parseInt(product.discount) > 0 && (
           <div className="absolute top-2 right-2 bg-red-50 text-red-600 px-2 py-1 rounded-md text-xs font-medium z-10">
             -{product.discount}%
           </div>
         )}
         <Image
-          src={product.images[0]}
-          alt={product.arabicTitle}
+          src={product?.media?.[0] || "/images/product.jpg"}
+          alt={product?.name || ""}
           fill
           className="object-contain p-4 group-hover:scale-105 transition-transform"
         />
@@ -38,7 +61,7 @@ const ProductCard = ({ product }: Props) => {
 
         {/* Title */}
         <h3 className="text-sm text-gray-600 line-clamp-2 min-h-[40px]">
-          {product.arabicTitle}
+          {product.name}
         </h3>
 
         {/* Rating */}
@@ -49,12 +72,16 @@ const ProductCard = ({ product }: Props) => {
               <Star
                 key={i}
                 className={cn("h-4 w-4", {
-                  "text-[#FFA726] fill-[#FFA726]": i < product.rating,
-                  "text-gray-300 fill-gray-300": i >= product.rating,
+                  "text-[#FFA726] fill-[#FFA726]":
+                    i < (parseInt(product.averageRating!) || 0),
+                  "text-gray-300 fill-gray-300":
+                    i >= (parseInt(product.averageRating!) || 0),
                 })}
               />
             ))}
-          <span className="text-xs text-gray-500">({product.reviewCount})</span>
+          <span className="text-xs text-gray-500">
+            ({product?._count?.reviews || 0})
+          </span>
         </div>
 
         {/* Price */}
@@ -63,14 +90,14 @@ const ProductCard = ({ product }: Props) => {
             <span className="font-medium text-gray-900">{product.price}</span>
             <span className="text-sm text-gray-600">ر.س</span>
           </div>
-          {product.originalPrice > product.price && (
+          {/* {product.price && product.price > (product.price || 0) && (
             <div className="flex items-center gap-1">
               <span className="text-sm text-gray-400 line-through">
-                {product.originalPrice}
+                {product.price}
               </span>
               <span className="text-sm text-gray-400">ر.س</span>
             </div>
-          )}
+          )} */}
         </div>
 
         {/* Add to Cart Button */}

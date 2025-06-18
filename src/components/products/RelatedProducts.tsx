@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Star, ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { Product } from "@/lib/mock-data";
+import { Product } from "@/lib/api/products";
 
 interface RelatedProductsProps {
   products: Product[];
@@ -35,14 +35,14 @@ export function RelatedProducts({ products }: RelatedProductsProps) {
           >
             <div className="relative aspect-square rounded-lg bg-white border border-gray-100 overflow-hidden">
               {/* Discount Badge */}
-              {product.discount > 0 && (
+              {product.discount && parseInt(product.discount) > 0 && (
                 <div className="absolute top-2 right-2 bg-red-50 text-red-600 px-2 py-1 rounded text-xs font-medium">
                   -{product.discount}%
                 </div>
               )}
               <Image
-                src={product.images[0]}
-                alt={product.arabicTitle}
+                src={product.media[0]}
+                alt={product.name}
                 fill
                 className="object-contain p-4 group-hover:scale-105 transition-transform"
               />
@@ -50,7 +50,7 @@ export function RelatedProducts({ products }: RelatedProductsProps) {
 
             <div className="mt-3 space-y-2">
               <h3 className="text-sm text-gray-600 line-clamp-2">
-                {product.arabicTitle}
+                {product.name}
               </h3>
 
               <div className="flex items-center gap-1">
@@ -60,13 +60,15 @@ export function RelatedProducts({ products }: RelatedProductsProps) {
                     <Star
                       key={i}
                       className={cn("h-4 w-4", {
-                        "text-yellow-400 fill-yellow-400": i < product.rating,
-                        "text-gray-300 fill-gray-300": i >= product.rating,
+                        "text-yellow-400 fill-yellow-400":
+                          i < (parseInt(product.averageRating!) || 0),
+                        "text-gray-300 fill-gray-300":
+                          i >= (parseInt(product.averageRating!) || 0),
                       })}
                     />
                   ))}
                 <span className="text-xs text-gray-500">
-                  ({product.reviewCount})
+                  ({product?._count?.reviews || 0})
                 </span>
               </div>
 
@@ -75,9 +77,9 @@ export function RelatedProducts({ products }: RelatedProductsProps) {
                   <span className="font-medium">{product.price}</span>
                   <span className="text-sm">ر.س</span>
                 </div>
-                {product.originalPrice > product.price && (
+                {product.price && product.price > (product.price || 0) && (
                   <span className="text-sm text-gray-400 line-through">
-                    {product.originalPrice} ر.س
+                    {product.price} ر.س
                   </span>
                 )}
               </div>
