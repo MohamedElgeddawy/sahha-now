@@ -105,6 +105,7 @@ export default function LoginPage() {
               <FormField
                 label="رقم الجوال"
                 placeholder="رجاء إدخال رقم الجوال"
+                startElement="+966"
                 error={error}
                 {...field}
               />
