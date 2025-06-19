@@ -10,6 +10,12 @@ import { login } from "@/lib/api/auth";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { OtpFormData, otpSchema } from "@/lib/schemas/auth";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
 
 export default function OTPVerificationPage() {
   const [resendTimer, setResendTimer] = useState(30);
@@ -70,7 +76,7 @@ export default function OTPVerificationPage() {
       const res = await login({ ...data });
       localStorage.setItem("accessToken", res.accessToken);
       localStorage.setItem("refreshToken", res.refreshToken);
-      
+
       toast.success("تم التحقق بنجاح");
       router.push("/");
     } catch (error) {
@@ -102,9 +108,22 @@ export default function OTPVerificationPage() {
           <Controller
             control={control}
             name="otp"
-            render={({ field: { onChange, value }, fieldState: { error } }) => (
+            render={({ field, fieldState: { error } }) => (
               <div className="flex flex-col items-center gap-2 w-full">
-                <div className="flex justify-center gap-3">
+                <InputOTP maxLength={6} {...field}>
+                  <InputOTPGroup>
+                    <InputOTPSlot index={0} />
+                    <InputOTPSlot index={1} />
+                    <InputOTPSlot index={2} />
+                  </InputOTPGroup>
+                  <InputOTPSeparator />
+                  <InputOTPGroup>
+                    <InputOTPSlot index={3} />
+                    <InputOTPSlot index={4} />
+                    <InputOTPSlot index={5} />
+                  </InputOTPGroup>
+                </InputOTP>
+                {/* <div className="flex justify-center gap-3">
                   {Array(6)
                     .fill(0)
                     .map((_, index) => (
@@ -152,7 +171,7 @@ export default function OTPVerificationPage() {
                         required
                       />
                     ))}
-                </div>
+                </div> */}
                 {error && (
                   <span className="text-sm text-red-500">{error.message}</span>
                 )}

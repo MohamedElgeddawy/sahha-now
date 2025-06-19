@@ -35,7 +35,7 @@ export default function ProductPage({
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
-        {/* <ProductGallery images={product?.media || []} /> */}
+        <ProductGallery images={product?.media || []} />
         <ProductInfo product={product || ({} as Product)} />
       </div>
 
