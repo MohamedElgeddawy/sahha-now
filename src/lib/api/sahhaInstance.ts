@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://104.248.45.73:3000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://104.248.45.73/api";
 
 // Create an Axios instance
 const sahhaInstance = axios.create({
