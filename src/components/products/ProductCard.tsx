@@ -56,13 +56,28 @@ const ProductCard = ({ product, isLoading = false }: Props) => {
       </div>
 
       <div className="mt-4 space-y-2">
-        {/* Category */}
-        <div className="text-xs text-gray-500">{product.category}</div>
-
         {/* Title */}
-        <h3 className="text-sm text-gray-600 line-clamp-2 min-h-[40px]">
+        <h3 className="text-gray-600 line-clamp-2 font-semibold text-lg">
           {product.name}
         </h3>
+
+        <div className="text-xs text-gray-500">{product.category}</div>
+
+        {/* Price */}
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
+            <span className="font-medium text-green-500">{product.price}</span>
+            <span className="text-green-500">ر.س</span>
+          </div>
+          {/* {product.price && product.price > (product.price || 0) && (
+            <div className="flex items-center gap-1">
+              <span className="text-sm text-gray-400 line-through">
+                {product.price}
+              </span>
+              <span className="text-sm text-gray-400">ر.س</span>
+            </div>
+          )} */}
+        </div>
 
         {/* Rating */}
         <div className="flex items-center gap-1">
@@ -71,7 +86,7 @@ const ProductCard = ({ product, isLoading = false }: Props) => {
             .map((_, i) => (
               <Star
                 key={i}
-                className={cn("h-4 w-4", {
+                className={cn("size-4", {
                   "text-[#FFA726] fill-[#FFA726]":
                     i < (parseInt(product.averageRating!) || 0),
                   "text-gray-300 fill-gray-300":
@@ -82,22 +97,6 @@ const ProductCard = ({ product, isLoading = false }: Props) => {
           <span className="text-xs text-gray-500">
             ({product?._count?.reviews || 0})
           </span>
-        </div>
-
-        {/* Price */}
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1">
-            <span className="font-medium text-gray-900">{product.price}</span>
-            <span className="text-sm text-gray-600">ر.س</span>
-          </div>
-          {/* {product.price && product.price > (product.price || 0) && (
-            <div className="flex items-center gap-1">
-              <span className="text-sm text-gray-400 line-through">
-                {product.price}
-              </span>
-              <span className="text-sm text-gray-400">ر.س</span>
-            </div>
-          )} */}
         </div>
 
         {/* Add to Cart Button */}

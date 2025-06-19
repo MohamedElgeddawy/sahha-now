@@ -16,12 +16,21 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { useLocalStorage } from "usehooks-ts";
 
 export default function OTPVerificationPage() {
   const [resendTimer, setResendTimer] = useState(30);
   const router = useRouter();
   const [mobile, setPhoneNumber] = useState<string | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
+  const [_accessToken, setAccessToken] = useLocalStorage<string | null>(
+    "accessToken",
+    null
+  );
+  const [_refreshToken, setRefreshToken] = useLocalStorage<string | null>(
+    "refreshToken",
+    null
+  );
 
   const {
     control,
@@ -74,15 +83,13 @@ export default function OTPVerificationPage() {
   const onSubmit = async (data: OtpFormData) => {
     try {
       const res = await login({ ...data });
-      localStorage.setItem("accessToken", res.accessToken);
-      localStorage.setItem("refreshToken", res.refreshToken);
+      setAccessToken(res.accessToken);
+      setRefreshToken(res.refreshToken);
 
       toast.success("تم التحقق بنجاح");
       router.push("/");
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "رمز التحقق غير صحيح"
-      );
+      toast.error("رمز التحقق غير صحيح");
     }
   };
 
@@ -115,63 +122,12 @@ export default function OTPVerificationPage() {
                     <InputOTPSlot index={0} />
                     <InputOTPSlot index={1} />
                     <InputOTPSlot index={2} />
-                  </InputOTPGroup>
-                  <InputOTPSeparator />
-                  <InputOTPGroup>
+
                     <InputOTPSlot index={3} />
                     <InputOTPSlot index={4} />
                     <InputOTPSlot index={5} />
                   </InputOTPGroup>
                 </InputOTP>
-                {/* <div className="flex justify-center gap-3">
-                  {Array(6)
-                    .fill(0)
-                    .map((_, index) => (
-                      <Input
-                        key={index}
-                        type="text"
-                        inputMode="numeric"
-                        pattern="[0-9]*"
-                        maxLength={1}
-                        value={value[index] || ""}
-                        onChange={(e) => {
-                          const newValue =
-                            value.slice(0, index) +
-                            e.target.value +
-                            value.slice(index + 1);
-                          onChange(newValue);
-
-                          // Auto-focus next input
-                          if (e.target.value && index < 5) {
-                            const nextInput =
-                              e.target.parentElement?.nextElementSibling?.querySelector(
-                                "input"
-                              );
-                            if (nextInput) nextInput.focus();
-                          }
-                        }}
-                        onKeyDown={(e) => {
-                          if (e.key === "Backspace") {
-                            if (!value[index] && index > 0) {
-                              // If current input is empty, move to previous input
-                              const prevInput =
-                                e.currentTarget.parentElement?.previousElementSibling?.querySelector(
-                                  "input"
-                                );
-                              if (prevInput) prevInput.focus();
-                            }
-                            const newValue =
-                              value.slice(0, index) +
-                              "" +
-                              value.slice(index + 1);
-                            onChange(newValue);
-                          }
-                        }}
-                        className="size-20 text-center !text-xl font-bold border-gray-300 rounded-lg focus:border-green-500 focus:ring-green-500"
-                        required
-                      />
-                    ))}
-                </div> */}
                 {error && (
                   <span className="text-sm text-red-500">{error.message}</span>
                 )}

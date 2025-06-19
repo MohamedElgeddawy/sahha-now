@@ -43,7 +43,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
         {/* Brand Label */}
         <div className="flex items-center gap-2">
           <span className="text-sm text-gray-600">العلامة التجارية:</span>
-          <span className="text-sm text-gray-900">جارنييه</span>
+          <span className="text-sm text-gray-900">{product.brand?.name}</span>
         </div>
 
         <div className="flex items-center gap-1">
