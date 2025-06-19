@@ -23,9 +23,9 @@ export default function RegisterPage() {
   } = useForm<RegisterFormData>({
     mode: "all",
     resolver: zodResolver(registerSchema),
-    defaultValues: { 
-      mobile: ""
-    }
+    defaultValues: {
+      mobile: "",
+    },
   });
 
   const [agreeTerms, setAgreeTerms] = useState(false);
@@ -219,12 +219,14 @@ export default function RegisterPage() {
         </Button>
 
         <div className="text-center mt-4">
+          <span className="text-[#2C3E50]"> هل لديك حساب؟</span>
+
           <Link
             prefetch
             href="/auth/login"
-            className="text-green-600 hover:underline text-sm font-medium"
+            className="text-blue-600 hover:underline font-medium"
           >
-            لديك حساب بالفعل؟ سجل الدخول الآن
+            سجّل الدخول الآن
           </Link>
         </div>
       </form>

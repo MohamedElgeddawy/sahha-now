@@ -201,8 +201,7 @@ export function ProductTabs({ product }: ProductTabsProps) {
                   className="w-full h-32 p-3 border border-gray-200 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-[#4184F3] focus:border-transparent"
                 />
                 <p className="text-xs text-gray-500">
-                  * سيتم مراجعة تقييمك قبل النشر للتأكد من مطابقته للشروط
-                  والأحكام
+                  * احفظ اسمي وبريدي الإلكتروني في هذا المتصفح لاستخدامهم المرة القادمة التي أعلق فيها.
                 </p>
               </div>
               <button className="bg-[#27AE60] text-white px-6 py-2 rounded-lg hover:bg-[#219653] transition-colors">
