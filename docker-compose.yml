@@ -3,31 +3,16 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
     environment:
       - NODE_ENV=production
       - PORT=3001
-      - NEXT_PUBLIC_API_URL=https://104.248.45.73/api  # Use HTTPS and /api path
+      - NEXT_PUBLIC_API_URL=https://104.248.45.73/api
     restart: unless-stopped
     container_name: sahha-frontend
     networks:
       - sahha-network
-    
-  nginx:
-    image: nginx:alpine
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
-      - ./ssl:/etc/nginx/ssl
-    depends_on:
-      - sahha-frontend
-    restart: unless-stopped
-    container_name: sahha-nginx
-    networks:
-      - sahha-network
-    extra_hosts:
-      - "host.docker.internal:host-gateway"  # Allow access to host services
 
 networks:
   sahha-network:
