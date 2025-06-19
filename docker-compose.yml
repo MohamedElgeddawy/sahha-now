@@ -6,7 +6,7 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3001
-      - NEXT_PUBLIC_API_URL=http://104.248.45.73:3000
+      - NEXT_PUBLIC_API_URL=https://104.248.45.73/api  # Use HTTPS and /api path
     restart: unless-stopped
     container_name: sahha-frontend
     networks:
@@ -26,6 +26,8 @@ services:
     container_name: sahha-nginx
     networks:
       - sahha-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"  # Allow access to host services
 
 networks:
   sahha-network:
