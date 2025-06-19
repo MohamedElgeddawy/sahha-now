@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  sahha-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - NEXT_PUBLIC_API_URL=http://104.248.45.73:3000
+    restart: unless-stopped
+    container_name: sahha-frontend
+    networks:
+      - sahha-network
+
+networks:
+  sahha-network:
+    driver: bridge 
