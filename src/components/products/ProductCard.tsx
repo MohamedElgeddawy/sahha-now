@@ -48,7 +48,7 @@ const ProductCard = ({ product, isLoading = false }: Props) => {
           </div>
         )}
         <Image
-          src={product?.media?.[0] || "/images/product.jpg"}
+          src={product?.media?.[0]?.thumbnailUrl || ""}
           alt={product?.name || ""}
           fill
           className="object-contain p-4 group-hover:scale-105 transition-transform"
@@ -61,22 +61,27 @@ const ProductCard = ({ product, isLoading = false }: Props) => {
           {product.name}
         </h3>
 
-        <div className="text-xs text-gray-500">{product.category}</div>
+        <div className="text-xs text-gray-500">{product.category?.name}</div>
 
         {/* Price */}
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1">
-            <span className="font-medium text-green-500">{product.price}</span>
+            <span className="font-medium text-green-500">
+              {Number(product?.discount)
+                ? Number(product?.price) -
+                  Number(product?.price) * (Number(product?.discount) / 100)
+                : product?.price}
+            </span>
             <span className="text-green-500">ر.س</span>
           </div>
-          {/* {product.price && product.price > (product.price || 0) && (
+          {Number(product?.discount) ? (
             <div className="flex items-center gap-1">
               <span className="text-sm text-gray-400 line-through">
-                {product.price}
+                {product?.price}
               </span>
               <span className="text-sm text-gray-400">ر.س</span>
             </div>
-          )} */}
+          ) : null}
         </div>
 
         {/* Rating */}

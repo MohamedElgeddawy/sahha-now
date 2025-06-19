@@ -13,7 +13,11 @@ export interface Product {
   isFavourite: boolean;
   brandId: string;
   categoryId: string;
-  media: any[];
+  media: {
+    url: string;
+    thumbnailUrl: string;
+    isMain: boolean;
+  }[];
   brand: {
     id: string;
     createdAt: string;
@@ -24,11 +28,58 @@ export interface Product {
     logoKey: string | null;
     logoFileName: string | null;
   };
-  category: string | null;
+  category: {
+    id: string;
+    createdAt: string;
+    updatedAt: string;
+    name: string;
+    description: string;
+  };
+  variants: ProductVariant[];
   _count: {
     reviews: number;
     favourites: number;
   };
+}
+
+export interface ProductVariant {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  name: string;
+  sku: string;
+  price: string;
+  discount: string;
+  isAvailable: boolean;
+  isDefault: boolean;
+  productId: string;
+}
+
+export interface ReviewStats {
+  totalReviews: number;
+  averageRating: number;
+  ratingDistribution: [
+    {
+      rating: 5;
+      count: number;
+    },
+    {
+      rating: 4;
+      count: number;
+    },
+    {
+      rating: 3;
+      count: number;
+    },
+    {
+      rating: 2;
+      count: number;
+    },
+    {
+      rating: 1;
+      count: number;
+    }
+  ];
 }
 
 // export interface ProductsResponse {
@@ -66,5 +117,22 @@ export async function fetchProduct(id: string) {
     return response.data;
   } catch (error) {
     console.error(`Error fetching product ${id}:`, error);
+  }
+}
+
+export async function fetchProductReviewStats(
+  productId: string
+): Promise<ReviewStats> {
+  try {
+    const response = await sahhaInstance.get(
+      `/products/${productId}/reviews/stats`
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      `Error fetching review stats for product ${productId}:`,
+      error
+    );
+    throw error;
   }
 }

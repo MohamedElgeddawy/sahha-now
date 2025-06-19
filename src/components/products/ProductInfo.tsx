@@ -78,18 +78,21 @@ export function ProductInfo({ product }: ProductInfoProps) {
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <span className="text-2xl font-bold text-green-600">
-              {product.price}
+              {Number(product.discount) > 0
+                ? Number(product.price) -
+                  Number(product.price) * (Number(product.discount) / 100)
+                : product.price}
             </span>
             <span className="text-sm font-medium  text-green-600">ر.س</span>
           </div>
-          {product.price && product.price > (product.price || 0) && (
+          {Number(product.discount) > 0 ? (
             <div className="flex items-center gap-1">
               <span className="text-base text-gray-400 line-through">
                 {product.price}
               </span>
               <span className="text-sm text-gray-400">ر.س</span>
             </div>
-          )}
+          ) : null}
         </div>
         <div className="flex items-center gap-2 bg-[#F2FBF6] rounded-lg px-3 py-1">
           <span className="text-[#27AE60] text-sm">20 نقطة</span>

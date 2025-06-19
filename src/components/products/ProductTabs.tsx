@@ -5,6 +5,9 @@ import { Star, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ReviewItem } from "./ReviewItem";
 import { Product } from "@/lib/api/products";
+import { useProductReviewStats } from "@/lib/hooks/use-products";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Progress } from "../ui/progress";
 
 interface ProductTabsProps {
   product: Product;
@@ -13,64 +16,73 @@ interface ProductTabsProps {
 type RatingKey = 1 | 2 | 3 | 4 | 5;
 
 export function ProductTabs({ product }: ProductTabsProps) {
-  const [activeTab, setActiveTab] = useState("description");
   const [rating, setRating] = useState<RatingKey | null>(null);
   const [comment, setComment] = useState("");
 
-  const tabs = [
-    { id: "description", label: "وصف المنتج" },
-    { id: "specifications", label: "مواصفات المنتج" },
-    { id: "shipping", label: "سياسة الشحن والإرجاع" },
-    { id: "reviews", label: "تقييم المنتج" },
-  ];
+  const {
+    data: reviewStats,
+    isLoading: isLoadingStats,
+    error,
+  } = useProductReviewStats(product.id);
 
   // Calculate rating percentages
   const ratingCounts: Record<RatingKey, number> = {
-    5: product?._count?.reviews || 0,
-    4: product?._count?.reviews || 0,
-    3: product?._count?.reviews || 0,
-    2: product?._count?.reviews || 0,
-    1: product?._count?.reviews || 0,
+    5: reviewStats?.ratingDistribution[0]?.count || 0,
+    4: reviewStats?.ratingDistribution[1]?.count || 0,
+    3: reviewStats?.ratingDistribution[2]?.count || 0,
+    2: reviewStats?.ratingDistribution[3]?.count || 0,
+    1: reviewStats?.ratingDistribution[4]?.count || 0,
   };
 
-  const totalReviews = product?._count?.reviews || 0;
+  const totalReviews = reviewStats?.totalReviews || 0;
+  const averageRating =
+    reviewStats?.averageRating || parseInt(product.averageRating) || 0;
 
   return (
-    <div className="w-full" dir="rtl">
-      {/* Centered Tabs */}
-      <div className="flex justify-center border-b border-gray-200">
-        <div className="flex gap-8">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={cn(
-                "px-4 py-2 text-sm font-medium rounded-md transition-colors duration-300",
-                activeTab === tab.id
-                  ? "bg-[#2D9CDB] text-white" // Active state
-                  : "text-[#2D9CDB] bg-[#EDF8FF]" // Inactive state
-              )}
+    <div className="w-full">
+      <Tabs dir="rtl" defaultValue="description" className="w-full">
+        {/* Centered Tabs */}
+        <div className="flex justify-center border-b border-gray-200 pb-3">
+          <TabsList className="flex gap-8 bg-transparent">
+            <TabsTrigger
+              value="description"
+              className="px-4 py-2 text-sm font-medium rounded-md transition-colors duration-300 data-[state=active]:bg-[#2D9CDB] data-[state=active]:text-white data-[state=inactive]:text-[#2D9CDB] data-[state=inactive]:bg-[#EDF8FF]"
             >
-              {/* <button className="w-full py-2 text-center bg-[#FF9B07] text-white rounded-lg hover:bg-[#F08C00] transition-colors"> */}
-
-              {tab.label}
-            </button>
-          ))}
+              وصف المنتج
+            </TabsTrigger>
+            <TabsTrigger
+              value="specifications"
+              className="px-4 py-2 text-sm font-medium rounded-md transition-colors duration-300 data-[state=active]:bg-[#2D9CDB] data-[state=active]:text-white data-[state=inactive]:text-[#2D9CDB] data-[state=inactive]:bg-[#EDF8FF]"
+            >
+              مواصفات المنتج
+            </TabsTrigger>
+            <TabsTrigger
+              value="shipping"
+              className="px-4 py-2 text-sm font-medium rounded-md transition-colors duration-300 data-[state=active]:bg-[#2D9CDB] data-[state=active]:text-white data-[state=inactive]:text-[#2D9CDB] data-[state=inactive]:bg-[#EDF8FF]"
+            >
+              سياسة الشحن والإرجاع
+            </TabsTrigger>
+            <TabsTrigger
+              value="reviews"
+              className="px-4 py-2 text-sm font-medium rounded-md transition-colors duration-300 data-[state=active]:bg-[#2D9CDB] data-[state=active]:text-white data-[state=inactive]:text-[#2D9CDB] data-[state=inactive]:bg-[#EDF8FF]"
+            >
+              تقييم المنتج
+            </TabsTrigger>
+          </TabsList>
         </div>
-      </div>
 
-      {/* Tab Content */}
-      <div className="py-6">
-        {activeTab === "description" && (
-          <div className="prose prose-sm max-w-none text-right">
+        {/* Tab Content */}
+        <div className="py-6">
+          <TabsContent
+            value="description"
+            className="prose prose-sm max-w-none text-right"
+          >
             <p className="text-gray-600 leading-relaxed">
               {product.description}
             </p>
-          </div>
-        )}
+          </TabsContent>
 
-        {activeTab === "specifications" && (
-          <div className="space-y-4 text-right">
+          <TabsContent value="specifications" className="space-y-4 text-right">
             {/* {product?.specifications?.map((spec, index) => (
               <div
                 key={index}
@@ -80,94 +92,101 @@ export function ProductTabs({ product }: ProductTabsProps) {
                 <span className="font-medium text-gray-900">{spec.value}</span>
               </div>
             ))} */}
-          </div>
-        )}
+          </TabsContent>
 
-        {activeTab === "shipping" && (
-          <div className="prose prose-sm max-w-none text-right">
+          <TabsContent
+            value="shipping"
+            className="prose prose-sm max-w-none text-right"
+          >
             <p className="text-gray-600 leading-relaxed">
-              {/* {product.shippingPolicy || "سياسة الشحن والإرجاع ستظهر هنا"} */}
-            {product.description || "سياسة الشحن والإرجاع ستظهر هنا"}
+              {product.description || "سياسة الشحن والإرجاع ستظهر هنا"}
             </p>
-          </div>
-        )}
+          </TabsContent>
 
-        {activeTab === "reviews" && (
-          <div className="space-y-8 text-right">
+          <TabsContent value="reviews" className="space-y-8 text-right">
             {/* Rating Statistics */}
-            <div className="flex gap-8 items-start">
-              {/* Overall Rating */}
-              <div className="text-center">
-                <div className="text-4xl font-bold text-green-600">
-                  {parseInt(product.averageRating).toFixed(1)}
-                </div>
-                <div className="flex items-center justify-center gap-1 my-2">
-                  {Array(5)
-                    .fill(0)
-                    .map((_, i) => (
-                      <Star
-                        key={i}
-                        className={cn("size-5", {
-                          "text-[#FFA726] fill-[#FFA726]":
-                            i < Math.floor(parseInt(product.averageRating)),
-                          "text-gray-300 fill-gray-300":
-                            i >= Math.ceil(parseInt(product.averageRating)),
-                          // For partial stars
-                          "text-[#FFA726]":
-                            i === Math.floor(parseInt(product.averageRating)) &&
-                            parseInt(product.averageRating) % 1 > 0,
-                        })}
-                      />
-                    ))}
-                </div>
-                <div className="text-sm text-gray-500">
-                  {totalReviews} تقييم
+            {isLoadingStats ? (
+              <div className="flex gap-8 items-start animate-pulse">
+                <div className="w-24 h-24 bg-gray-200 rounded-lg"></div>
+                <div className="flex-1 space-y-2">
+                  {[1, 2, 3, 4, 5].map((i) => (
+                    <div key={i} className="h-4 bg-gray-200 rounded-full"></div>
+                  ))}
                 </div>
               </div>
-
-              {/* Rating Bars */}
-              <div className="flex-1 space-y-2">
-                {[1, 2, 3, 4, 5].map((rating) => (
-                  <div key={rating} className="flex items-center gap-2">
-                    <div className="flex items-center gap-1 w-12">
-                      <span className="text-sm text-gray-600">{rating}</span>
-                      <Star className="size-4 text-[#FFA726] fill-[#FFA726]" />
-                    </div>
-                    <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-[#FFA726] rounded-full"
-                        style={{
-                          width: `${
-                            totalReviews > 0
-                              ? (ratingCounts[rating as RatingKey] /
-                                  totalReviews) *
-                                100
-                              : 0
-                          }%`,
-                        }}
-                      />
-                    </div>
-                    <span className="text-sm text-gray-500 w-12 text-left">
-                      {ratingCounts[rating as RatingKey]}
-                    </span>
+            ) : error ? (
+              <div className="text-red-500">
+                Failed to load review statistics
+              </div>
+            ) : (
+              <div className="flex gap-8 items-start">
+                {/* Overall Rating */}
+                <div className="text-center flex items-center gap-4">
+                  <div className="text-4xl font-bold text-green-600">
+                    {averageRating.toFixed(1)}
                   </div>
-                ))}
+                  <div className="flex items-start flex-col">
+                    <div className="flex items-center justify-center gap-1 my-2">
+                      {Array(5)
+                        .fill(0)
+                        .map((_, i) => (
+                          <Star
+                            key={i}
+                            className={cn("size-5", {
+                              "text-[#FFA726] fill-[#FFA726]":
+                                i < Math.floor(averageRating),
+                              "text-gray-300 fill-gray-300":
+                                i >= Math.ceil(averageRating),
+                              // For partial stars
+                              "text-[#FFA726]":
+                                i === Math.floor(averageRating) &&
+                                averageRating % 1 > 0,
+                            })}
+                          />
+                        ))}
+                    </div>
+                    <div className="text-sm text-gray-500">
+                      {totalReviews} تقييم
+                    </div>
+                  </div>
+                </div>
+
+                {/* Rating Bars */}
+                <div className="flex-1 space-y-2">
+                  {[5, 4, 3, 2, 1].map((rating) => (
+                    <div key={rating} className="flex items-center gap-2">
+                      <div className="flex items-center gap-1 w-12">
+                        <span className="text-sm text-gray-600">{rating}</span>
+                        <Star className="size-4 shrink-0 text-[#FFA726] fill-[#FFA726]" />
+                        <span className="text-sm text-gray-500 w-12 text-left">
+                          {`(${ratingCounts[rating as RatingKey]})`}
+                        </span>
+                      </div>
+                      <Progress
+                        value={
+                          totalReviews > 0
+                            ? (ratingCounts[rating as RatingKey] /
+                                totalReviews) *
+                              100
+                            : 0
+                        }
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Reviews List */}
             <div className="space-y-6">
-              {product?._count?.reviews
-              // .map((review) => (
-              //   <ReviewItem
-              //     key={review.id}
-              //     userName={review.userName}
-              //     rating={review.rating}
-              //     date={review.date}
-              //     comment={review.comment}
-              //   />
-              // ))
-              }
+              {product?._count?.reviews > 0 ? (
+                // Add code to fetch and display actual reviews
+                <div className="text-gray-500">
+                  Reviews will be displayed here
+                </div>
+              ) : (
+                <div className="text-gray-500">لم يتم إضافة أي تقييمات بعد</div>
+              )}
             </div>
 
             {/* Add Review Form */}
@@ -208,9 +227,9 @@ export function ProductTabs({ product }: ProductTabsProps) {
                 إرسال
               </button>
             </div>
-          </div>
-        )}
-      </div>
+          </TabsContent>
+        </div>
+      </Tabs>
     </div>
   );
 }

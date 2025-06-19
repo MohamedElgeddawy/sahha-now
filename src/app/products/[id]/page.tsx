@@ -9,6 +9,7 @@ import ProductCarousel from "@/components/products/ProductCarousel";
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
 import { useFeaturedProducts, useProduct } from "@/lib/hooks/use-products";
 import { Product } from "@/lib/api/products";
+import Loader from "@/app/loading";
 
 export default function ProductPage({
   params,
@@ -20,6 +21,10 @@ export default function ProductPage({
   const { data: featuredProducts, isLoading: featuredProductsLoading } =
     useFeaturedProducts();
 
+  if (isLoading) {
+    return <Loader />;
+  }
+
   return (
     <div className="container mx-auto px-4 py-8">
       <Breadcrumb
@@ -27,7 +32,7 @@ export default function ProductPage({
           { label: "الرئيسية", href: "/" },
           { label: "المنتجات", href: "/products" },
           {
-            label: product?.category || "",
+            label: product?.category?.name || "",
             href: `/category/${resolvedParams.id}`,
           },
           { label: product?.name || "", href: "#" },
@@ -35,7 +40,10 @@ export default function ProductPage({
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
-        <ProductGallery images={product?.media || []} />
+        <ProductGallery
+          images={product?.media || []}
+          discount={product?.discount || "0"}
+        />
         <ProductInfo product={product || ({} as Product)} />
       </div>
 
@@ -47,6 +55,7 @@ export default function ProductPage({
         <ProductCarousel
           title="اكتشف منتجات أخرى قد تهمك"
           products={featuredProducts || []}
+          isLoading={featuredProductsLoading}
         />
       </div>
     </div>

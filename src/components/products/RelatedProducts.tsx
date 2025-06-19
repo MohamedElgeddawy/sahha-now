@@ -41,7 +41,7 @@ export function RelatedProducts({ products }: RelatedProductsProps) {
                 </div>
               )}
               <Image
-                src={product.media[0]}
+                src={product.media[0]?.thumbnailUrl || ""}
                 alt={product.name}
                 fill
                 className="object-contain p-4 group-hover:scale-105 transition-transform"

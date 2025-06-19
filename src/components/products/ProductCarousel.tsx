@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Carousel,
   CarouselApi,
@@ -54,7 +54,10 @@ export default function ProductCarousel({
   const skeletonProducts = Array(4)
     .fill(null)
     .map((_, i) => ({ id: `skeleton-${i}` }));
-  const displayProducts = isLoading ? skeletonProducts : products;
+  const displayProducts = useMemo(() => {
+    if (isLoading) return skeletonProducts;
+    return products;
+  }, [isLoading, products]);
 
   return (
     <div className={cn("w-full", className)}>

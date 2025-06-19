@@ -1,18 +1,26 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Heart, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { Product } from "@/lib/api/products";
 
 interface ProductGalleryProps {
-  images: string[];
+  images: Product["media"] | [];
+  discount: string;
 }
 
-export function ProductGallery({ images }: ProductGalleryProps) {
-  const [selectedImage, setSelectedImage] = useState(0);
+export function ProductGallery({ images, discount }: ProductGalleryProps) {
+  const [selectedImage, setSelectedImage] = useState(
+    images.findIndex((image) => image.isMain)
+  );
   const [isLiked, setIsLiked] = useState(false);
+
+  useEffect(() => {
+    setSelectedImage(images.findIndex((image) => image.isMain));
+  }, [images]);
 
   return (
     <div className="flex gap-4">
@@ -30,7 +38,7 @@ export function ProductGallery({ images }: ProductGalleryProps) {
             )}
           >
             <Image
-              src={image}
+              src={image?.thumbnailUrl}
               alt={`Product thumbnail ${index + 1}`}
               fill
               className="object-contain p-2"
@@ -42,7 +50,7 @@ export function ProductGallery({ images }: ProductGalleryProps) {
       {/* Main Image */}
       <div className="flex-1 relative aspect-square rounded-lg overflow-hidden bg-white border border-gray-100">
         <Image
-          src={images[selectedImage]}
+          src={images[selectedImage]?.url}
           alt="Product image"
           fill
           className="object-contain p-4"
@@ -73,9 +81,11 @@ export function ProductGallery({ images }: ProductGalleryProps) {
           </Button>
         </div>
         {/* Discount Badge */}
-        <div className="absolute top-4 right-4 bg-red-50 text-red-600 px-3 py-1 rounded-md text-sm font-medium">
-          -15%
-        </div>
+        {Number(discount) > 0 ? (
+          <div className="absolute top-4 right-4 bg-red-50 text-red-600 px-3 py-1 rounded-md text-sm font-medium">
+            -{discount}%
+          </div>
+        ) : null}
       </div>
     </div>
   );
