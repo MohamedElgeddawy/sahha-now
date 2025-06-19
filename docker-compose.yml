@@ -1,12 +1,8 @@
-version: '3.8'
-
 services:
   sahha-frontend:
     build:
       context: .
       dockerfile: Dockerfile
-    ports:
-      - "3001:3001"
     environment:
       - NODE_ENV=production
       - PORT=3001
@@ -15,7 +11,22 @@ services:
     container_name: sahha-frontend
     networks:
       - sahha-network
+    
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./ssl:/etc/nginx/ssl
+    depends_on:
+      - sahha-frontend
+    restart: unless-stopped
+    container_name: sahha-nginx
+    networks:
+      - sahha-network
 
 networks:
   sahha-network:
-    driver: bridge 
+    driver: bridge
