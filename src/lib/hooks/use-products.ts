@@ -1,5 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import {
+  fetchFavoriteProducts,
+  fetchOfferProducts,
   fetchProduct,
   fetchProductReviewStats,
   fetchProducts,
@@ -12,12 +14,16 @@ export const productKeys = {
   all: ["products"] as const,
   lists: () => [...productKeys.all, "list"] as const,
   list: (filters: ProductFilters) => [...productKeys.lists(), filters] as const,
+  infinite: (filters: ProductFilters) =>
+    [...productKeys.lists(), "infinite", filters] as const,
   details: () => [...productKeys.all, "detail"] as const,
   detail: (id: string) => [...productKeys.details(), id] as const,
   reviews: () => [...productKeys.all, "reviews"] as const,
   // reviewsList: (id: string, filters: ReviewFilters = {}) =>
   //   [...productKeys.reviews(), "list", id, filters] as const,
   reviewStats: (id: string) => [...productKeys.reviews(), "stats", id] as const,
+  favorites: () => [...productKeys.all, "favorites"] as const,
+  offers: () => [...productKeys.all, "offers"] as const,
 };
 
 export function useProducts(filters: ProductFilters = {}) {
@@ -46,6 +52,25 @@ export function useProductReviewStats(productId: string) {
   });
 }
 
+export function useInfiniteProducts(filters: ProductFilters = {}) {
+  return useInfiniteQuery<Product[]>({
+    queryKey: productKeys.infinite(filters),
+    queryFn: async ({ pageParam = 1 }) => {
+      // Pass the current page as pageParam
+      return fetchProducts({ ...filters, page: pageParam as number });
+    },
+    getNextPageParam: (lastPage, allPages) => {
+      // If there are products in the last page, there might be more
+      if (lastPage.length === 0) {
+        return undefined;
+      }
+      // Return the next page number
+      return allPages.length + 1;
+    },
+    initialPageParam: 1,
+  });
+}
+
 // export function useProductReviews(
 //   productId: string,
 //   filters: ReviewFilters = {}
@@ -56,3 +81,41 @@ export function useProductReviewStats(productId: string) {
 //     enabled: !!productId,
 //   });
 // }
+
+export function useFavoriteProducts() {
+  return useInfiniteQuery<Product[]>({
+    queryKey: productKeys.favorites(),
+    queryFn: async ({ pageParam = 1 }) => {
+      // Pass the current page as pageParam
+      return fetchFavoriteProducts({ page: pageParam as number });
+    },
+    getNextPageParam: (lastPage, allPages) => {
+      // If there are products in the last page, there might be more
+      if (lastPage.length === 0) {
+        return undefined;
+      }
+      // Return the next page number
+      return allPages.length + 1;
+    },
+    initialPageParam: 1,
+  });
+}
+
+export function useOfferProducts() {
+  return useInfiniteQuery<Product[]>({
+    queryKey: productKeys.offers(),
+    queryFn: async ({ pageParam = 1 }) => {
+      // Pass the current page as pageParam
+      return fetchOfferProducts({ page: pageParam as number });
+    },
+    getNextPageParam: (lastPage, allPages) => {
+      // If there are products in the last page, there might be more
+      if (lastPage.length === 0) {
+        return undefined;
+      }
+      // Return the next page number
+      return allPages.length + 1;
+    },
+    initialPageParam: 1,
+  });
+}

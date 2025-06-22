@@ -105,7 +105,14 @@ export default function LoginPage() {
               <FormField
                 label="رقم الجوال"
                 placeholder="رجاء إدخال رقم الجوال"
-                startElement="+966"
+                startElement={
+                  <span
+                    dir="ltr"
+                    className="text-gray-500 select-none pointer-events-none"
+                  >
+                    +966
+                  </span>
+                }
                 type="number"
                 inputMode="numeric"
                 dir="ltr"

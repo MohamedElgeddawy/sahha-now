@@ -1,4 +1,6 @@
 import axios from "axios";
+import { store } from "../redux/store";
+import { clearCredentials, setCredentials } from "../redux/slices/authSlice";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://104.248.45.73/api";
 
@@ -30,7 +32,7 @@ const processQueue = (error: any, token: string | null = null) => {
 sahhaInstance.interceptors.request.use(
   (config) => {
     // Add auth token or other headers
-    const token = localStorage.getItem("accessToken"); // Or use a context/store
+    const token = store.getState().auth.accessToken; // Or use a context/store
     if (token && config.headers["without-token"] !== "true") {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -98,16 +100,20 @@ export default sahhaInstance;
 
 const refreshAccessToken = async () => {
   try {
-    const { data } = await axios.post(`${API_URL}/auth/token/refresh`, {
-      refreshToken: localStorage.getItem("refreshToken"), // Assuming refreshToken is stored in the redux store
+    const { data } = await sahhaInstance.post(`/auth/token/refresh`, {
+      refreshToken: store.getState().auth.refreshToken, // Assuming refreshToken is stored in the redux store
     });
-    localStorage.setItem("accessToken", data.accessToken);
+    store.dispatch(
+      setCredentials({
+        refreshToken: data.refreshToken,
+        accessToken: data.accessToken,
+      })
+    );
 
     return data.accessToken;
   } catch (error) {
     console.error("Failed to refresh access token:", error);
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
+    store.dispatch(clearCredentials());
     return null;
   }
 };

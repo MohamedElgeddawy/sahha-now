@@ -1,4 +1,6 @@
+"use client";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -17,9 +19,21 @@ import {
   Heart,
   ShoppingCart,
   Gift,
+  Menu,
+  X,
+  User,
+  MapPin,
+  Download,
+  Globe,
+  ChevronRight,
 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { motion } from "motion/react";
+import { MobileNav } from "@/components/layout/mobile-nav";
 
 export function MainHeader() {
+  const [open, setOpen] = useState(false);
+
   const categories = [
     { name: "جميع المنتجات", href: "/categories/all" },
     { name: "العناية بالأم والطفل", href: "/categories/mother-baby" },
@@ -35,24 +49,35 @@ export function MainHeader() {
   ];
 
   return (
-    <header className="bg-white border-b border-[#DADADA] sticky top-0 z-50 shadow-sm w-full">
-      <div className="container mx-auto px-4 py-4">
+    <motion.header
+      className={`bg-white border-b border-[#DADADA] sticky top-0 z-50 w-full transition-all duration-300 shadow-sm`}
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+    >
+      <div className="container mx-auto px-4 py-3 md:py-4">
         <div className="flex items-center justify-between">
           {/* Right Section - Logo */}
-          <div className="flex-shrink-0 mr-4">
-            <Link
-              prefetch
-              href="/"
-              className="flex items-center gap-3"
-            >
+          <motion.div
+            className="flex-shrink-0 mr-0 md:mr-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Link prefetch href="/" className="flex items-center gap-3">
               <SahhaNowArabicLogo />
               <SahhaNowEnglishLogo />
             </Link>
-          </div>
+          </motion.div>
 
-          {/* Center Section - Search Bar */}
-          <div className="flex-1 max-w-[800px]">
-            <div className="flex h-[48px]">
+          {/* Center Section - Search Bar (hidden on mobile) */}
+          <div className="hidden md:block flex-1 max-w-[800px]">
+            <motion.div
+              className="flex h-[48px]"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.1 }}
+            >
               {/* Categories Dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -112,11 +137,16 @@ export function MainHeader() {
               >
                 <Search className="size-5 text-white" />
               </Button>
-            </div>
+            </motion.div>
           </div>
 
           {/* Left Section - Action Icons */}
-          <div className="flex items-center gap-6 shrink-0 ml-4">
+          <motion.div
+            className="flex items-center gap-4 md:gap-6 shrink-0 ml-0 md:ml-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3, delay: 0.2 }}
+          >
             <ActionButton icon={<Gift className="size-6" />} href="/gifts" />
             <ActionButton
               icon={<ShoppingCart className="size-6" />}
@@ -125,16 +155,28 @@ export function MainHeader() {
             />
             <ActionButton
               icon={<Heart className="size-6" />}
-              href="/wishlist"
+              href="/favorites"
               count={3}
             />
-            {/* <Button variant="ghost" size="icon" className="h-10 w-10 lg:hidden">
-              <Menu className="w-6 h-6" />
-            </Button> */}
-          </div>
+            <div className="block md:hidden">
+              <MobileNav
+                open={open}
+                onOpenChange={setOpen}
+                trigger={
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="size-10 text-[#2C3E50]"
+                  >
+                    <Menu className="size-6" />
+                  </Button>
+                }
+              />
+            </div>
+          </motion.div>
         </div>
       </div>
-    </header>
+    </motion.header>
   );
 }
 
@@ -148,21 +190,28 @@ function ActionButton({
   count?: number;
 }) {
   return (
-    <Button
-      asChild
-      variant="ghost"
-      size="icon"
-      className="relative text-[#2C3E50] hover:bg-gray-100"
-    >
-      <Link prefetch href={href}>
-        {icon}
-        {count !== undefined && count > 0 && (
-          <span className="absolute top-0 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-green-600 text-xs font-bold text-white">
-            {count}
-          </span>
-        )}
-      </Link>
-    </Button>
+    <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
+      <Button
+        asChild
+        variant="ghost"
+        size="icon"
+        className="relative text-[#2C3E50] hover:bg-gray-100 size-9 md:size-10"
+      >
+        <Link prefetch href={href}>
+          {icon}
+          {count !== undefined && count > 0 && (
+            <motion.span
+              className="absolute top-0 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-green-600 text-xs font-bold text-white"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 500, damping: 15 }}
+            >
+              {count}
+            </motion.span>
+          )}
+        </Link>
+      </Button>
+    </motion.div>
   );
 }
 

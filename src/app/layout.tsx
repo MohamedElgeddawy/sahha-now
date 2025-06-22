@@ -5,7 +5,7 @@ import { Header } from "@/components/layout/header";
 import Footer from "@/components/layout/footer/footer";
 import { Container } from "@/components/layout/container";
 import { Toaster } from "sonner";
-import Providers from "@/components/layout/providers";
+import { Providers } from "@/components/layout/providers";
 
 const cairo = Cairo({ subsets: ["latin"] });
 
@@ -22,7 +22,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         className={`${cairo.className} min-h-screen flex flex-col`}
       >
         <Providers>
-          <Toaster richColors />
+          <Toaster richColors position="top-center" />
           <Header />
           <Container>{children}</Container>
           <Footer />

@@ -7,8 +7,6 @@ import { cn } from "@/lib/utils";
 import { VisaIcon } from "@/components/icons/payment/VisaIcon";
 import { MasterCardIcon } from "@/components/icons/payment/MasterCardIcon";
 import { MadaIcon } from "@/components/icons/payment/MadaIcon";
-import { TamaraIcon } from "@/components/icons/payment/TamaraIcon";
-import { TabbyIcon } from "@/components/icons/payment/TabbyIcon";
 import { Product } from "@/lib/api/products";
 
 interface ProductInfoProps {

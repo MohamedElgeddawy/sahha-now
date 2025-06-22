@@ -1,4 +1,13 @@
 import Link from "next/link";
+import { Fragment } from "react";
+import {
+  Breadcrumb as ShadcnBreadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 interface BreadcrumbItem {
   label: string;
@@ -11,25 +20,28 @@ interface BreadcrumbProps {
 
 export function Breadcrumb({ items }: BreadcrumbProps) {
   return (
-    <nav className="text-[#2C3E50]">
-      <ol className="flex items-center flex-wrap gap-2">
+    <ShadcnBreadcrumb className="py-4 text-[#2C3E50]">
+      <BreadcrumbList>
         {items.map((item, index) => (
-          <li key={item.href} className="flex items-center">
-            {index > 0 && <span className="mx-2 text-gray-400">/</span>}
-            {index === items.length - 1 ? (
-              <span className="font-medium">{item.label}</span>
-            ) : (
-              <Link
-                prefetch
-                href={item.href}
-                className="hover:text-green-600 transition-colors"
-              >
-                {item.label}
-              </Link>
-            )}
-          </li>
+          <Fragment key={item.href}>
+            {index > 0 && <BreadcrumbSeparator />}
+            <BreadcrumbItem>
+              {index === items.length - 1 ? (
+                <BreadcrumbPage>{item.label}</BreadcrumbPage>
+              ) : (
+                <BreadcrumbLink asChild>
+                  <Link
+                    className="text-gray-500 hover:underline"
+                    href={item.href}
+                  >
+                    {item.label}
+                  </Link>
+                </BreadcrumbLink>
+              )}
+            </BreadcrumbItem>
+          </Fragment>
         ))}
-      </ol>
-    </nav>
+      </BreadcrumbList>
+    </ShadcnBreadcrumb>
   );
 }

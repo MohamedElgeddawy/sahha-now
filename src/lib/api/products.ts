@@ -97,6 +97,8 @@ export interface ProductFilters {
   sort?: string;
   minPrice?: number;
   maxPrice?: number;
+  rating?: number;
+  hasDiscount?: boolean;
 }
 
 export async function fetchProducts(
@@ -134,5 +136,33 @@ export async function fetchProductReviewStats(
       error
     );
     throw error;
+  }
+}
+
+export async function fetchFavoriteProducts(
+  filters: ProductFilters = {}
+): Promise<Product[]> {
+  try {
+    const response = await sahhaInstance.get("/products/favourites", {
+      params: filters,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching favorite products:", error);
+    return [];
+  }
+}
+
+export async function fetchOfferProducts(
+  filters: ProductFilters = {}
+): Promise<Product[]> {
+  try {
+    const response = await sahhaInstance.get("/products/offers", {
+      params: filters,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching offer products:", error);
+    return [];
   }
 }
