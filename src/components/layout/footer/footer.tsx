@@ -17,7 +17,7 @@ export default function Footer() {
               <li>
                 <Link
                   prefetch
-                  href="#"
+                  href="/about"
                   className="hover:text-green-600 transition-colors block"
                 >
                   من نحن
@@ -26,7 +26,7 @@ export default function Footer() {
               <li>
                 <Link
                   prefetch
-                  href="#"
+                  href="/terms"
                   className="hover:text-green-600 transition-colors block"
                 >
                   الشروط والأحكام
@@ -35,7 +35,7 @@ export default function Footer() {
               <li>
                 <Link
                   prefetch
-                  href="#"
+                  href="/terms"
                   className="hover:text-green-600 transition-colors block"
                 >
                   سياسة الخصوصية
@@ -44,7 +44,7 @@ export default function Footer() {
               <li>
                 <Link
                   prefetch
-                  href="#"
+                  href="/contact"
                   className="hover:text-green-600 transition-colors block"
                 >
                   تواصل معنا
