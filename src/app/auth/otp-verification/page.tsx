@@ -16,21 +16,15 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { useLocalStorage } from "usehooks-ts";
+import { useAppDispatch } from "@/lib/redux/hooks";
+import { setCredentials } from "@/lib/redux/slices/authSlice";
 
 export default function OTPVerificationPage() {
   const [resendTimer, setResendTimer] = useState(30);
   const router = useRouter();
   const [mobile, setPhoneNumber] = useState<string | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
-  const [_accessToken, setAccessToken] = useLocalStorage<string | null>(
-    "accessToken",
-    null
-  );
-  const [_refreshToken, setRefreshToken] = useLocalStorage<string | null>(
-    "refreshToken",
-    null
-  );
+  const dispatch = useAppDispatch();
 
   const {
     control,
@@ -83,8 +77,12 @@ export default function OTPVerificationPage() {
   const onSubmit = async (data: OtpFormData) => {
     try {
       const res = await login({ ...data });
-      setAccessToken(res.accessToken);
-      setRefreshToken(res.refreshToken);
+      dispatch(
+        setCredentials({
+          accessToken: res.accessToken,
+          refreshToken: res.refreshToken,
+        })
+      );
 
       toast.success("تم التحقق بنجاح");
       router.push("/");

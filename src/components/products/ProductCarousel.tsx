@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import ProductCard from "./ProductCard";
+import ProductCardGrid from "./ProductCardGrid";
 import type { Product } from "@/lib/api/products";
 
 interface ProductCarouselProps {
@@ -106,7 +106,7 @@ export default function ProductCarousel({
               key={product.id}
               className="pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
             >
-              <ProductCard product={product} isLoading={isLoading} />
+              <ProductCardGrid product={product} isLoading={isLoading} />
             </CarouselItem>
           ))}
         </CarouselContent>

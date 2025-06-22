@@ -1,0 +1,77 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import sahhaInstance from "@/lib/api/sahhaInstance";
+import { toast } from "sonner";
+import { z } from "zod";
+
+// Define the user schema
+export const userProfileSchema = z.object({
+  fullname: z.string().min(2, { message: "الاسم يجب أن يكون أكثر من حرفين" }),
+  mobile: z.string().min(10, { message: "رقم الهاتف غير صحيح" }),
+  email: z.string().email({ message: "البريد الإلكتروني غير صحيح" }),
+  age: z.coerce
+    .number()
+    .min(18, { message: "يجب أن يكون العمر 18 سنة على الأقل" })
+    .max(100, { message: "العمر غير صحيح" }),
+});
+
+export type UserProfileData = z.infer<typeof userProfileSchema>;
+
+// Mock data for development
+const mockUserData = {
+  fullname: "أحمد عبدالله",
+  email: "Ahmed@example.com",
+  mobile: "0512345678",
+  age: 32,
+};
+
+// API functions
+const fetchUserProfile = async (): Promise<UserProfileData> => {
+  try {
+    const response = await sahhaInstance.get("/users/me");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching user profile:", error);
+    // Return mock data for development
+    return mockUserData;
+  }
+};
+
+const updateUserProfile = async (
+  data: UserProfileData
+): Promise<UserProfileData> => {
+  const response = await sahhaInstance.patch("/users/me", data);
+  return response.data;
+};
+
+export function useUserProfile() {
+  const queryClient = useQueryClient();
+
+  const query = useQuery({
+    queryKey: ["userProfile"],
+    queryFn: fetchUserProfile,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    retry: 1,
+  });
+
+  const mutation = useMutation({
+    mutationFn: updateUserProfile,
+    onSuccess: (data) => {
+      // Update the cache with the new data
+      queryClient.setQueryData(["userProfile"], data);
+      toast.success("تم تحديث المعلومات الشخصية بنجاح");
+    },
+    onError: (error) => {
+      toast.error("حدث خطأ أثناء تحديث المعلومات الشخصية");
+      console.error("Error updating user profile:", error);
+    },
+  });
+
+  return {
+    userProfile: query.data || mockUserData,
+    isLoading: query.isLoading,
+    isError: query.isError,
+    error: query.error,
+    updateProfile: mutation.mutate,
+    isPending: mutation.isPending,
+  };
+}

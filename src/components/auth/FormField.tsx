@@ -25,7 +25,7 @@ export function FormField({
         htmlFor={name}
         className="block text-sm font-medium text-gray-700 text-right"
       >
-        {label}
+        {label} {props.required && <span className="text-red-500">*</span>}
       </label>
       <div className="relative">
         {startElement && (
