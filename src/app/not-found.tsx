@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Search, Home, ArrowRight } from "lucide-react";
-import { motion, AnimatePresence, Variants } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "motion/react";
 
 export default function NotFound() {
   // Animation for the numbers
@@ -82,65 +82,21 @@ export default function NotFound() {
     },
   };
 
-  const buttonVariants: Variants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5,
-        ease: "easeOut",
-        delay: 0.9,
-      },
-    },
-    hover: {
-      scale: 1.05,
-      transition: {
-        duration: 0.2,
-        ease: "easeOut",
-      },
-    },
-    tap: { scale: 0.95 },
-  };
-
-  const dotsContainerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        when: "beforeChildren",
-        staggerChildren: 0.1,
-        delayChildren: 1.2,
-      },
-    },
-  };
-
   const dotVariants: Variants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: (custom: number) => ({
-      opacity: 1,
-      y: 0,
+    jump: {
+      y: -30,
       transition: {
-        duration: 0.5,
-        ease: "easeOut",
-      },
-      delay: custom * 0.2,
-    }),
-    bounce: (custom: number) => ({
-      y: [0, -15, 0],
-      opacity: [0.5, 1, 0.5],
-      transition: {
+        duration: 0.8,
         repeat: Infinity,
-        duration: 1,
+        repeatType: "mirror",
         ease: "easeInOut",
       },
-      delay: custom * 0.2,
-    }),
+    },
   };
 
   return (
     <motion.div
-      className="min-h-[80vh] flex flex-col items-center justify-center px-4 py-16"
+      className="flex flex-col items-center justify-center py-16"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -188,54 +144,41 @@ export default function NotFound() {
 
       {/* Action buttons */}
       <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md mb-16">
-        <motion.div
-          className="flex-1"
-          variants={buttonVariants}
-          whileHover="hover"
-          whileTap="tap"
+        <Button
+          asChild
+          fullWidthContainer
+          className="w-full bg-green-600 hover:bg-green-700 text-white h-12 rounded-lg"
         >
-          <Button
-            asChild
-            className="w-full bg-green-600 hover:bg-green-700 text-white h-12 rounded-lg"
-          >
-            <Link href="/">
-              <Home className="mr-2 h-5 w-5" />
-              العودة للرئيسية
-            </Link>
-          </Button>
-        </motion.div>
+          <Link href="/">
+            <Home className="mr-2 h-5 w-5" />
+            العودة للرئيسية
+          </Link>
+        </Button>
 
-        <motion.div
-          className="flex-1"
-          variants={buttonVariants}
-          whileHover="hover"
-          whileTap="tap"
+        <Button
+          asChild
+          fullWidthContainer
+          variant="outline"
+          className="w-full border-green-primary text-green-primary hover:bg-green-primary/10 h-12 rounded-lg"
         >
-          <Button
-            asChild
-            variant="outline"
-            className="w-full border-green-600 text-green-600 hover:bg-green-50 h-12 rounded-lg"
-          >
-            <Link href="/products">
-              تصفح المنتجات
-              <ArrowRight className="mr-2 h-5 w-5" />
-            </Link>
-          </Button>
-        </motion.div>
+          <Link href="/products">
+            تصفح المنتجات
+            <ArrowRight className="size-5 rtl:rotate-180" />
+          </Link>
+        </Button>
       </div>
 
       {/* Animated dots */}
       <motion.div
-        className="flex justify-center"
-        variants={dotsContainerVariants}
+        animate="jump"
+        transition={{ staggerChildren: -0.2, staggerDirection: -1 }}
+        className="flex justify-center gap-2"
       >
         {[...Array(5)].map((_, i) => (
           <motion.div
             key={i}
-            className="h-3 w-3 mx-1 rounded-full bg-green-500"
+            className="size-4 will-change-transform rounded-full bg-green-500"
             variants={dotVariants}
-            animate="bounce"
-            custom={i}
           />
         ))}
       </motion.div>

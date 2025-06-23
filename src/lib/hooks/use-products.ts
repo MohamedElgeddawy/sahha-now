@@ -7,6 +7,7 @@ import {
   fetchProducts,
   Product,
   ProductFilters,
+  ProductsResponse,
   ReviewStats,
 } from "../api/products";
 
@@ -27,7 +28,7 @@ export const productKeys = {
 };
 
 export function useProducts(filters: ProductFilters = {}) {
-  return useQuery<Product[]>({
+  return useQuery<ProductsResponse>({
     queryKey: productKeys.list(filters),
     queryFn: () => fetchProducts(filters),
   });
@@ -53,7 +54,7 @@ export function useProductReviewStats(productId: string) {
 }
 
 export function useInfiniteProducts(filters: ProductFilters = {}) {
-  return useInfiniteQuery<Product[]>({
+  return useInfiniteQuery<ProductsResponse>({
     queryKey: productKeys.infinite(filters),
     queryFn: async ({ pageParam = 1 }) => {
       // Pass the current page as pageParam
@@ -61,7 +62,7 @@ export function useInfiniteProducts(filters: ProductFilters = {}) {
     },
     getNextPageParam: (lastPage, allPages) => {
       // If there are products in the last page, there might be more
-      if (lastPage.length === 0) {
+      if (lastPage.products.length === 0) {
         return undefined;
       }
       // Return the next page number
@@ -102,7 +103,7 @@ export function useFavoriteProducts() {
 }
 
 export function useOfferProducts() {
-  return useInfiniteQuery<Product[]>({
+  return useInfiniteQuery<ProductsResponse>({
     queryKey: productKeys.offers(),
     queryFn: async ({ pageParam = 1 }) => {
       // Pass the current page as pageParam
@@ -110,7 +111,7 @@ export function useOfferProducts() {
     },
     getNextPageParam: (lastPage, allPages) => {
       // If there are products in the last page, there might be more
-      if (lastPage.length === 0) {
+      if (lastPage.products.length === 0) {
         return undefined;
       }
       // Return the next page number

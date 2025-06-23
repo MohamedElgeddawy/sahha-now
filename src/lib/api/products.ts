@@ -82,12 +82,12 @@ export interface ReviewStats {
   ];
 }
 
-// export interface ProductsResponse {
-//   products: Product[];
-//   totalCount: number;
-//   currentPage: number;
-//   totalPages: number;
-// }
+export interface ProductsResponse {
+  products: Product[];
+  page: number;
+  limit: number;
+  totalPages: number;
+}
 
 export interface ProductFilters {
   page?: number;
@@ -103,7 +103,7 @@ export interface ProductFilters {
 
 export async function fetchProducts(
   filters: ProductFilters = {}
-): Promise<Product[]> {
+): Promise<ProductsResponse> {
   try {
     const response = await sahhaInstance.get("/products", { params: filters });
     return response.data;
@@ -143,7 +143,7 @@ export async function fetchFavoriteProducts(
   filters: ProductFilters = {}
 ): Promise<Product[]> {
   try {
-    const response = await sahhaInstance.get("/products/favourites", {
+    const response = await sahhaInstance.get("/favourites", {
       params: filters,
     });
     return response.data;
@@ -155,7 +155,7 @@ export async function fetchFavoriteProducts(
 
 export async function fetchOfferProducts(
   filters: ProductFilters = {}
-): Promise<Product[]> {
+): Promise<ProductsResponse> {
   try {
     const response = await sahhaInstance.get("/products/offers", {
       params: filters,
@@ -163,6 +163,11 @@ export async function fetchOfferProducts(
     return response.data;
   } catch (error) {
     console.error("Error fetching offer products:", error);
-    return [];
+    return {
+      products: [],
+      page: 1,
+      limit: 10,
+      totalPages: 1,
+    };
   }
 }

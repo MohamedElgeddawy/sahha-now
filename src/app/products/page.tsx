@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import ProductCardGrid from "@/components/products/ProductCardGrid";
 import { useInfiniteProducts } from "@/lib/hooks/use-products";
 import { ProductFilters } from "@/lib/api/products";
@@ -145,8 +145,14 @@ export default function ProductsPage() {
   ];
 
   // Flatten product data from multiple pages
-  const products = data?.pages.flat() || [];
-  const totalProducts = 124; // This would ideally come from the API response
+  const products = useMemo(() => {
+    return data?.pages.flatMap((page) => page.products) || [];
+  }, [data]);
+  const totalProducts = useMemo(() => {
+    return (
+      Number(data?.pages[0]?.totalPages) * (data?.pages[0]?.limit || 12) || 0
+    );
+  }, [data]);
 
   return (
     <motion.div

@@ -17,7 +17,7 @@ export default function AccountPage() {
   const dispatch = useDispatch();
   const router = useRouter();
   return (
-    <div className="py-8 px-4 flex flex-col gap-4">
+    <div className="py-8 flex flex-col gap-4">
       <Breadcrumb
         items={[
           { label: "الرئيسية", href: "/" },
@@ -54,6 +54,7 @@ export default function AccountPage() {
             <span>نقاطي</span>
           </TabsTrigger>
           <Button
+            fullWidthContainer
             type="button"
             onClick={() => {
               dispatch(clearCredentials());

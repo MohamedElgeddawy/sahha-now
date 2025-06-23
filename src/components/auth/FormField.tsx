@@ -40,10 +40,10 @@ export function FormField({
             {
               "ps-12": !!startElement,
               "pe-12": !!endElement,
-              "border-red-500 focus-visible:ring-red-500": error,
             },
             className
           )}
+          aria-invalid={!!error}
           {...props}
         />
         {endElement && (

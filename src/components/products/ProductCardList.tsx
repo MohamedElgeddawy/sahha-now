@@ -1,19 +1,23 @@
 import { Product } from "@/lib/api/products";
-import React, { useRef } from "react";
-import { Heart, Eye, ShoppingCart, Star } from "lucide-react";
+import React from "react";
+import { Eye, ShoppingCart, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { useHover } from "usehooks-ts";
 import { motion, AnimatePresence } from "motion/react";
 import FavoriteButton from "./FavoriteButton";
 
 type Props = {
   product: Partial<Product>;
   isLoading?: boolean;
+  isFavorite?: boolean;
 };
 
-const ProductCardList = ({ product, isLoading = false }: Props) => {
+const ProductCardList = ({
+  product,
+  isLoading = false,
+  isFavorite = false,
+}: Props) => {
   // Render skeleton UI when loading
   if (isLoading) {
     return (
@@ -145,7 +149,7 @@ const ProductCardList = ({ product, isLoading = false }: Props) => {
             <AnimatePresence>
               <FavoriteButton
                 productId={product.id!}
-                isFavorite={product.isFavourite}
+                isFavorite={product?.isFavourite || isFavorite}
               />
               <motion.button
                 className="bg-white rounded-full p-2 shadow-sm"

@@ -1,6 +1,6 @@
 import React from "react";
 import { Heart, Loader2 } from "lucide-react";
-import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
+import { useAppSelector } from "@/lib/redux/hooks";
 
 import { selectIsAuthenticated } from "@/lib/redux/slices/authSlice";
 import { motion } from "motion/react";
@@ -27,16 +27,21 @@ const FavoriteButton = ({
   const queryClient = useQueryClient();
   const { mutate: toggleFavorite, isPending } = useMutation({
     mutationFn: async () => {
-      return await sahhaInstance.post(`/products/${productId}/favourites`);
+      return await sahhaInstance.post(`/favourites/${productId}`);
     },
     onSuccess: () => {
-      toast.success("تم إضافة المنتج إلى المفضلة");
       queryClient.invalidateQueries({ queryKey: productKeys.all });
       queryClient.invalidateQueries({
         queryKey: productKeys.detail(productId),
       });
       queryClient.invalidateQueries({
         queryKey: productKeys.infinite({}),
+      });
+      queryClient.invalidateQueries({
+        queryKey: productKeys.favorites(),
+      });
+      queryClient.invalidateQueries({
+        queryKey: productKeys.offers(),
       });
     },
   });
@@ -56,7 +61,10 @@ const FavoriteButton = ({
 
   return (
     <motion.button
-      className={cn("bg-white rounded-full p-2 shadow-sm cursor-pointer", className)}
+      className={cn(
+        "bg-white rounded-full p-2 shadow-sm cursor-pointer",
+        className
+      )}
       onClick={handleToggleFavorite}
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.9 }}

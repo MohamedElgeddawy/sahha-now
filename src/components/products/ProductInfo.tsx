@@ -4,10 +4,11 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Star, Truck, Info, MessageSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { VisaIcon } from "@/components/icons/payment/VisaIcon";
-import { MasterCardIcon } from "@/components/icons/payment/MasterCardIcon";
-import { MadaIcon } from "@/components/icons/payment/MadaIcon";
 import { Product } from "@/lib/api/products";
+import Image from "next/image";
+import QuantityCounter from "../ui/QuantityCounter";
+import { toast } from "sonner";
+import { useCart } from "@/lib/hooks/use-cart";
 
 interface ProductInfoProps {
   product: Product;
@@ -15,6 +16,7 @@ interface ProductInfoProps {
 
 export function ProductInfo({ product }: ProductInfoProps) {
   const [quantity, setQuantity] = useState(1);
+  const { addToCart, openCart } = useCart();
   const [showQuestionForm, setShowQuestionForm] = useState(false);
   const [questionForm, setQuestionForm] = useState({
     name: "",
@@ -111,27 +113,21 @@ export function ProductInfo({ product }: ProductInfoProps) {
 
       {/* Quantity and Add to Cart */}
       <div className="flex items-center gap-4">
-        <div className="flex items-center border border-gray-200 rounded-md">
-          <button
-            onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-            className="px-3 py-2 text-gray-600 hover:text-gray-900"
-          >
-            -
-          </button>
-          <span className="px-3 py-2 text-gray-900 min-w-[40px] text-center">
-            {quantity}
-          </span>
-          <button
-            // onClick={() =>
-            // setQuantity((q) => Math.min(parseInt(product.stock!) || 0, q + 1))
-            // }
-            className="px-3 py-2 text-gray-600 hover:text-gray-900"
-          >
-            +
-          </button>
-        </div>
-        <Button className="flex-1 bg-[#FF9B07] text-white hover:bg-[#F08C00] h-[42px]">
-          اضف لعربة التسوق س- {(Number(product.price) || 0) * quantity} ر.س
+        <QuantityCounter
+          initialValue={quantity}
+          onChange={(value) => setQuantity(value)}
+        />
+        <Button
+          fullWidthContainer
+          onClick={() => {
+            addToCart(product, null, quantity);
+            toast.success("تمت الإضافة إلى السلة");
+            openCart();
+            setQuantity(1);
+          }}
+          className="w-full bg-[#FF9B07] text-white hover:bg-[#F08C00]"
+        >
+          اضف لعربة التسوق - {(Number(product.price) || 0) * quantity} ر.س
         </Button>
       </div>
 
@@ -240,9 +236,24 @@ export function ProductInfo({ product }: ProductInfoProps) {
         <div className="flex items-center justify-between">
           <span className="text-sm text-gray-600">طرق الدفع المتاحة</span>
           <div className="flex items-center gap-2">
-            <VisaIcon />
-            <MasterCardIcon />
-            <MadaIcon />
+            <Image
+              src="/icons/payment/VISA.svg"
+              alt="VISA"
+              width={40}
+              height={24}
+            />
+            <Image
+              src="/icons/payment/MASTERCARD.svg"
+              alt="MASTERCARD"
+              width={40}
+              height={24}
+            />
+            <Image
+              src="/icons/payment/MADA.svg"
+              alt="MADA"
+              width={40}
+              height={24}
+            />
           </div>
         </div>
         {/* <div className="flex items-center justify-between">

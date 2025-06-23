@@ -1,7 +1,6 @@
-import { ChevronLeft } from "lucide-react";
-import Link from "next/link";
 import { Metadata } from "next";
 import { TermsAndConditions } from "@/components/TermsAndConditions";
+import { Breadcrumb } from "@/components/layout/Breadcrumb";
 
 export const metadata: Metadata = {
   title: "الشروط والأحكام - صحتي الآن",
@@ -10,27 +9,16 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
-    <main className="py-12 bg-gray-50 min-h-[calc(100vh-64px)]">
+    <main className="py-12 bg-gray-50">
       {/* Breadcrumb */}
-      <div className="container mb-8">
-        <nav className="text-[#2C3E50]">
-          <ul className="flex items-center">
-            <li>
-              <Link prefetch href="/" className="hover:text-green-600">
-                الرئيسية
-              </Link>
-            </li>
-            <li className="mx-2">
-              <ChevronLeft className="ltr:rotate-180 size-4" />
-            </li>
-            <li className="font-medium">الشروط والأحكام</li>
-          </ul>
-        </nav>
-      </div>
+      <Breadcrumb
+        items={[
+          { label: "الرئيسية", href: "/" },
+          { label: "الشروط والأحكام", href: "/terms" },
+        ]}
+      />
 
-      <div className="container">
-        <TermsAndConditions />
-      </div>
+      <TermsAndConditions />
     </main>
   );
 }

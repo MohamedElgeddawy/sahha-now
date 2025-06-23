@@ -1,6 +1,5 @@
 "use client";
 import Link from "next/link";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -20,19 +19,15 @@ import {
   ShoppingCart,
   Gift,
   Menu,
-  X,
-  User,
-  MapPin,
-  Download,
-  Globe,
-  ChevronRight,
 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "motion/react";
 import { MobileNav } from "@/components/layout/mobile-nav";
+import { useCart } from "@/lib/hooks/use-cart";
 
 export function MainHeader() {
   const [open, setOpen] = useState(false);
+  const { totalItems } = useCart();
 
   const categories = [
     { name: "جميع المنتجات", href: "/categories/all" },
@@ -151,7 +146,7 @@ export function MainHeader() {
             <ActionButton
               icon={<ShoppingCart className="size-6" />}
               href="/cart"
-              count={0}
+              count={totalItems}
             />
             <ActionButton
               icon={<Heart className="size-6" />}

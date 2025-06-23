@@ -101,7 +101,7 @@ export default function ProductCarousel({
         className="w-full"
       >
         <CarouselContent className="-ml-4">
-          {displayProducts.map((product) => (
+          {displayProducts?.map((product) => (
             <CarouselItem
               key={product.id}
               className="pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4"

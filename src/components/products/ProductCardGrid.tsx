@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useHover } from "usehooks-ts";
 import { motion, AnimatePresence } from "motion/react";
 import FavoriteButton from "./FavoriteButton";
+import AddToCart from "./AddToCart";
 
 type Props = {
   product: Partial<Product>;
@@ -99,13 +100,11 @@ const ProductCardGrid = ({ product, isLoading = false }: Props) => {
               >
                 <Scale className="w-5 h-5 text-gray-600" />
               </motion.button>
-              <motion.button
-                className="bg-green-500 rounded-full p-2 shadow-sm"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                <ShoppingCart className="w-5 h-5 text-white" />
-              </motion.button>
+              <AddToCart
+                product={product as Product}
+                className="bg-green-500"
+                quantity={1}
+              />
             </motion.div>
           )}
         </AnimatePresence>

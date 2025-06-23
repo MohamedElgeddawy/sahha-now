@@ -95,27 +95,27 @@ const getBadgeVariant = (status: string) => {
     case "مقبولة":
       return {
         variant: "default",
-        className: "bg-green-100 text-green-600 border-green-200",
+        className: "bg-green-100 px-4 py-2 text-green-600 border-green-200",
       };
     case "مكتملة":
       return {
         variant: "secondary",
-        className: "bg-purple-100 text-purple-600 border-purple-200",
+        className: "bg-purple-100 px-4 py-2 text-purple-600 border-purple-200",
       };
     case "تسوية الصيدلية":
       return {
         variant: "destructive",
-        className: "bg-red-100 text-red-600 border-red-200",
+        className: "bg-red-100 px-4 py-2 text-red-600 border-red-200",
       };
     case "التسويق":
       return {
         variant: "outline",
-        className: "bg-amber-100 text-amber-600 border-amber-200",
+        className: "bg-amber-100 px-4 py-2 text-amber-600 border-amber-200",
       };
     default:
       return {
         variant: "default",
-        className: "bg-gray-100 text-gray-600 border-gray-200",
+        className: "bg-gray-100 px-4 py-2 text-gray-600 border-gray-200",
       };
   }
 };
@@ -134,26 +134,26 @@ export function PointsTab() {
     <div className="bg-gray-50 p-6 rounded-lg">
       {/* Points Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-        <div className="bg-[#FFF9E9] p-4 rounded-lg flex justify-between items-center">
-          <div>
+        <div className="bg-[#FFF9E9] p-4 rounded-lg flex flex-col gap-3">
+          <div className="flex justify-between items-center gap-2">
             <h4 className="text-gray-600 text-lg font-bold">
               الرصيد الحالي من النقاط
             </h4>
-            <p className="font-medium text-gray-800">1380 نقطة</p>
-          </div>
-          <div className="flex flex-col items-end gap-2">
-            <Button variant="link" className="text-amber-600 p-0 text-sm">
+            <Button variant="link" className="text-amber-600 p-0 h-auto text-sm">
               استبدل نقاطك
             </Button>
+          </div>
+          <div className="flex items-end justify-between gap-2">
+            <p className="font-medium text-gray-800">1380 نقطة</p>
             <Image src="/icons/gift.svg" alt="gift" width={32} height={32} />
           </div>
         </div>
-        <div className="bg-[#E9F8F4] p-4 rounded-lg flex justify-between items-center">
+        <div className="bg-[#E9F8F4] p-4 rounded-lg flex flex-col gap-3">
           <div>
             <h4 className="text-gray-600 text-lg font-bold">محفظتي</h4>
-            <p className="font-medium text-gray-800">45.00 ر.س</p>
           </div>
-          <div>
+          <div className="flex items-end justify-between gap-2">
+            <p className="font-medium text-gray-800">45.00 ر.س</p>
             <Image
               src="/icons/wallet.svg"
               alt="wallet"
@@ -164,85 +164,81 @@ export function PointsTab() {
         </div>
       </div>
 
-      <h3 className="text-lg font-semibold text-[#2C3E50] mb-6 text-right">
+      <h3 className="text-lg font-semibold text-[#2C3E50] mb-6 ">
         جدول النقاط
       </h3>
 
       {/* Points Table */}
-      <div className="rounded-lg border overflow-hidden mb-6">
-        <Table>
-          <TableHeader>
-            <TableRow className="bg-gray-50">
-              <TableHead className="text-right font-bold text-gray-700">
-                النوع
-              </TableHead>
-              <TableHead className="text-right font-bold text-gray-700">
-                عدد النقاط
-              </TableHead>
-              <TableHead className="text-right font-bold text-gray-700">
-                التاريخ
-              </TableHead>
-              <TableHead className="text-right font-bold text-gray-700">
-                الحالة
-              </TableHead>
-              <TableHead className="text-right font-bold text-gray-700">
-                المرجع
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {pointsHistory.map((item) => (
-              <TableRow key={item.id}>
-                <TableCell className="text-right font-medium">
-                  {item.type}
-                </TableCell>
-                <TableCell
-                  className={`text-right ${getPointsColor(item.points)}`}
-                >
-                  {item.points}
-                </TableCell>
-                <TableCell className="text-right text-gray-600">
-                  {item.date}
-                </TableCell>
-                <TableCell className="text-right">
-                  <Badge
-                    variant={getBadgeVariant(item.status).variant as any}
-                    className={getBadgeVariant(item.status).className}
-                  >
-                    {item.status}
-                  </Badge>
-                </TableCell>
-                <TableCell className="text-right text-gray-600">
-                  {item.source}
-                </TableCell>
+      <div className="rounded-lg overflow-x-auto border border-gray-300 mb-6">
+        <div>
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-gray-50">
+                <TableHead className=" font-bold text-gray-700">
+                  النوع
+                </TableHead>
+                <TableHead className=" font-bold text-gray-700">
+                  عدد النقاط
+                </TableHead>
+                <TableHead className=" font-bold text-gray-700">
+                  التاريخ
+                </TableHead>
+                <TableHead className=" font-bold text-gray-700">
+                  الحالة
+                </TableHead>
+                <TableHead className=" font-bold text-gray-700">
+                  المرجع
+                </TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+            </TableHeader>
+            <TableBody>
+              {pointsHistory.map((item) => (
+                <TableRow key={item.id}>
+                  <TableCell className=" font-medium">{item.type}</TableCell>
+                  <TableCell className={` ${getPointsColor(item.points)}`}>
+                    {item.points}
+                  </TableCell>
+                  <TableCell className=" text-gray-600">{item.date}</TableCell>
+                  <TableCell className="">
+                    <Badge
+                      variant={getBadgeVariant(item.status).variant as any}
+                      className={getBadgeVariant(item.status).className}
+                    >
+                      {item.status}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className=" text-gray-600">
+                    {item.source}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
 
-      {/* Pagination */}
-      <Pagination>
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious href="#" />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#" isActive>
-              1
-            </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">2</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">3</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext href="#" />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
+        {/* Pagination */}
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious href="#" />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href="#" isActive>
+                1
+              </PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href="#">2</PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href="#">3</PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationNext href="#" />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      </div>
     </div>
   );
 }

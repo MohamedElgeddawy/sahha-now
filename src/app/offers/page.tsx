@@ -36,8 +36,8 @@ export default function OffersPage() {
 
   const hasOffers = useMemo(
     () =>
-      offerProducts?.pages.flat().length &&
-      offerProducts?.pages.flat().length > 0,
+      offerProducts?.pages.flatMap((page) => page.products).length &&
+      offerProducts?.pages.flatMap((page) => page.products).length > 0,
     [offerProducts]
   );
 
@@ -65,9 +65,11 @@ export default function OffersPage() {
       ) : hasOffers ? (
         <>
           <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-4">
-            {offerProducts?.pages.flat().map((product) => (
-              <ProductCardGrid key={product.id} product={product} />
-            ))}
+            {offerProducts?.pages
+              .flatMap((page) => page.products)
+              .map((product) => (
+                <ProductCardGrid key={product.id} product={product} />
+              ))}
           </div>
 
           {/* Load more trigger element */}
@@ -95,11 +97,9 @@ export default function OffersPage() {
           <p className="text-gray-500 mb-8 max-w-md">
             تفقد موقعنا لاحقاً للحصول على أفضل العروض والخصومات
           </p>
-          <Link href="/products">
-            <Button className="bg-green-600 text-white hover:bg-green-700 py-3 px-10">
-              تصفح المنتجات
-            </Button>
-          </Link>
+          <Button asChild className="py-3 px-10">
+            <Link href="/products">تصفح المنتجات</Link>
+          </Button>
         </div>
       )}
     </div>

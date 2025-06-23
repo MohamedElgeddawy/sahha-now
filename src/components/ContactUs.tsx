@@ -1,267 +1,262 @@
 "use client";
 
-import { useState, FormEvent } from "react";
 import { Button } from "./ui/button";
-import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import Image from "next/image";
-import { Mail, Phone, Clock, MapPin } from "lucide-react";
+import { Mail, Phone, Clock, MapPin, Send, Loader2 } from "lucide-react";
+import { FormField } from "./auth/FormField";
+import { motion } from "motion/react";
+import { z } from "zod";
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-type ContactFormData = {
-  name: string;
-  email: string;
-  phone: string;
-  message: string;
-};
+// Define Zod schema for form validation
+const contactFormSchema = z.object({
+  name: z.string().min(1, { message: "هذا الحقل مطلوب" }),
+  email: z
+    .string()
+    .min(1, { message: "هذا الحقل مطلوب" })
+    .email({ message: "بريد إلكتروني غير صالح" }),
+  phone: z
+    .string()
+    .min(1, { message: "هذا الحقل مطلوب" })
+    .regex(/^[0-9]+$/, { message: "رقم هاتف غير صالح" }),
+  message: z
+    .string()
+    .min(1, { message: "هذا الحقل مطلوب" })
+    .min(10, { message: "يجب أن تكون الرسالة على الأقل 10 أحرف" }),
+});
+
+type ContactFormData = z.infer<typeof contactFormSchema>;
+
+const contactInfo = [
+  {
+    icon: <Mail className="text-gray-600 size-5" />,
+    text: "Support@email.com",
+  },
+  {
+    icon: <Phone className="text-gray-600 size-5" />,
+    text: "9200 XXXX",
+  },
+  {
+    icon: <MapPin className="text-gray-600 size-5" />,
+    text: "الرياض، المملكة العربية السعودية",
+  },
+  {
+    icon: <Clock className="text-gray-600 size-5" />,
+    text: "يوميًا من 9 صباحًا إلى 10 مساءً",
+  },
+];
 
 export function ContactUs() {
-  const [formData, setFormData] = useState<ContactFormData>({
-    name: "",
-    email: "",
-    phone: "",
-    message: "",
+  const {
+    register,
+    handleSubmit,
+    reset,
+    control,
+    formState: { isSubmitting },
+  } = useForm<ContactFormData>({
+    resolver: zodResolver(contactFormSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+      message: "",
+    },
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errors, setErrors] = useState<Partial<ContactFormData>>({});
 
-  const validateForm = () => {
-    const newErrors: Partial<ContactFormData> = {};
-
-    if (!formData.name) {
-      newErrors.name = "هذا الحقل مطلوب";
-    }
-
-    if (!formData.email) {
-      newErrors.email = "هذا الحقل مطلوب";
-    } else if (
-      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(formData.email)
-    ) {
-      newErrors.email = "بريد إلكتروني غير صالح";
-    }
-
-    if (!formData.phone) {
-      newErrors.phone = "هذا الحقل مطلوب";
-    } else if (!/^[0-9]+$/.test(formData.phone)) {
-      newErrors.phone = "رقم هاتف غير صالح";
-    }
-
-    if (!formData.message) {
-      newErrors.message = "هذا الحقل مطلوب";
-    } else if (formData.message.length < 10) {
-      newErrors.message = "يجب أن تكون الرسالة على الأقل 10 أحرف";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-
-    if (!validateForm()) {
-      return;
-    }
-
-    setIsSubmitting(true);
+  const onSubmit = async (data: ContactFormData) => {
     try {
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(data),
       });
 
       if (response.ok) {
         alert("تم إرسال رسالتك بنجاح");
-        setFormData({
-          name: "",
-          email: "",
-          phone: "",
-          message: "",
-        });
+        reset();
       } else {
         throw new Error("فشل إرسال الرسالة");
       }
     } catch (error) {
       alert("حدث خطأ أثناء إرسال الرسالة");
-    } finally {
-      setIsSubmitting(false);
     }
   };
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
   return (
-    <div className="w-full px-2 sm:px-4 py-4 sm:py-8">
-      <div className="flex flex-col lg:flex-row gap-4 sm:gap-8 max-w-7xl mx-auto">
+    <motion.div
+      className="max-w-7xl mx-auto py-8"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Left Column - Form and Contact Info */}
-        <div className="w-full lg:w-1/2 order-1">
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
           {/* Contact Form */}
-          <div className="bg-white rounded-lg border border-[#DADADA] p-3 sm:p-4 md:p-8 mb-4 sm:mb-8 w-full ">
-            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-right mb-3 sm:mb-4 md:mb-6">
+          <div
+            className="bg-white rounded-lg border border-[#DADADA] p-8 mb-8"
+            style={{
+              width: "100%",
+              maxWidth: "600px",
+              minHeight: "639px",
+            }}
+          >
+            <motion.h1
+              className="text-3xl font-bold text-right mb-6"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.3 }}
+            >
               اتصل بنا
-            </h1>
-            <p className="text-right mb-4 sm:mb-6 md:mb-8 text-gray-700 text-sm sm:text-base">
+            </motion.h1>
+            <motion.p
+              className="text-right mb-8 text-gray-700"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.4, delay: 0.2 }}
+            >
               نحن هنا للإجابة على استفساراتك، لا تتردد في التواصل معنا في أي
               وقت.
-            </p>
+            </motion.p>
 
-            <form
-              onSubmit={handleSubmit}
-              className="space-y-3 sm:space-y-4 md:space-y-6"
+            <motion.form
+              onSubmit={handleSubmit(onSubmit)}
+              className="space-y-6"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
             >
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
-                <div>
-                  <label
-                    htmlFor="name"
-                    className="block mb-1 md:mb-2 font-medium text-right text-gray-700 text-sm sm:text-base"
-                  >
-                    الاسم*
-                  </label>
-                  <Input
-                    id="name"
-                    name="name"
-                    type="text"
-                    value={formData.name}
-                    onChange={handleChange}
-                    placeholder="برجاء إدخال الاسم"
-                    className="w-full text-right text-sm md:text-base"
-                  />
-                  {errors.name && (
-                    <p className="text-red-500 text-xs md:text-sm mt-1 text-right">
-                      {errors.name}
-                    </p>
+              {/* Form fields using FormField component */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Controller
+                  name="name"
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <FormField
+                      label="الاسم"
+                      {...field}
+                      error={fieldState.error}
+                      placeholder="برجاء إدخال الاسم"
+                      required
+                    />
                   )}
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="email"
-                    className="block mb-1 md:mb-2 font-medium text-right text-gray-700 text-sm sm:text-base"
-                  >
-                    البريد الإلكتروني*
-                  </label>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    placeholder="برجاء إدخال البريد الإلكتروني"
-                    className="w-full text-right text-sm md:text-base"
-                  />
-                  {errors.email && (
-                    <p className="text-red-500 text-xs md:text-sm mt-1 text-right">
-                      {errors.email}
-                    </p>
+                />
+                <Controller
+                  name="email"
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <FormField
+                      label="البريد الإلكتروني"
+                      {...field}
+                      error={fieldState.error}
+                      type="email"
+                      placeholder="برجاء إدخال البريد الإلكتروني"
+                      required
+                    />
                   )}
-                </div>
+                />
               </div>
 
-              <div>
-                <label
-                  htmlFor="phone"
-                  className="block mb-1 md:mb-2 font-medium text-right text-gray-700 text-sm sm:text-base"
-                >
-                  رقم الهاتف*
-                </label>
-                <Input
-                  id="phone"
-                  name="phone"
-                  type="tel"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  placeholder="برجاء إدخال رقم الهاتف"
-                  className="w-full text-right text-sm md:text-base"
-                />
-                {errors.phone && (
-                  <p className="text-red-500 text-xs md:text-sm mt-1 text-right">
-                    {errors.phone}
-                  </p>
+              <Controller
+                name="phone"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <FormField
+                    label="رقم الهاتف"
+                    {...field}
+                    error={fieldState.error}
+                    type="tel"
+                    placeholder="برجاء إدخال رقم الهاتف"
+                    required
+                  />
                 )}
-              </div>
+              />
 
-              <div>
-                <label
-                  htmlFor="message"
-                  className="block mb-1 md:mb-2 font-medium text-right text-gray-700 text-sm sm:text-base"
-                >
-                  الرسالة*
-                </label>
-                <Textarea
-                  id="message"
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  placeholder="برجاء إدخال رسالتك"
-                  className="w-full min-h-[80px] sm:min-h-[100px] md:min-h-[120px] text-right text-sm md:text-base md:mb-4"
-                />
-                {errors.message && (
-                  <p className="text-red-500 text-xs md:text-sm mt-1 text-right">
-                    {errors.message}
-                  </p>
+              <Controller
+                name="message"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <div className="space-y-2">
+                    <label
+                      htmlFor="message"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      الرسالة <span className="text-red-500">*</span>
+                    </label>
+                    <Textarea
+                      id="message"
+                      {...field}
+                      placeholder="برجاء إدخال رسالتك"
+                      className="w-full min-h-[80px] sm:min-h-[100px] md:min-h-[120px] text-right text-sm md:text-base md:mb-4"
+                    />
+                    {fieldState.error && (
+                      <p className="text-sm text-red-500 text-right">
+                        {fieldState.error.message}
+                      </p>
+                    )}
+                  </div>
                 )}
-              </div>
+              />
 
               <Button
                 type="submit"
-                className="w-full bg-green-600 hover:bg-green-700 h-10 md:h-12 text-sm md:text-lg"
+                className="w-full bg-green-500 hover:bg-green-600 text-white h-12 text-lg"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? "جاري الإرسال..." : "إرسال"}
+                {isSubmitting ? (
+                  <span className="flex items-center gap-2">
+                    <Loader2 className="size-4 animate-spin" />
+                    جاري الإرسال...
+                  </span>
+                ) : (
+                  <span className="flex items-center justify-center gap-2">
+                    إرسال <Send className="size-4" />
+                  </span>
+                )}
               </Button>
-            </form>
+            </motion.form>
           </div>
 
           {/* Contact Information Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 md:gap-4  order-3">
-            <div className="h-10 md:h-12 flex items-center justify-start gap-2 md:gap-3 bg-white rounded-lg px-3 md:px-4 shadow-sm border border-[#DADADA]">
-              <Mail className="text-gray-600 size-4 md:size-5" />
-              <span className="text-[#2C3E50] text-xs md:text-sm">
-                Support@email.com
-              </span>
-            </div>
-            <div className="h-10 md:h-12 flex items-center justify-start gap-2 md:gap-3 bg-white rounded-lg px-3 md:px-4 shadow-sm border border-[#DADADA]">
-              <Phone className="text-[#2C3E50] size-4 md:size-5" />
-              <span className="text-[#2C3E50] text-xs md:text-sm">
-                9200 XXXX
-              </span>
-            </div>
-            <div className="h-10 md:h-12 flex items-center justify-start gap-2 md:gap-3 bg-white rounded-lg px-3 md:px-4 shadow-sm border border-[#DADADA]">
-              <MapPin className="text-[#2C3E50] size-4 md:size-5" />
-              <span className="text-[#2C3E50] text-xs md:text-sm">
-                الرياض، المملكة العربية السعودية
-              </span>
-            </div>
-            <div className="h-10 md:h-12 flex items-center justify-start gap-2 md:gap-3 bg-white rounded-lg px-3 md:px-4 shadow-sm border border-[#DADADA]">
-              <Clock className="text-[#2C3E50] size-4 md:size-5" />
-              <span className="text-[#2C3E50] text-xs md:text-sm">
-                يوميًا من 9 صباحًا إلى 10 مساءً
-              </span>
-            </div>
+          <div className="flex flex-wrap justify-center gap-4">
+            {contactInfo.map((item, index) => (
+              <motion.div
+                key={index}
+                className="w-full sm:w-[288px] h-[48px] flex items-center justify-start gap-3 bg-white rounded-lg px-4 shadow-sm border border-[#DADADA]"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.2 + index * 0.1 }}
+                whileHover={{ y: -5, boxShadow: "0 4px 8px rgba(0,0,0,0.1)" }}
+              >
+                {item.icon}
+                <span className="text-gray-700 text-sm">{item.text}</span>
+              </motion.div>
+            ))}
           </div>
-        </div>
+        </motion.div>
 
         {/* Right Column - Map Section */}
-        <div className="w-full lg:w-1/2 h-[250px] sm:h-[300px] md:h-[400px] lg:h-[600px] xl:h-[740px] rounded-lg overflow-hidden border border-[#DADADA] order-2 lg:order-2 mb-4 lg:mb-0">
-          <div className="relative w-full h-full">
-            <Image
-              src="/images/map.png"
-              alt="Location Map"
-              fill
-              className="object-cover"
-            />
-          </div>
-        </div>
+        <motion.div
+          className="relative h-[780px] rounded-lg overflow-hidden border border-[#DADADA]"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.7, delay: 0.3 }}
+        >
+          <Image
+            src="/images/map.png"
+            alt="Location Map"
+            fill
+            className="object-cover"
+          />
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 }

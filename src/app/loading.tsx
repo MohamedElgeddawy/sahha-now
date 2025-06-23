@@ -2,7 +2,7 @@ import React from "react";
 
 const Loader = () => {
   return (
-    <div className="flex justify-center items-center h-screen">
+    <div className="flex justify-center items-center h-[70vh]">
       <div className="loader">
         <div className="truckWrapper">
           <div className="truckBody">

@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { useFavoriteProducts, useProducts } from "@/lib/hooks/use-products";
-import { Container } from "@/components/layout/container";
 import { useAppSelector } from "@/lib/redux/hooks";
 import { selectIsAuthenticated } from "@/lib/redux/slices/authSlice";
 import { useRouter } from "next/navigation";
@@ -29,8 +28,8 @@ export default function FavoritesPage() {
 
   const hasFavorites = useMemo(
     () =>
-      favoriteProducts?.pages.flat().length &&
-      favoriteProducts?.pages.flat().length > 0,
+      favoriteProducts?.pages.flatMap((page) => page).length &&
+      favoriteProducts?.pages.flatMap((page) => page).length > 0,
     [favoriteProducts]
   );
 
@@ -42,57 +41,58 @@ export default function FavoritesPage() {
           { label: "قائمة المفضلات", href: "/favorites" },
         ]}
       />
+      <h1 className="text-3xl font-bold mb-6 text-gray-800 rtl:text-right">
+        قائمة المفضلات
+      </h1>
 
-      <Container className="py-8">
-        <h1 className="text-3xl font-bold mb-6 text-gray-800 rtl:text-right">
-          قائمة المفضلات
-        </h1>
-
-        {favoritesLoading ? (
-          <div className="grid grid-cols-1 gap-4">
-            {Array(3)
-              .fill(null)
-              .map((_, idx) => (
-                <ProductCardList key={idx} product={{}} isLoading={true} />
-              ))}
-          </div>
-        ) : hasFavorites ? (
-          <div className="grid grid-cols-1 gap-6">
-            {favoriteProducts?.pages.flat().map((product) => (
-              <ProductCardList key={product.id} product={product} />
+      {favoritesLoading ? (
+        <div className="grid grid-cols-1 gap-4">
+          {Array(3)
+            .fill(null)
+            .map((_, idx) => (
+              <ProductCardList key={idx} product={{}} isLoading={true} />
             ))}
-          </div>
-        ) : (
-          <div className="flex flex-col items-center justify-center py-16 text-center">
-            <Image
-              src="/images/emptyCart.svg"
-              alt="قائمة المفضلات فارغة"
-              width={200}
-              height={200}
-              className="mb-6"
-            />
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">
-              قائمة المفضلات فارغة حاليا
-            </h2>
-            <p className="text-gray-500 mb-8 max-w-md">
-              ابدأ التسوق الآن وأضف منتجاتك المفضلة هنا سيظهروا!
-            </p>
-            <Link href="/products">
-              <Button className="bg-green-600 text-white hover:bg-green-700 py-3 px-10">
-                تسوق الآن
-              </Button>
-            </Link>
-          </div>
-        )}
-
-        <div className="mt-16">
-          <ProductCarousel
-            title="توصيات خاصة لك"
-            products={recommendedProducts || []}
-            isLoading={recommendationsLoading}
-          />
         </div>
-      </Container>
+      ) : hasFavorites ? (
+        <div className="grid grid-cols-1 gap-6">
+          {favoriteProducts?.pages
+            .flatMap((page) => page)
+            .map((product) => (
+              <ProductCardList
+                key={product.id}
+                product={product}
+                isFavorite={true}
+              />
+            ))}
+        </div>
+      ) : (
+        <div className="flex flex-col items-center justify-center py-16 text-center">
+          <Image
+            src="/images/emptyCart.svg"
+            alt="قائمة المفضلات فارغة"
+            width={200}
+            height={200}
+            className="mb-6"
+          />
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">
+            قائمة المفضلات فارغة حاليا
+          </h2>
+          <p className="text-gray-500 mb-8 max-w-md">
+            ابدأ التسوق الآن وأضف منتجاتك المفضلة هنا سيظهروا!
+          </p>
+          <Button asChild className="py-3 px-10">
+            <Link href="/products">تسوق الآن</Link>
+          </Button>
+        </div>
+      )}
+
+      <div className="mt-16">
+        <ProductCarousel
+          title="توصيات خاصة لك"
+          products={recommendedProducts?.products || []}
+          isLoading={recommendationsLoading}
+        />
+      </div>
     </>
   );
 }

@@ -26,7 +26,7 @@ export default function ProductPage({
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <>
       <Breadcrumb
         items={[
           { label: "الرئيسية", href: "/" },
@@ -54,10 +54,10 @@ export default function ProductPage({
       <div className="mt-16">
         <ProductCarousel
           title="اكتشف منتجات أخرى قد تهمك"
-          products={featuredProducts || []}
+          products={featuredProducts?.products || []}
           isLoading={featuredProductsLoading}
         />
       </div>
-    </div>
+    </>
   );
 }
