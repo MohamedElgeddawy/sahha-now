@@ -99,33 +99,30 @@ export function ContactUs() {
       [name]: value,
     }));
   };
-
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div className="w-full px-2 sm:px-4 py-4 sm:py-8">
+      <div className="flex flex-col lg:flex-row gap-4 sm:gap-8 max-w-7xl mx-auto">
         {/* Left Column - Form and Contact Info */}
-        <div>
+        <div className="w-full lg:w-1/2 order-1">
           {/* Contact Form */}
-          <div
-            className="bg-white rounded-lg border border-[#DADADA] p-8 mb-8"
-            style={{
-              width: "600px",
-              minHeight: "639px",
-            }}
-          >
-            <h1 className="text-3xl font-bold text-right mb-6">اتصل بنا</h1>
-            <p className="text-right mb-8 text-gray-700">
+          <div className="bg-white rounded-lg border border-[#DADADA] p-3 sm:p-4 md:p-8 mb-4 sm:mb-8 w-full ">
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-right mb-3 sm:mb-4 md:mb-6">
+              اتصل بنا
+            </h1>
+            <p className="text-right mb-4 sm:mb-6 md:mb-8 text-gray-700 text-sm sm:text-base">
               نحن هنا للإجابة على استفساراتك، لا تتردد في التواصل معنا في أي
               وقت.
             </p>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Form fields remain the same as before */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <form
+              onSubmit={handleSubmit}
+              className="space-y-3 sm:space-y-4 md:space-y-6"
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
                 <div>
                   <label
                     htmlFor="name"
-                    className="block mb-2 font-medium text-right text-gray-700"
+                    className="block mb-1 md:mb-2 font-medium text-right text-gray-700 text-sm sm:text-base"
                   >
                     الاسم*
                   </label>
@@ -136,10 +133,10 @@ export function ContactUs() {
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="برجاء إدخال الاسم"
-                    className="w-full text-right"
+                    className="w-full text-right text-sm md:text-base"
                   />
                   {errors.name && (
-                    <p className="text-red-500 text-sm mt-1 text-right">
+                    <p className="text-red-500 text-xs md:text-sm mt-1 text-right">
                       {errors.name}
                     </p>
                   )}
@@ -148,7 +145,7 @@ export function ContactUs() {
                 <div>
                   <label
                     htmlFor="email"
-                    className="block mb-2 font-medium text-right text-gray-700"
+                    className="block mb-1 md:mb-2 font-medium text-right text-gray-700 text-sm sm:text-base"
                   >
                     البريد الإلكتروني*
                   </label>
@@ -159,10 +156,10 @@ export function ContactUs() {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="برجاء إدخال البريد الإلكتروني"
-                    className="w-full text-right"
+                    className="w-full text-right text-sm md:text-base"
                   />
                   {errors.email && (
-                    <p className="text-red-500 text-sm mt-1 text-right">
+                    <p className="text-red-500 text-xs md:text-sm mt-1 text-right">
                       {errors.email}
                     </p>
                   )}
@@ -172,9 +169,9 @@ export function ContactUs() {
               <div>
                 <label
                   htmlFor="phone"
-                  className="block mb-2 font-medium text-right text-gray-700"
+                  className="block mb-1 md:mb-2 font-medium text-right text-gray-700 text-sm sm:text-base"
                 >
-                  رقم الهاتف
+                  رقم الهاتف*
                 </label>
                 <Input
                   id="phone"
@@ -183,10 +180,10 @@ export function ContactUs() {
                   value={formData.phone}
                   onChange={handleChange}
                   placeholder="برجاء إدخال رقم الهاتف"
-                  className="w-full text-right"
+                  className="w-full text-right text-sm md:text-base"
                 />
                 {errors.phone && (
-                  <p className="text-red-500 text-sm mt-1 text-right">
+                  <p className="text-red-500 text-xs md:text-sm mt-1 text-right">
                     {errors.phone}
                   </p>
                 )}
@@ -195,7 +192,7 @@ export function ContactUs() {
               <div>
                 <label
                   htmlFor="message"
-                  className="block mb-2 font-medium text-right text-gray-700"
+                  className="block mb-1 md:mb-2 font-medium text-right text-gray-700 text-sm sm:text-base"
                 >
                   الرسالة*
                 </label>
@@ -205,10 +202,10 @@ export function ContactUs() {
                   value={formData.message}
                   onChange={handleChange}
                   placeholder="برجاء إدخال رسالتك"
-                  className="w-full min-h-[120px] text-right"
+                  className="w-full min-h-[80px] sm:min-h-[100px] md:min-h-[120px] text-right text-sm md:text-base md:mb-4"
                 />
                 {errors.message && (
-                  <p className="text-red-500 text-sm mt-1 text-right">
+                  <p className="text-red-500 text-xs md:text-sm mt-1 text-right">
                     {errors.message}
                   </p>
                 )}
@@ -216,7 +213,7 @@ export function ContactUs() {
 
               <Button
                 type="submit"
-                className="w-full bg-green-500 hover:bg-green-700 h-12 text-lg"
+                className="w-full bg-green-600 hover:bg-green-700 h-10 md:h-12 text-sm md:text-lg"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? "جاري الإرسال..." : "إرسال"}
@@ -224,25 +221,29 @@ export function ContactUs() {
             </form>
           </div>
 
-          {/* Contact Information Cards - Now positioned directly under the form */}
-          <div className="flex flex-wrap justify-center gap-4">
-            <div className="w-full sm:w-[288px] h-[48px] flex items-center justify-start gap-3 bg-white rounded-lg px-4 shadow-sm border border-[#DADADA]">
-              <Mail className="text-gray-600 size-5" />
-              <span className="text-gray-700 text-sm">Support@email.com</span>
+          {/* Contact Information Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 md:gap-4  order-3">
+            <div className="h-10 md:h-12 flex items-center justify-start gap-2 md:gap-3 bg-white rounded-lg px-3 md:px-4 shadow-sm border border-[#DADADA]">
+              <Mail className="text-gray-600 size-4 md:size-5" />
+              <span className="text-[#2C3E50] text-xs md:text-sm">
+                Support@email.com
+              </span>
             </div>
-            <div className="w-full sm:w-[288px] h-[48px] flex items-center justify-start gap-3 bg-white rounded-lg px-4 shadow-sm border border-[#DADADA]">
-              <Phone className="text-gray-600 size-5" />
-              <span className="text-gray-700 text-sm">9200 XXXX</span>
+            <div className="h-10 md:h-12 flex items-center justify-start gap-2 md:gap-3 bg-white rounded-lg px-3 md:px-4 shadow-sm border border-[#DADADA]">
+              <Phone className="text-[#2C3E50] size-4 md:size-5" />
+              <span className="text-[#2C3E50] text-xs md:text-sm">
+                9200 XXXX
+              </span>
             </div>
-            <div className="w-full sm:w-[288px] h-[48px] flex items-center justify-start gap-3 bg-white rounded-lg px-4 shadow-sm border border-[#DADADA]">
-              <MapPin className="text-gray-600 size-5" />
-              <span className="text-gray-700 text-sm">
+            <div className="h-10 md:h-12 flex items-center justify-start gap-2 md:gap-3 bg-white rounded-lg px-3 md:px-4 shadow-sm border border-[#DADADA]">
+              <MapPin className="text-[#2C3E50] size-4 md:size-5" />
+              <span className="text-[#2C3E50] text-xs md:text-sm">
                 الرياض، المملكة العربية السعودية
               </span>
             </div>
-            <div className="w-full sm:w-[288px] h-[48px] flex items-center justify-start gap-3 bg-white rounded-lg px-4 shadow-sm border border-[#DADADA]">
-              <Clock className="text-gray-600 size-5" />
-              <span className="text-gray-700 text-sm">
+            <div className="h-10 md:h-12 flex items-center justify-start gap-2 md:gap-3 bg-white rounded-lg px-3 md:px-4 shadow-sm border border-[#DADADA]">
+              <Clock className="text-[#2C3E50] size-4 md:size-5" />
+              <span className="text-[#2C3E50] text-xs md:text-sm">
                 يوميًا من 9 صباحًا إلى 10 مساءً
               </span>
             </div>
@@ -250,13 +251,15 @@ export function ContactUs() {
         </div>
 
         {/* Right Column - Map Section */}
-        <div className="relative h-[780px] rounded-lg overflow-hidden border border-[#DADADA]">
-          <Image
-            src="/images/map.png"
-            alt="Location Map"
-            fill
-            className="object-cover"
-          />
+        <div className="w-full lg:w-1/2 h-[250px] sm:h-[300px] md:h-[400px] lg:h-[600px] xl:h-[740px] rounded-lg overflow-hidden border border-[#DADADA] order-2 lg:order-2 mb-4 lg:mb-0">
+          <div className="relative w-full h-full">
+            <Image
+              src="/images/map.png"
+              alt="Location Map"
+              fill
+              className="object-cover"
+            />
+          </div>
         </div>
       </div>
     </div>

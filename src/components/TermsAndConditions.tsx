@@ -5,20 +5,20 @@ import { ContactUs } from "./ContactUs";
 export function TermsAndConditions() {
   return (
     <div className="w-full mx-auto">
-      <div className="bg-white">
+      <div className="bg-white px-4 sm:px-6 md:px-8 py-6 md:py-8">
         {/* Header */}
-        <div className="text-right mb-8">
-          <h1 className="text-right font-cairo text-[#2C3E50]  text-[32px] font-extrabold leading-[140%] tracking-[0.5px] w-[249px] h-[45px] ml-auto mb-6">
+        <div className="text-right mb-6 md:mb-8">
+          <h1 className="text-right font-cairo text-[#2C3E50] text-2xl sm:text-[28px] md:text-[32px] font-extrabold leading-[140%] tracking-[0.5px] w-full sm:w-auto ml-auto mb-4 md:mb-6">
             الشروط والأحكام
           </h1>
-          <p className="text-right font-cairo text-[#2C3E50]  text-base font-normal leading-[140%] w-[675px] ml-auto">
+          <p className="text-right font-cairo text-[#2C3E50] text-sm sm:text-base font-normal leading-[140%] w-full sm:w-auto md:w-[675px] ml-auto">
             مرحبًا بك في موقعنا! يُرجى قراءة الشروط والأحكام التالية بعناية قبل
             استخدامك للموقع أو أي من خدماتنا.
           </p>
         </div>
 
         {/* Terms Sections */}
-        <div className="space-y-8">
+        <div className="space-y-6 md:space-y-8">
           <Section
             number="1"
             title="التعريفات"
@@ -99,7 +99,7 @@ export function TermsAndConditions() {
           />
 
           <div>
-            <h2 className="text-3xl mb-3 flex items-center gap-1">
+            <h2 className="text-xl sm:text-2xl md:text-3xl mb-3 flex items-center gap-1">
               <span className="text-[#2C3E50]">10.</span>
               <span className="text-[#2C3E50]">الدعم والتواصل</span>
             </h2>
@@ -124,14 +124,19 @@ function Section({
 }) {
   return (
     <div>
-      <h2 className="text-3xl mb-3 flex items-center gap-1">
+      <h2 className="text-xl sm:text-2xl md:text-3xl mb-2 md:mb-3 flex items-center gap-1">
         <span className="text-[#2C3E50]">{number}.</span>
         <span className="text-[#2C3E50]">{title}</span>
       </h2>
-      <ul className="space-y-1 text-[#2C3E50] text-base list-inside">
+      <ul className="space-y-1 md:space-y-2 text-[#2C3E50] text-sm sm:text-base list-inside">
         {items.map((item, index) => (
-          <li key={index} className="flex items-start gap-1 px-2">
-            <span className="text-[#2C3E50] mt-1 px-2">•</span>
+          <li
+            key={index}
+            className="flex items-start gap-1 px-0 sm:px-2 text-right"
+          >
+            <span className="text-[#2C3E50] mt-1 px-1 sm:px-2 flex-shrink-0">
+              •
+            </span>
             <span className="leading-snug">{item}</span>
           </li>
         ))}
