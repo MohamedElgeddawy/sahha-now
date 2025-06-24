@@ -53,7 +53,7 @@ export const useCart = () => {
   });
 
   // Add to cart mutation
-  const { mutate: addToCart } = useMutation({
+  const addToCart = useMutation({
     mutationFn: async ({
       product,
       variant,
@@ -83,7 +83,7 @@ export const useCart = () => {
   });
 
   // Remove from cart mutation
-  const { mutate: removeFromCart } = useMutation({
+  const removeFromCart = useMutation({
     mutationFn: async ({
       itemId,
       quantity = 1,
@@ -110,7 +110,7 @@ export const useCart = () => {
   });
 
   // Update quantity mutation
-  const { mutate: updateItemQuantity } = useMutation({
+  const updateItemQuantity = useMutation({
     mutationFn: async ({
       itemId,
       quantity = 1,
@@ -161,6 +161,7 @@ export const useCart = () => {
     addToCart,
     removeFromCart,
     updateItemQuantity,
+
     openCart,
     closeCart,
     toggleCartOpen,

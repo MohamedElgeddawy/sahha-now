@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Star, Truck, Info, MessageSquare } from "lucide-react";
+import { Star, Truck, Info, MessageSquare, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Product } from "@/lib/api/products";
 import Image from "next/image";
@@ -119,14 +119,22 @@ export function ProductInfo({ product }: ProductInfoProps) {
         />
         <Button
           onClick={() => {
-            addToCart({ product, variant: null, quantity });
+            addToCart.mutate({ product, variant: null, quantity });
             toast.success("تمت الإضافة إلى السلة");
             openCart();
             setQuantity(1);
           }}
           className="w-full bg-[#FF9B07] text-white hover:bg-[#F08C00]"
+          disabled={addToCart.isPending}
         >
-          اضف لعربة التسوق - {(Number(product.price) || 0) * quantity} ر.س
+          {addToCart.isPending ? (
+            <span className="flex items-center gap-2">
+              <Loader2 className="w-5 h-5 text-white animate-spin" />
+              جاري الإضافة...
+            </span>
+          ) : (
+            `اضف لعربة التسوق - ${(Number(product.price) || 0) * quantity} ر.س`
+          )}
         </Button>
       </div>
 

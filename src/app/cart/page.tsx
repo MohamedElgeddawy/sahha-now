@@ -15,6 +15,7 @@ import { Breadcrumb } from "@/components/layout/Breadcrumb";
 import ProductCarousel from "@/components/products/ProductCarousel";
 import { useFeaturedProducts } from "@/lib/hooks/use-products";
 import { toast } from "sonner";
+import { useDebounceCallback } from "usehooks-ts";
 
 export default function CartPage() {
   const {
@@ -57,17 +58,27 @@ export default function CartPage() {
 
   // Handle quantity update
   const handleQuantityChange = (itemId: string, quantity: number) => {
-    updateItemQuantity(
+    if (quantity < 1) {
+      removeFromCart.mutate({ itemId, quantity: 1 });
+      return;
+    }
+    updateItemQuantity.mutate(
       { itemId, quantity },
       {
         onError: () => toast.error("حدث خطأ أثناء تحديث الكمية"),
       }
     );
   };
+  const debouncedUpdateQuantity = useDebounceCallback(
+    (itemId: string, quantity: number) => {
+      handleQuantityChange(itemId, quantity);
+    },
+    500
+  );
 
   // Handle remove item
   const handleRemoveItem = (itemId: string, quantity?: number) => {
-    removeFromCart(
+    removeFromCart.mutate(
       { itemId, quantity: quantity || 1 },
       {
         onError: () => toast.error("حدث خطأ أثناء إزالة المنتج من السلة"),
@@ -161,6 +172,7 @@ export default function CartPage() {
                       <Button
                         variant="ghost"
                         size="icon"
+                        disabled={removeFromCart.isPending}
                         className="rounded-full text-gray-400 hover:text-red-500"
                         onClick={() => handleRemoveItem(item.id, item.quantity)}
                       >
@@ -207,7 +219,7 @@ export default function CartPage() {
                       <QuantityCounter
                         initialValue={item.quantity}
                         onChange={(value) =>
-                          handleQuantityChange(item.id, value)
+                          debouncedUpdateQuantity(item.id, value)
                         }
                         size="md"
                       />

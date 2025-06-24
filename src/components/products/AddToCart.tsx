@@ -1,4 +1,4 @@
-import { ShoppingCart } from "lucide-react";
+import { Loader2, ShoppingCart } from "lucide-react";
 import { motion } from "motion/react";
 import React from "react";
 import { useCart } from "@/lib/hooks/use-cart";
@@ -21,7 +21,7 @@ const AddToCart = ({
   const { addToCart, openCart } = useCart();
 
   const handleAddToCart = () => {
-    addToCart(
+    addToCart.mutate(
       { product, variant, quantity },
       {
         onSuccess: () => {
@@ -43,7 +43,11 @@ const AddToCart = ({
       onClick={handleAddToCart}
       aria-label="إضافة إلى السلة"
     >
-      <ShoppingCart className="w-5 h-5 text-white" />
+      {addToCart.isPending ? (
+        <Loader2 className="w-5 h-5 text-white animate-spin" />
+      ) : (
+        <ShoppingCart className="w-5 h-5 text-white" />
+      )}
     </motion.button>
   );
 };
