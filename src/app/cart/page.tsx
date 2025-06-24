@@ -16,26 +16,15 @@ import ProductCarousel from "@/components/products/ProductCarousel";
 import { useFeaturedProducts } from "@/lib/hooks/use-products";
 import { toast } from "sonner";
 import { useDebounceCallback } from "usehooks-ts";
+import Loader from "../loading";
 
 export default function CartPage() {
-  const {
-    items,
-    subtotal,
-    removeFromCart,
-    updateItemQuantity,
-    isLoading,
-    error,
-    refetchCart,
-  } = useCart();
+  const { items, subtotal, removeFromCart, updateItemQuantity, isLoading } =
+    useCart();
   const [usePoints, setUsePoints] = useState(false);
   const [couponCode, setCouponCode] = useState("");
   const { data: otherProducts, isLoading: otherProductsLoading } =
     useFeaturedProducts();
-
-  // Fetch cart data when component mounts
-  useEffect(() => {
-    refetchCart();
-  }, [refetchCart]);
 
   // Calculate service fee (example: 4% of subtotal)
   const serviceFee = useMemo(() => subtotal * 0.04, [subtotal]);
@@ -88,26 +77,7 @@ export default function CartPage() {
 
   // Show loading state
   if (isLoading) {
-    return (
-      <div className="py-12 flex flex-col items-center">
-        <div className="animate-pulse flex flex-col items-center">
-          <div className="h-48 w-48 bg-gray-200 rounded-full mb-6"></div>
-          <div className="h-8 w-64 bg-gray-200 rounded mb-4"></div>
-          <div className="h-4 w-96 bg-gray-200 rounded mb-8"></div>
-        </div>
-      </div>
-    );
-  }
-
-  // Show error state
-  if (error) {
-    return (
-      <div className="py-12 flex flex-col items-center text-center">
-        <h2 className="text-2xl font-bold mb-4 text-red-500">حدث خطأ</h2>
-        <p className="text-gray-500 mb-8 max-w-md">{error}</p>
-        <Button onClick={() => refetchCart()}>إعادة المحاولة</Button>
-      </div>
-    );
+    return <Loader />;
   }
 
   if (items.length === 0) {
