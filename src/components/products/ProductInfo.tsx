@@ -118,7 +118,6 @@ export function ProductInfo({ product }: ProductInfoProps) {
           onChange={(value) => setQuantity(value)}
         />
         <Button
-          fullWidthContainer
           onClick={() => {
             addToCart(product, null, quantity);
             toast.success("تمت الإضافة إلى السلة");

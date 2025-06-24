@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { AlertTriangle, Home, RefreshCw } from "lucide-react";
-import { motion, AnimatePresence, Variants } from "motion/react";
+import { motion, Variants } from "motion/react";
 
 export default function Error({
   error,
@@ -163,11 +163,10 @@ export default function Error({
       )}
 
       {/* Action buttons */}
-      <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md mb-16">
+      <div className="flex flex-col *:flex-1 sm:flex-row gap-4 w-full max-w-md mb-16">
         <Button
           onClick={() => reset()}
-          fullWidthContainer
-          className="w-full bg-green-600 hover:bg-green-700 text-white h-12 rounded-lg"
+          className="bg-green-600 hover:bg-green-700 text-white h-12 rounded-lg"
         >
           <RefreshCw className="mr-2 h-5 w-5" />
           إعادة المحاولة
@@ -175,9 +174,8 @@ export default function Error({
 
         <Button
           asChild
-          fullWidthContainer
           variant="outline"
-          className="w-full border-green-600 text-green-600 hover:bg-green-50 h-12 rounded-lg"
+          className="border-green-600 text-green-600 hover:bg-green-50 h-12 rounded-lg"
         >
           <Link href="/">
             <Home className="mr-2 h-5 w-5" />

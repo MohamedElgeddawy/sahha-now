@@ -14,6 +14,37 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { RegisterFormData, registerSchema } from "@/lib/schemas/auth";
 import { FormField } from "@/components/auth/FormField";
 import { register as registerApi } from "@/lib/api/auth";
+import { motion } from "motion/react";
+
+// Define animation variants
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.1,
+    },
+  },
+  exit: {
+    opacity: 0,
+    y: -10,
+    transition: {
+      duration: 0.3,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+    },
+  },
+};
 
 export default function RegisterPage() {
   const {
@@ -61,40 +92,58 @@ export default function RegisterPage() {
 
   const socialLoginSection = (
     <>
-      <div className="text-center">
-        <h2 className="font-semibold text-base tracking-[0.5px] text-[#2C3E50] mb-6">
+      <motion.div
+        className="text-center"
+        initial="hidden"
+        animate="visible"
+        variants={containerVariants}
+      >
+        <motion.h2
+          className="font-semibold text-base tracking-[0.5px] text-[#2C3E50] mb-6"
+          variants={itemVariants}
+        >
           يمكنك تسجيل الدخول عن طريق
-        </h2>
-        <div className="flex justify-center">
+        </motion.h2>
+        <motion.div className="flex justify-center" variants={itemVariants}>
           <SocialLoginButtons
             onGoogle={() => handleSocialLogin("google")}
             onApple={() => handleSocialLogin("apple")}
             width={312}
           />
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
       <AuthSeparator />
     </>
   );
 
   return (
     <AuthLayout title="" description="" aboveCard={socialLoginSection}>
-      <form
+      <motion.form
         onSubmit={handleSubmit(onSubmit)}
         className="space-y-6 w-full max-w-[592px] mx-auto"
+        initial="hidden"
+        animate="visible"
+        exit="exit"
+        variants={containerVariants}
       >
         {/* Form header */}
-        <div className="space-y-2 mb-6 text-right">
-          <h3 className="font-semibold text-xl text-[#2C3E50]">
+        <motion.div
+          className="space-y-2 mb-6 text-right"
+          variants={itemVariants}
+        >
+          <motion.h3 className="font-semibold text-xl text-[#2C3E50]">
             تسجيل حساب جديد
-          </h3>
-          <p className="text-gray-600 text-sm">
+          </motion.h3>
+          <motion.p className="text-gray-600 text-sm">
             أدخل البيانات التالية وسنرسل لك رمز تحقق لإنشاء حساب جديد.
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
 
         {/* Name and Phone in a row */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 gap-6"
+          variants={itemVariants}
+        >
           <Controller
             control={control}
             name="fullname"
@@ -119,15 +168,22 @@ export default function RegisterPage() {
                 dir="ltr"
                 inputMode="numeric"
                 error={error}
-                startElement="+966"
+                startElement={
+                  <span dir="ltr" className="text-gray-600">
+                    +966
+                  </span>
+                }
                 {...field}
               />
             )}
           />
-        </div>
+        </motion.div>
 
         {/* Email and Age in a row */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 gap-6"
+          variants={itemVariants}
+        >
           <Controller
             control={control}
             name="email"
@@ -161,29 +217,10 @@ export default function RegisterPage() {
               />
             )}
           />
-        </div>
-
-        {/* Password and Confirm Password in a row
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <FormField
-            label="كلمة المرور"
-            placeholder="برجاء إدخال كلمة المرور"
-            type="password"
-            error={errors.password}
-            {...register("password")}
-          />
-
-          <FormField
-            label="تأكيد كلمة المرور"
-            placeholder="برجاء تأكيد كلمة المرور"
-            type="password"
-            error={errors.confirmPassword}
-            {...register("confirmPassword")}
-          />
-        </div> */}
+        </motion.div>
 
         {/* Terms Checkbox */}
-        <div className="flex items-center gap-2">
+        <motion.div className="flex items-center gap-2" variants={itemVariants}>
           <Checkbox
             id="terms"
             checked={agreeTerms}
@@ -208,7 +245,7 @@ export default function RegisterPage() {
               سياسة الخصوصية
             </Link>
           </label>
-        </div>
+        </motion.div>
 
         <Button
           type="submit"
@@ -218,7 +255,12 @@ export default function RegisterPage() {
           {isSubmitting ? "جاري التسجيل..." : "إنشاء حساب"}
         </Button>
 
-        <div className="text-center mt-4">
+        <motion.div
+          className="text-center mt-4"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 0.5 }}
+        >
           <span className="text-[#2C3E50]"> هل لديك حساب؟</span>
 
           <Link
@@ -228,8 +270,8 @@ export default function RegisterPage() {
           >
             سجّل الدخول الآن
           </Link>
-        </div>
-      </form>
+        </motion.div>
+      </motion.form>
     </AuthLayout>
   );
 }

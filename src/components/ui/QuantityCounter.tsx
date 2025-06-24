@@ -73,7 +73,7 @@ const QuantityCounter: React.FC<QuantityCounterProps> = ({
       setCount(newValue);
       onChange?.(newValue);
     }
-  }, [min, max]);
+  }, [min, max, count]);
 
   // Animation variants
   const containerVariants: Variants = {

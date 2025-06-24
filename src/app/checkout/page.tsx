@@ -274,11 +274,7 @@ const CheckoutPage = () => {
 
             {/* Submit Button */}
             <div className="mt-8">
-              <Button
-                type="submit"
-                className="w-full py-4 text-lg"
-                fullWidthContainer
-              >
+              <Button type="submit" className="w-full py-4 text-lg">
                 الدفع الآن
               </Button>
             </div>

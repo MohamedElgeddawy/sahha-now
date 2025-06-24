@@ -14,15 +14,44 @@ import * as z from "zod";
 import { generateOtp, login as loginApi } from "@/lib/api/auth";
 import { toast } from "sonner";
 import { Controller, useForm } from "react-hook-form";
+import { motion } from "motion/react";
+import { useRef } from "react";
 
 const loginSchema = z.object({
-  mobile: z
-    .string()
-
-    .regex(/^[0-9]+$/, "رقم الهاتف يجب أن يحتوي على أرقام فقط"),
+  mobile: z.string().regex(/^[0-9]+$/, "رقم الهاتف يجب أن يحتوي على أرقام فقط"),
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
+
+// Define animation variants
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.1,
+    },
+  },
+  exit: {
+    opacity: 0,
+    y: -10,
+    transition: {
+      duration: 0.3,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+    },
+  },
+};
 
 export default function LoginPage() {
   const {
@@ -40,6 +69,7 @@ export default function LoginPage() {
 
   const [rememberMe, setRememberMe] = useState(false);
   const router = useRouter();
+  const formRef = useRef<HTMLFormElement>(null);
 
   const onSubmit = async (data: LoginFormData) => {
     try {
@@ -61,69 +91,65 @@ export default function LoginPage() {
     }
   };
 
-  const handleSocialLogin = (provider: "google" | "apple") => {
-    // Social login logic
-    console.log(`Logging in with ${provider}`);
-  };
-
-  const socialLoginSection = (
-    <>
-      <div className="text-center">
-        <h2 className="font-semibold text-base tracking-[0.5px] text-[#2C3E50] mb-6">
-          يمكنك تسجيل الدخول عن طريق
-        </h2>
-        <div className="flex justify-center">
-          <SocialLoginButtons
-            onGoogle={() => handleSocialLogin("google")}
-            onApple={() => handleSocialLogin("apple")}
-            width={312}
-          />
-        </div>
-      </div>
-      <AuthSeparator />
-    </>
-  );
-
   return (
-    <AuthLayout title="" description="" aboveCard={socialLoginSection}>
-      <div className="w-full  mx-auto">
+    <AuthLayout title="" description="" aboveCard={<SocialLoginSection />}>
+      <motion.div
+        className="w-full mx-auto"
+        initial="hidden"
+        animate="visible"
+        variants={containerVariants}
+      >
         {/* Form header */}
-        <div className="text-right mb-6">
-          <h3 className="font-semibold text-xl text-[#2C3E50] mb-2">
+        <motion.div className="text-right mb-6">
+          <motion.h3
+            className="font-semibold text-xl text-[#2C3E50] mb-2"
+            variants={itemVariants}
+          >
             تسجيل الدخول إلى حسابك
-          </h3>
-          <p className="text-gray-600 text-sm">
+          </motion.h3>
+          <motion.p className="text-gray-600 text-sm" variants={itemVariants}>
             أدخل رقم جوالك وسنرسل لك رمز تحقق لتسجيل الدخول.
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <Controller
-            control={control}
-            name="mobile"
-            render={({ field, fieldState: { error } }) => (
-              <FormField
-                label="رقم الجوال"
-                placeholder="رجاء إدخال رقم الجوال"
-                startElement={
-                  <span
-                    dir="ltr"
-                    className="text-gray-500 select-none pointer-events-none"
-                  >
-                    +966
-                  </span>
-                }
-                type="number"
-                inputMode="numeric"
-                dir="ltr"
-                error={error}
-                {...field}
-              />
-            )}
-          />
+        <motion.form
+          ref={formRef}
+          onSubmit={handleSubmit(onSubmit)}
+          className="space-y-4"
+          variants={containerVariants}
+          exit="exit"
+        >
+          <motion.div variants={itemVariants}>
+            <Controller
+              control={control}
+              name="mobile"
+              render={({ field, fieldState: { error } }) => (
+                <FormField
+                  label="رقم الجوال"
+                  placeholder="رجاء إدخال رقم الجوال"
+                  startElement={
+                    <span
+                      dir="ltr"
+                      className="text-gray-500 select-none pointer-events-none"
+                    >
+                      +966
+                    </span>
+                  }
+                  type="number"
+                  inputMode="numeric"
+                  dir="ltr"
+                  error={error}
+                  {...field}
+                />
+              )}
+            />
+          </motion.div>
 
           {/* Remember me */}
-          <div className="flex items-center gap-2 justify-start">
+          <motion.div
+            className="flex items-center gap-2 justify-start"
+            variants={itemVariants}
+          >
             <Checkbox
               id="remember"
               checked={rememberMe}
@@ -133,7 +159,7 @@ export default function LoginPage() {
             <label htmlFor="remember" className="text-sm text-gray-600">
               تذكرني
             </label>
-          </div>
+          </motion.div>
 
           <Button
             type="submit"
@@ -142,10 +168,15 @@ export default function LoginPage() {
           >
             {isSubmitting ? "جاري الإرسال..." : "أرسل رمز التحقق"}
           </Button>
-        </form>
+        </motion.form>
 
         {/* Register link */}
-        <div className="text-center mt-4 text-sm">
+        <motion.div
+          className="text-center mt-4 text-sm register-link"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 0.5 }}
+        >
           <span className="text-[#2C3E50]">ليس لديك حساب؟ </span>
           <Link
             href="/auth/register"
@@ -154,8 +185,40 @@ export default function LoginPage() {
           >
             أنشئ حساب الآن
           </Link>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </AuthLayout>
   );
 }
+
+const SocialLoginSection = () => {
+  const handleSocialLogin = (provider: "google" | "apple") => {
+    // Social login logic
+    console.log(`Logging in with ${provider}`);
+  };
+  return (
+    <>
+      <motion.div
+        className="text-center"
+        initial="hidden"
+        animate="visible"
+        variants={containerVariants}
+      >
+        <motion.h2
+          className="font-semibold text-base tracking-[0.5px] text-[#2C3E50] mb-6"
+          variants={itemVariants}
+        >
+          يمكنك تسجيل الدخول عن طريق
+        </motion.h2>
+        <motion.div className="flex justify-center" variants={itemVariants}>
+          <SocialLoginButtons
+            onGoogle={() => handleSocialLogin("google")}
+            onApple={() => handleSocialLogin("apple")}
+            width={312}
+          />
+        </motion.div>
+      </motion.div>
+      <AuthSeparator />
+    </>
+  );
+};

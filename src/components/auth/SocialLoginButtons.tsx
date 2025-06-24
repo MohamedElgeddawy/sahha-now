@@ -16,7 +16,7 @@ export function SocialLoginButtons({
     <div className="flex flex-col md:flex-row justify-center gap-4 md:gap-6 mb-6">
       <Button
         variant="outline"
-        className="h-[48px] text-base border border-[#DADADA] rounded-[8px] flex items-center justify-center gap-2"
+        className="text-base text-slate-800 border border-[#DADADA] rounded-[8px] flex items-center justify-center gap-2"
         style={{ width: width }}
         type="button"
         onClick={onGoogle}
@@ -60,7 +60,7 @@ export function SocialLoginButtons({
       </Button>
       <Button
         variant="outline"
-        className="h-[48px] text-base border border-[#DADADA] rounded-[8px] flex items-center justify-center gap-2"
+        className="text-base text-slate-800 border border-[#DADADA] rounded-[8px] flex items-center justify-center gap-2"
         style={{ width: width }}
         type="button"
         onClick={onApple}

@@ -3,17 +3,15 @@
 import React from "react";
 import Image from "next/image";
 import { motion } from "motion/react";
-import { CheckCircle2 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-
-type OrderItem = {
-  id: string;
-  name: string;
-  quantity: number;
-  price: number;
-  image: string;
-};
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { OrderStepper } from "@/components/OrderStepper";
 
 type OrderDetailsProps = {
   orderId?: string;
@@ -45,7 +43,7 @@ export function OrderDetails({ orderId }: OrderDetailsProps) {
       },
       {
         id: "3",
-        name: "توصيل مناديل استخدام مرة للوجه",
+        name: "لوشن مناديل استخدام مرة للوجه",
         quantity: 1,
         price: 30.51,
         image: "/images/products/baby-joy-diapers.png",
@@ -57,242 +55,115 @@ export function OrderDetails({ orderId }: OrderDetailsProps) {
     points: 350,
   };
 
-  // Calculate progress step based on status
-  const getProgressStep = () => {
-    switch (orderDetails.status) {
-      case "قيد التجهيز":
-        return 1;
-      case "تم الشحن":
-        return 2;
-      case "تم التوصيل":
-        return 3;
-      default:
-        return 1;
-    }
-  };
-
-  const progressStep = getProgressStep();
-
   return (
     <motion.div
-      className="bg-white rounded-lg border border-gray-200 shadow overflow-hidden"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
+      className="bg-white rounded-lg p-4 md:p-6"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.4 }}
     >
-      {/* Progress Stepper */}
-      <div className="p-6 pb-0">
-        <div className="flex justify-between items-center my-8">
-          <motion.div
-            className="flex items-center flex-col"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-          >
-            <div
-              className={`w-10 h-10 rounded-full flex items-center justify-center
-              ${progressStep >= 3 ? "bg-green-500" : "bg-gray-200"}`}
-            >
-              <CheckCircle2
-                className={progressStep >= 3 ? "text-white" : "text-gray-400"}
-              />
-            </div>
-            <span
-              className={`mt-2 text-sm ${
-                progressStep >= 3
-                  ? "text-green-500 font-medium"
-                  : "text-gray-500"
-              }`}
-            >
-              تم التوصيل
-            </span>
-          </motion.div>
+      {/* Order ID and Title */}
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6">
+        <h2 className="text-xl font-bold">طلب #{orderDetails.id}</h2>
+        <div className="text-gray-500 text-sm">{orderDetails.date}</div>
+      </div>
 
-          <div
-            className={`h-1 flex-1 mx-2 ${
-              progressStep >= 2 ? "bg-green-500" : "bg-gray-200"
-            }`}
-          ></div>
+      {/* Order Status Stepper */}
+      <OrderStepper currentStatus={orderDetails.status} />
 
-          <motion.div
-            className="flex items-center flex-col"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-          >
-            <div
-              className={`w-10 h-10 rounded-full flex items-center justify-center
-              ${progressStep >= 2 ? "bg-green-500" : "bg-gray-200"}`}
-            >
-              <CheckCircle2
-                className={progressStep >= 2 ? "text-white" : "text-gray-400"}
-              />
-            </div>
-            <span
-              className={`mt-2 text-sm ${
-                progressStep >= 2
-                  ? "text-green-500 font-medium"
-                  : "text-gray-500"
-              }`}
-            >
-              تم الشحن
-            </span>
-          </motion.div>
-
-          <div
-            className={`h-1 flex-1 mx-2 ${
-              progressStep >= 1 ? "bg-green-500" : "bg-gray-200"
-            }`}
-          ></div>
-
-          <motion.div
-            className="flex items-center flex-col"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.1 }}
-          >
-            <div
-              className={`w-10 h-10 rounded-full flex items-center justify-center
-              ${progressStep >= 1 ? "bg-green-500" : "bg-gray-200"}`}
-            >
-              <CheckCircle2
-                className={progressStep >= 1 ? "text-white" : "text-gray-400"}
-              />
-            </div>
-            <span
-              className={`mt-2 text-sm ${
-                progressStep >= 1
-                  ? "text-green-500 font-medium"
-                  : "text-gray-500"
-              }`}
-            >
-              قيد التجهيز
-            </span>
-          </motion.div>
+      {/* Order Details */}
+      <div className="grid md:grid-cols-3 gap-6">
+        <div className="col-span-2">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="">المنتج</TableHead>
+                <TableHead className="text-center">السعر</TableHead>
+                <TableHead className="text-center">الكمية</TableHead>
+                <TableHead className="text-left">الإجمالي</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {orderDetails.items.map((item) => (
+                <TableRow key={item.id}>
+                  <TableCell className="">
+                    <div className="flex items-center justify-start gap-3">
+                      <div className="relative size-14 bg-gray-100 rounded-md overflow-hidden">
+                        <Image
+                          src={item.image}
+                          alt={item.name}
+                          fill
+                          className="object-contain"
+                        />
+                      </div>
+                      <div>
+                        <div className="font-medium">{item.name}</div>
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {item.price.toFixed(2)} ر.س
+                  </TableCell>
+                  <TableCell className="text-center">{item.quantity}</TableCell>
+                  <TableCell className="text-left font-medium">
+                    {(item.quantity * item.price).toFixed(2)} ر.س
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </div>
-      </div>
 
-      <div className="grid md:grid-cols-2 gap-6 p-6">
-        {/* Order Info Column */}
-        <motion.div
-          className="space-y-4 bg-gray-50 p-4 rounded-lg"
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.3 }}
-        >
-          <div>
-            <h3 className="font-bold text-lg mb-4 text-gray-800 text-right">
-              معلومات الطلب
-            </h3>
-            <div className="space-y-2">
-              <div className="flex justify-between py-2">
-                <span className="text-gray-900 font-medium">
-                  {orderDetails.id}
-                </span>
-                <span className="text-gray-600">رقم الطلب</span>
-              </div>
-              <div className="flex justify-between py-2">
-                <span className="text-gray-900">{orderDetails.date}</span>
-                <span className="text-gray-600">تاريخ الطلب</span>
-              </div>
-              <div className="flex justify-between py-2">
-                <span className="text-gray-900">
-                  {orderDetails.paymentMethod}
-                </span>
-                <span className="text-gray-600">طريقة الدفع</span>
-              </div>
-              <div className="flex justify-between py-2">
-                <span className="text-gray-900">{orderDetails.address}</span>
-                <span className="text-gray-600">العنوان</span>
-              </div>
-              <div className="flex justify-between py-2">
-                <span className="text-gray-900" dir="ltr">
-                  {orderDetails.phone}
-                </span>
-                <span className="text-gray-600">رقم الجوال</span>
-              </div>
-            </div>
+        <div className="flex flex-col gap-4 bg-gray-50 p-4 rounded-lg">
+          <div className="flex justify-between gap-2">
+            <span className=" font-medium">رقم الطلب</span>
+            <span className="text-gray-700">{orderDetails.id}</span>
           </div>
-        </motion.div>
-
-        {/* Order Summary Column */}
-        <motion.div
-          className="space-y-2 bg-gray-50 p-4 rounded-lg"
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.3 }}
-        >
-          <div>
-            <h3 className="font-bold text-lg mb-4 text-gray-800 text-right">
-              ملخص الطلب
-            </h3>
-            <div className="space-y-2 text-right">
-              <div className="flex justify-between">
-                <span className="text-gray-900">
-                  {orderDetails.subtotal.toFixed(2)} ر.س
-                </span>
-                <span className="text-gray-600">المجموع الفرعي</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-900">
-                  {orderDetails.shipping.toFixed(2)} ر.س
-                </span>
-                <span className="text-gray-600">خدمة التوصيل</span>
-              </div>
-              <div className="flex justify-between pt-2 border-t">
-                <span className="font-bold text-green-600">
-                  {orderDetails.total.toFixed(2)} ر.س
-                </span>
-                <span className="font-bold">الإجمالي</span>
-              </div>
-
-              {orderDetails.points > 0 && (
-                <div className="flex justify-between mt-4 pt-2 border-t">
-                  <span className="font-bold text-green-600">
-                    {orderDetails.points} نقطة
-                  </span>
-                  <span className="font-bold">النقاط المكتسبة</span>
-                </div>
-              )}
-            </div>
+          <div className="flex justify-between gap-2">
+            <span className=" font-medium">تاريخ الطلب</span>
+            <span className="text-gray-700">{orderDetails.date}</span>
           </div>
-        </motion.div>
-      </div>
+          <div className="flex justify-between gap-2">
+            <span className=" font-medium">طريقة الدفع</span>
+            <span className="text-gray-700">{orderDetails.paymentMethod}</span>
+          </div>
+          <div className="flex justify-between gap-2">
+            <span className=" font-medium">العنوان</span>
+            <span className="text-gray-700">{orderDetails.address}</span>
+          </div>
+          <div className="flex justify-between gap-2">
+            <span className=" font-medium">رقم الجوال</span>
+            <span className="text-gray-700" dir="ltr">
+              {orderDetails.phone}
+            </span>
+          </div>
 
-      {/* Order Products */}
-      <div className="p-6 border-t border-gray-200">
-        <h3 className="font-bold text-lg mb-4 text-gray-800 text-right">
-          المنتجات
-        </h3>
-        <div className="space-y-4">
-          {orderDetails.items.map((item, index) => (
-            <motion.div
-              key={item.id}
-              className="flex items-center justify-between border-b border-gray-200 pb-4 last:border-0 last:pb-0"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 + index * 0.1 }}
-            >
-              <div className="flex items-center gap-4">
-                <div className="flex flex-col items-end">
-                  <span className="text-sm text-gray-600">
-                    {item.quantity} × {item.price.toFixed(2)} ر.س
-                  </span>
-                </div>
-                <div>
-                  <h4 className="font-medium text-right">{item.name}</h4>
-                </div>
-                <div className="relative w-16 h-16 bg-gray-100 rounded-md overflow-hidden">
-                  <Image
-                    src={item.image}
-                    alt={item.name}
-                    fill
-                    className="object-contain"
-                  />
-                </div>
-              </div>
-            </motion.div>
-          ))}
+          <div className="flex justify-between gap-2">
+            <span className=" font-medium">المجموع الفرعي</span>
+            <span className="text-gray-700">
+              {orderDetails.subtotal.toFixed(2)} ر.س
+            </span>
+          </div>
+          <div className="flex justify-between gap-2">
+            <span className=" font-medium">خدمة التوصيل</span>
+            <span className="text-gray-700">
+              {orderDetails.shipping.toFixed(2)} ر.س
+            </span>
+          </div>
+          <div className="flex justify-between gap-2 border-t pt-4 border-gray-300">
+            <span className=" font-bold">الإجمالي</span>
+            <span className="font-bold text-green-600">
+              {orderDetails.total.toFixed(2)} ر.س
+            </span>
+          </div>
+          {orderDetails.points > 0 && (
+            <div className="flex justify-between gap-2">
+              <span className=" font-bold">النقاط المكتسبة</span>
+              <span className="font-bold text-green-600">
+                {orderDetails.points} نقطة
+              </span>
+            </div>
+          )}
         </div>
       </div>
     </motion.div>

@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, memo } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { AuthLayout } from "@/components/auth/AuthLayout";
 import { login } from "@/lib/api/auth";
 import { Controller, useForm } from "react-hook-form";
@@ -13,14 +12,134 @@ import { OtpFormData, otpSchema } from "@/lib/schemas/auth";
 import {
   InputOTP,
   InputOTPGroup,
-  InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { useAppDispatch } from "@/lib/redux/hooks";
 import { setCredentials } from "@/lib/redux/slices/authSlice";
+import { motion } from "motion/react";
+import { useCountdown } from "usehooks-ts";
+
+// Animation variants
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.1,
+    },
+  },
+  exit: {
+    opacity: 0,
+    y: -10,
+    transition: {
+      duration: 0.3,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+    },
+  },
+};
+
+// Memoized OTP input component to prevent re-renders
+const OTPInput = memo(({ control }: { control: any }) => {
+  const AnimatedOTPSlot = motion(InputOTPSlot);
+
+  return (
+    <Controller
+      control={control}
+      name="otp"
+      render={({ field, fieldState: { error } }) => (
+        <motion.div
+          className="flex flex-col items-center gap-2 w-full"
+          animate={{ scale: error ? [1, 1.02, 1] : 1 }}
+          transition={{ duration: 0.3 }}
+        >
+          <InputOTP maxLength={6} {...field}>
+            <InputOTPGroup className="gap-3">
+              {Array.from({ length: 6 }).map((_, index) => (
+                <AnimatedOTPSlot
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{
+                    delay: 0.1 * index,
+                    duration: 0.4,
+                    type: "spring",
+                  }}
+                  whileFocus={{
+                    scale: 1.1,
+                    boxShadow: "0 0 0 2px rgba(34,197,94,0.6)",
+                  }}
+                  key={index}
+                  index={index}
+                />
+              ))}
+            </InputOTPGroup>
+          </InputOTP>
+          {error && (
+            <motion.span
+              className="text-sm text-red-500"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ type: "spring", stiffness: 300, damping: 15 }}
+            >
+              {error.message}
+            </motion.span>
+          )}
+        </motion.div>
+      )}
+    />
+  );
+});
+
+OTPInput.displayName = "OTPInput";
+
+// Memoized ResendTimer component to isolate countdown re-renders
+const ResendTimer = memo(
+  ({ count, onResend }: { count: number; onResend: () => void }) => {
+    return (
+      <motion.div
+        className="text-center text-sm text-gray-500 mb-6"
+        variants={itemVariants}
+      >
+        لم يصلك الرمز؟{" "}
+        <motion.button
+          type="button"
+          onClick={onResend}
+          disabled={count > 0}
+          className={`font-medium ${
+            count > 0
+              ? "text-gray-400"
+              : "text-green-600 hover:text-green-700 hover:underline"
+          }`}
+          whileHover={{ scale: count > 0 ? 1 : 1.05 }}
+          whileTap={{ scale: count > 0 ? 1 : 0.98 }}
+        >
+          {count > 0
+            ? `إعادة الإرسال خلال ${count} ثانية`
+            : "إعادة إرسال الرمز"}
+        </motion.button>
+      </motion.div>
+    );
+  }
+);
+
+ResendTimer.displayName = "ResendTimer";
 
 export default function OTPVerificationPage() {
-  const [resendTimer, setResendTimer] = useState(30);
+  const [count, { startCountdown, resetCountdown }] = useCountdown({
+    countStart: 30,
+    countStop: 0,
+    intervalMs: 1000,
+  });
   const router = useRouter();
   const [mobile, setPhoneNumber] = useState<string | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
@@ -31,7 +150,6 @@ export default function OTPVerificationPage() {
     handleSubmit,
     formState: { isSubmitting },
     setValue,
-    watch,
   } = useForm<OtpFormData>({
     resolver: zodResolver(otpSchema),
     defaultValues: {
@@ -56,23 +174,8 @@ export default function OTPVerificationPage() {
     setIsInitialized(true);
 
     // Set countdown timer
-    const timer = setInterval(() => {
-      setResendTimer((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
+    startCountdown();
   }, []);
-
-  // Don't render anything until we check the session
-  if (!isInitialized) {
-    return null;
-  }
 
   const onSubmit = async (data: OtpFormData) => {
     try {
@@ -91,12 +194,16 @@ export default function OTPVerificationPage() {
     }
   };
 
-  // Handle resend OTP
-  const handleResend = async () => {
-    if (resendTimer > 0) return;
-    setResendTimer(30);
+  // Handle resend OTP - memoized to prevent recreating on every count change
+  const handleResend = useCallback(async () => {
+    if (count > 0) return;
+    resetCountdown();
     toast.success("تم إرسال رمز جديد");
-  };
+  }, [resetCountdown]);
+
+  if (!isInitialized) {
+    return null;
+  }
 
   return (
     <AuthLayout
@@ -107,50 +214,24 @@ export default function OTPVerificationPage() {
           : undefined
       }
     >
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <motion.form
+        onSubmit={handleSubmit(onSubmit)}
+        className="space-y-6"
+        initial="hidden"
+        animate="visible"
+        exit="exit"
+        variants={containerVariants}
+      >
         {/* OTP inputs */}
-        <div className="flex justify-center gap-3 mb-8">
-          <Controller
-            control={control}
-            name="otp"
-            render={({ field, fieldState: { error } }) => (
-              <div className="flex flex-col items-center gap-2 w-full">
-                <InputOTP maxLength={6} {...field}>
-                  <InputOTPGroup>
-                    <InputOTPSlot index={0} />
-                    <InputOTPSlot index={1} />
-                    <InputOTPSlot index={2} />
+        <motion.div
+          className="flex justify-center gap-3 mb-8"
+          variants={itemVariants}
+        >
+          <OTPInput control={control} />
+        </motion.div>
 
-                    <InputOTPSlot index={3} />
-                    <InputOTPSlot index={4} />
-                    <InputOTPSlot index={5} />
-                  </InputOTPGroup>
-                </InputOTP>
-                {error && (
-                  <span className="text-sm text-red-500">{error.message}</span>
-                )}
-              </div>
-            )}
-          />
-        </div>
-
-        <div className="text-center text-sm text-gray-500 mb-6">
-          لم يصلك الرمز؟{" "}
-          <button
-            type="button"
-            onClick={handleResend}
-            disabled={resendTimer > 0}
-            className={`font-medium ${
-              resendTimer > 0
-                ? "text-gray-400"
-                : "text-green-600 hover:text-green-700 hover:underline"
-            }`}
-          >
-            {resendTimer > 0
-              ? `إعادة الإرسال خلال ${resendTimer} ثانية`
-              : "إعادة إرسال الرمز"}
-          </button>
-        </div>
+        {/* Resend Timer - isolated to prevent full page re-renders */}
+        <ResendTimer count={count} onResend={handleResend} />
 
         <Button
           type="submit"
@@ -159,7 +240,7 @@ export default function OTPVerificationPage() {
         >
           {isSubmitting ? "جاري التحقق..." : "تحقق وأكمل التسجيل"}
         </Button>
-      </form>
+      </motion.form>
     </AuthLayout>
   );
 }

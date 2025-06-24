@@ -7,7 +7,6 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import ProductCardGrid from "./ProductCardGrid";
@@ -54,6 +53,7 @@ export default function ProductCarousel({
   const skeletonProducts = Array(4)
     .fill(null)
     .map((_, i) => ({ id: `skeleton-${i}` }));
+
   const displayProducts = useMemo(() => {
     if (isLoading) return skeletonProducts;
     return products;

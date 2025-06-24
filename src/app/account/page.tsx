@@ -54,7 +54,6 @@ export default function AccountPage() {
             <span>نقاطي</span>
           </TabsTrigger>
           <Button
-            fullWidthContainer
             type="button"
             onClick={() => {
               dispatch(clearCredentials());
