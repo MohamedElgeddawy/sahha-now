@@ -21,9 +21,18 @@ const AddToCart = ({
   const { addToCart, openCart } = useCart();
 
   const handleAddToCart = () => {
-    addToCart(product, variant, quantity);
-    toast.success("تمت الإضافة إلى السلة");
-    openCart();
+    addToCart(
+      { product, variant, quantity },
+      {
+        onSuccess: () => {
+          toast.success("تمت الإضافة إلى السلة");
+          openCart();
+        },
+        onError: () => {
+          toast.error("حدث خطأ أثناء إضافة المنتج إلى السلة");
+        },
+      }
+    );
   };
 
   return (

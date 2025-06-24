@@ -119,7 +119,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
         />
         <Button
           onClick={() => {
-            addToCart(product, null, quantity);
+            addToCart({ product, variant: null, quantity });
             toast.success("تمت الإضافة إلى السلة");
             openCart();
             setQuantity(1);
@@ -255,14 +255,6 @@ export function ProductInfo({ product }: ProductInfoProps) {
             />
           </div>
         </div>
-        {/* <div className="flex items-center justify-between">
-          <span className="text-sm text-gray-600">يمكنك التقسيط بواسطة</span>
-          <div className="flex items-center gap-2">
-            <TamaraIcon />
-            <span className="text-gray-400 mx-1">أو</span>
-            <TabbyIcon />
-          </div>
-        </div> */}
       </div>
     </div>
   );

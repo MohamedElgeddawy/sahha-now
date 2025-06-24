@@ -5,36 +5,36 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { useCart } from "@/lib/hooks/use-cart";
 import Image from "next/image";
-import {
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  Minus,
-  Plus,
-  X,
-} from "lucide-react";
+import { ChevronRight, X } from "lucide-react";
 import QuantityCounter from "@/components/ui/QuantityCounter";
 import Link from "next/link";
-import { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Switch } from "@/components/ui/switch";
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
 import ProductCarousel from "@/components/products/ProductCarousel";
 import { useFeaturedProducts } from "@/lib/hooks/use-products";
+import { toast } from "sonner";
 
 export default function CartPage() {
   const {
     items,
-    totalItems,
     subtotal,
     removeFromCart,
     updateItemQuantity,
-    emptyCart,
+    isLoading,
+    error,
+    refetchCart,
   } = useCart();
   const [usePoints, setUsePoints] = useState(false);
   const [couponCode, setCouponCode] = useState("");
   const { data: otherProducts, isLoading: otherProductsLoading } =
     useFeaturedProducts();
+
+  // Fetch cart data when component mounts
+  useEffect(() => {
+    refetchCart();
+  }, [refetchCart]);
 
   // Calculate service fee (example: 4% of subtotal)
   const serviceFee = useMemo(() => subtotal * 0.04, [subtotal]);
@@ -54,6 +54,50 @@ export default function CartPage() {
   const formatCurrency = useCallback((amount: number) => {
     return `${amount.toFixed(2)} ر.س`;
   }, []);
+
+  // Handle quantity update
+  const handleQuantityChange = (itemId: string, quantity: number) => {
+    updateItemQuantity(
+      { itemId, quantity },
+      {
+        onError: () => toast.error("حدث خطأ أثناء تحديث الكمية"),
+      }
+    );
+  };
+
+  // Handle remove item
+  const handleRemoveItem = (itemId: string, quantity?: number) => {
+    removeFromCart(
+      { itemId, quantity: quantity || 1 },
+      {
+        onError: () => toast.error("حدث خطأ أثناء إزالة المنتج من السلة"),
+      }
+    );
+  };
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="py-12 flex flex-col items-center">
+        <div className="animate-pulse flex flex-col items-center">
+          <div className="h-48 w-48 bg-gray-200 rounded-full mb-6"></div>
+          <div className="h-8 w-64 bg-gray-200 rounded mb-4"></div>
+          <div className="h-4 w-96 bg-gray-200 rounded mb-8"></div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="py-12 flex flex-col items-center text-center">
+        <h2 className="text-2xl font-bold mb-4 text-red-500">حدث خطأ</h2>
+        <p className="text-gray-500 mb-8 max-w-md">{error}</p>
+        <Button onClick={() => refetchCart()}>إعادة المحاولة</Button>
+      </div>
+    );
+  }
 
   if (items.length === 0) {
     return (
@@ -118,7 +162,7 @@ export default function CartPage() {
                         variant="ghost"
                         size="icon"
                         className="rounded-full text-gray-400 hover:text-red-500"
-                        onClick={() => removeFromCart(item.id)}
+                        onClick={() => handleRemoveItem(item.id, item.quantity)}
                       >
                         <X className="h-5 w-5" />
                       </Button>
@@ -162,7 +206,9 @@ export default function CartPage() {
                     <div className="flex justify-center">
                       <QuantityCounter
                         initialValue={item.quantity}
-                        onChange={(value) => updateItemQuantity(item.id, value)}
+                        onChange={(value) =>
+                          handleQuantityChange(item.id, value)
+                        }
                         size="md"
                       />
                     </div>
@@ -180,10 +226,6 @@ export default function CartPage() {
           </div>
 
           <div className="flex justify-between items-center">
-            <Button variant="destructive" onClick={() => emptyCart()}>
-              حذف جميع المنتجات
-            </Button>
-
             <Button asChild variant="outline" className="gap-2">
               <Link href="/products" prefetch>
                 متابعة التسوق

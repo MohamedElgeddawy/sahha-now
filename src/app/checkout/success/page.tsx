@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 
 const CheckoutSuccessPage = () => {
   const router = useRouter();
-  const { items, subtotal, emptyCart } = useCart();
+  const { items, subtotal } = useCart();
   const [orderDetails] = useState({
     orderNumber: "1202101",
     orderDate: new Date().toLocaleDateString("ar-SA", {
@@ -43,17 +43,9 @@ const CheckoutSuccessPage = () => {
       }, 5000);
       return () => clearTimeout(timer);
     }
-
-    return () => {
-      // Clear cart when component unmounts
-      // In a real app, you'd only do this after confirming the order is processed
-      //   emptyCart();
-    };
   }, [items.length, router]);
 
   const handleContinueShopping = () => {
-    // Clear the cart when the user clicks continue shopping
-    emptyCart();
     router.push("/");
   };
 
