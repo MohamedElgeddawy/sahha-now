@@ -23,25 +23,17 @@ import {
 import { useState } from "react";
 import { motion } from "motion/react";
 import { MobileNav } from "@/components/layout/mobile-nav";
-import { useCart } from "@/lib/hooks/use-cart";
+import { useCartItemsCount } from "@/lib/hooks/use-cart";
+import {
+  useCategories,
+  useFavoriteProductsCount,
+} from "@/lib/hooks/use-products";
 
 export function MainHeader() {
   const [open, setOpen] = useState(false);
-  const { cartItemsCount } = useCart();
-
-  const categories = [
-    { name: "جميع المنتجات", href: "/categories/all" },
-    { name: "العناية بالأم والطفل", href: "/categories/mother-baby" },
-    { name: "المكياج والعناية بالجمال", href: "/categories/makeup-beauty" },
-    { name: "العناية بالبشرة", href: "/categories/skin-care" },
-    { name: "العناية بالشعر", href: "/categories/hair-care" },
-    { name: "العناية الشخصية", href: "/categories/personal-care" },
-    { name: "الأدوية والعلاجات", href: "/categories/medicines" },
-    {
-      name: "الفيتامينات والتغذية الصحية",
-      href: "/categories/vitamins-nutrition",
-    },
-  ];
+  const cartItemsCount = useCartItemsCount();
+  const { data: favoritesCount } = useFavoriteProductsCount();
+  const { data: categoriesResponse } = useCategories();
 
   return (
     <motion.header
@@ -74,7 +66,7 @@ export function MainHeader() {
               transition={{ duration: 0.4, delay: 0.1 }}
             >
               {/* Categories Dropdown */}
-              <DropdownMenu>
+              <DropdownMenu dir="rtl">
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="ghost"
@@ -85,14 +77,14 @@ export function MainHeader() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-56">
-                  {categories.map((category) => (
-                    <DropdownMenuItem key={category.href} asChild>
+                  {categoriesResponse?.categories?.map((category) => (
+                    <DropdownMenuItem key={category.id} asChild>
                       <Link
                         prefetch
-                        href={category.href}
+                        href={`/products?categoryIds=${category.id}`}
                         className="w-full text-right py-2 px-4 hover:bg-gray-50 text-[#2C3E50] text-[16px]"
                       >
-                        {category.name}
+                        {category.arabicName}
                       </Link>
                     </DropdownMenuItem>
                   ))}
@@ -151,7 +143,7 @@ export function MainHeader() {
             <ActionButton
               icon={<Heart className="size-6" />}
               href="/favorites"
-              count={3}
+              count={favoritesCount}
             />
             <div className="block md:hidden">
               <MobileNav

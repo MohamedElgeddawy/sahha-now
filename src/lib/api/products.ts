@@ -5,6 +5,7 @@ export interface Product {
   createdAt: string;
   updatedAt: string;
   name: string;
+  arabicName: string;
   sku: string | null;
   description: string;
   price: string;
@@ -23,18 +24,13 @@ export interface Product {
     createdAt: string;
     updatedAt: string;
     name: string;
+    arabicName: string;
     isBestBrand: boolean;
     logoUrl: string | null;
     logoKey: string | null;
     logoFileName: string | null;
   };
-  category: {
-    id: string;
-    createdAt: string;
-    updatedAt: string;
-    name: string;
-    description: string;
-  };
+  category: Category;
   variants: ProductVariant[];
   _count: {
     reviews: number;
@@ -42,55 +38,29 @@ export interface Product {
   };
 }
 
+export interface Category {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  name: string;
+  arabicName: string;
+  description: string;
+  logoKey: string | null;
+  logo: string | null;
+}
+
 export interface ProductVariant {
   id: string;
   createdAt: string;
   updatedAt: string;
   name: string;
+  arabicName: string;
   sku: string;
   price: string;
   discount: string;
   isAvailable: boolean;
   isDefault: boolean;
   productId: string;
-}
-
-export interface ReviewStats {
-  totalReviews: number;
-  averageRating: number;
-  ratingDistribution: [
-    {
-      rating: 5;
-      count: number;
-    },
-    {
-      rating: 4;
-      count: number;
-    },
-    {
-      rating: 3;
-      count: number;
-    },
-    {
-      rating: 2;
-      count: number;
-    },
-    {
-      rating: 1;
-      count: number;
-    }
-  ];
-}
-
-export interface ProductReview {
-  id: string;
-  rating: number;
-  comment: string;
-  createdAt: string;
-  user: {
-    id: string;
-    name: string;
-  };
 }
 
 export interface ProductsResponse {
@@ -103,13 +73,38 @@ export interface ProductsResponse {
 export interface ProductFilters {
   page?: number;
   limit?: number;
-  category?: string;
+  categoryIds?: string[];
+  brandIds?: string[];
   search?: string;
   sort?: string;
   minPrice?: number;
   maxPrice?: number;
   rating?: number;
   hasDiscount?: boolean;
+}
+
+export interface FiltersMetadata {
+  categories: {
+    id: string;
+    name: string;
+    arabicName: string;
+    productCount: number;
+  }[];
+  brands: {
+    id: string;
+    name: string;
+    arabicName: string;
+    productCount: number;
+  }[];
+  ratings: {
+    rating: number;
+    count: number;
+  }[];
+}
+
+export interface CategoryResponse {
+  categories: Category[];
+  total: number;
 }
 
 export async function fetchProducts(
@@ -133,35 +128,6 @@ export async function fetchProduct(id: string) {
   }
 }
 
-export async function fetchProductReviewStats(
-  productId: string
-): Promise<ReviewStats> {
-  try {
-    const response = await sahhaInstance.get(
-      `/products/${productId}/reviews/stats`
-    );
-    return response.data;
-  } catch (error) {
-    console.error(
-      `Error fetching review stats for product ${productId}:`,
-      error
-    );
-    throw error;
-  }
-}
-
-export async function fetchProductReviews(
-  productId: string
-): Promise<ProductReview[]> {
-  try {
-    const response = await sahhaInstance.get(`/products/${productId}/reviews`);
-    return response.data;
-  } catch (error) {
-    console.error(`Error fetching reviews for product ${productId}:`, error);
-    return [];
-  }
-}
-
 export async function fetchFavoriteProducts(
   filters: ProductFilters = {}
 ): Promise<Product[]> {
@@ -173,6 +139,15 @@ export async function fetchFavoriteProducts(
   } catch (error) {
     console.error("Error fetching favorite products:", error);
     return [];
+  }
+}
+export async function fetchFavoriteProductsCount(): Promise<number> {
+  try {
+    const response = await sahhaInstance.get("/favourites/count");
+    return response.data.count;
+  } catch (error) {
+    console.error("Error fetching favorite products:", error);
+    return 0;
   }
 }
 
@@ -195,54 +170,31 @@ export async function fetchOfferProducts(
   }
 }
 
-// Add review to a product
-export const addProductReview = async (
-  productId: string,
-  reviewData: {
-    rating: number;
-    comment?: string;
-  }
-) => {
+export async function fetchCategories(): Promise<CategoryResponse> {
   try {
-    // Get token from localStorage for client-side requests
-    let token;
-
-    if (typeof window !== "undefined") {
-      // Try localStorage first
-      token = localStorage.getItem("accessToken");
-    }
-
-    if (!token) {
-      console.error("No authentication token found");
-      throw new Error("Authentication required");
-    }
-
-    console.log("Sending review with token present, product ID:", productId);
-
-    // Use sahhaInstance directly instead of fetch
-    const response = await sahhaInstance.post(
-      `/products/${productId}/reviews`,
-      {
-        rating: reviewData.rating,
-        comment: reviewData.comment || "",
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    console.log("Review submission successful:", response.status);
+    const response = await sahhaInstance.get("/categories");
     return response.data;
-  } catch (error: any) {
-    console.error("Error adding product review:", error);
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    return {
+      categories: [],
+      total: 0,
+    };
+  }
+}
 
-    // Check if it's an authentication error
-    if (error.response?.status === 401 || error.response?.status === 403) {
-      throw new Error("Authentication required");
-    }
-
-    throw error;
+export const fetchFiltersMetadata = async (): Promise<FiltersMetadata> => {
+  try {
+    const res = await sahhaInstance.get<FiltersMetadata>(
+      "/products/filters-metadata"
+    );
+    return res.data;
+  } catch (error) {
+    console.error(error);
+    return {
+      categories: [],
+      brands: [],
+      ratings: [],
+    };
   }
 };

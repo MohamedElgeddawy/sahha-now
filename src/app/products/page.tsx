@@ -2,13 +2,17 @@
 
 import { useState, useEffect, useMemo } from "react";
 import ProductCardGrid from "@/components/products/ProductCardGrid";
-import { useInfiniteProducts } from "@/lib/hooks/use-products";
-import { ProductFilters } from "@/lib/api/products";
-import { Input } from "@/components/ui/input";
+import {
+  useInfiniteProducts,
+  useFiltersMetadata,
+} from "@/lib/hooks/use-products";
 import { useIntersectionObserver } from "usehooks-ts";
 import { motion } from "motion/react";
-import FilterSection from "@/components/products/FilterSection";
-import RatingFilterSection from "@/components/products/RatingFilterSection";
+import {
+  CategoryFilterSection,
+  BrandFilterSection,
+  ConnectedRatingFilterSection,
+} from "@/components/products/ConnectedFilterSection";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
@@ -19,16 +23,22 @@ import {
 import { ChevronDown, Grid, List } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ProductCardList from "@/components/products/ProductCardList";
+import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
+import {
+  resetFilters,
+  setFilter,
+  setMetadata,
+} from "@/lib/redux/slices/filtersSlice";
+import { useFilterParams } from "@/lib/hooks/use-filter-params";
+import { ActiveFilters } from "@/components/products/ActiveFilters";
 
 export default function ProductsPage() {
-  const [filters, setFilters] = useState<ProductFilters>({
-    page: 1,
-    limit: 12,
-  });
+  const dispatch = useAppDispatch();
+  const { activeFilters, metadata } = useAppSelector((state) => state.filters);
+  const { updateURL } = useFilterParams();
+  const { data: filtersMetadata } = useFiltersMetadata();
 
   const [view, setView] = useState<"grid" | "list">("grid");
-  const [onlyDiscounted, setOnlyDiscounted] = useState(false);
-  const [sortOption, setSortOption] = useState<string>("default");
 
   const sortOptions = [
     { id: "default", label: "الترتيب الافتراضي" },
@@ -41,23 +51,12 @@ export default function ProductsPage() {
 
   const { ref, isIntersecting } = useIntersectionObserver();
 
-  // State to track which sections are collapsed
-  const [collapsedSections, setCollapsedSections] = useState({
-    categories: false,
-    brands: false,
-    featured: false,
-    ratings: false,
-  });
-
-  // Toggle collapse function
-  const toggleCollapse = (
-    section: "categories" | "brands" | "featured" | "ratings"
-  ) => {
-    setCollapsedSections((prev) => ({
-      ...prev,
-      [section]: !prev[section],
-    }));
-  };
+  // Load metadata on mount
+  useEffect(() => {
+    if (filtersMetadata && !metadata) {
+      dispatch(setMetadata(filtersMetadata));
+    }
+  }, [filtersMetadata, metadata, dispatch]);
 
   const {
     data,
@@ -66,7 +65,7 @@ export default function ProductsPage() {
     isFetchingNextPage,
     isLoading,
     isError,
-  } = useInfiniteProducts(filters);
+  } = useInfiniteProducts(activeFilters);
 
   useEffect(() => {
     if (isIntersecting && hasNextPage && !isFetchingNextPage) {
@@ -74,75 +73,47 @@ export default function ProductsPage() {
     }
   }, [isIntersecting, fetchNextPage, hasNextPage, isFetchingNextPage]);
 
-  useEffect(() => {
-    // Update filters when sort option changes
-    if (sortOption === "newest") {
-      setFilters((prev) => ({ ...prev, sort: "newest" }));
-    } else if (sortOption === "price_asc") {
-      setFilters((prev) => ({ ...prev, sort: "price_asc" }));
-    } else if (sortOption === "price_desc") {
-      setFilters((prev) => ({ ...prev, sort: "price_desc" }));
-    } else if (sortOption === "best_selling") {
-      setFilters((prev) => ({ ...prev, sort: "bestselling" }));
-    } else if (sortOption === "highest_rated") {
-      setFilters((prev) => ({ ...prev, sort: "rating_desc" }));
-    } else {
-      setFilters((prev) => ({ ...prev, sort: "default" }));
+  const handleSortChange = (sortId: string) => {
+    let sortValue = "default";
+    switch (sortId) {
+      case "newest":
+        sortValue = "newest";
+        break;
+      case "price_asc":
+        sortValue = "price_asc";
+        break;
+      case "price_desc":
+        sortValue = "price_desc";
+        break;
+      case "best_selling":
+        sortValue = "bestselling";
+        break;
+      case "highest_rated":
+        sortValue = "rating_desc";
+        break;
     }
-  }, [sortOption]);
 
-  useEffect(() => {
-    // Update filters when discount filter changes
-    if (onlyDiscounted) {
-      setFilters((prev) => ({ ...prev, hasDiscount: true }));
+    const newFilters = { ...activeFilters, sort: sortValue };
+    dispatch(setFilter({ sort: sortValue }));
+    updateURL(newFilters);
+  };
+
+  const handleDiscountChange = (checked: boolean) => {
+    if (checked) {
+      // When checked, add hasDiscount: true
+      dispatch(setFilter({ hasDiscount: true }));
+      updateURL({ ...activeFilters, hasDiscount: true });
     } else {
-      setFilters((prev) => {
-        const newFilters = { ...prev };
-        delete newFilters.hasDiscount;
-        return newFilters;
-      });
+      // When unchecked, explicitly set hasDiscount: false
+      // Our reducer will handle removing it from state
+      dispatch(setFilter({ hasDiscount: false }));
+
+      // For URL, create a new object without hasDiscount
+      const newFilters = { ...activeFilters };
+      delete newFilters.hasDiscount;
+      updateURL(newFilters);
     }
-  }, [onlyDiscounted]);
-
-  const handleFilterChange = (name: string, value: any) => {
-    setFilters((prev) => ({ ...prev, [name]: value, page: 1 }));
   };
-
-  const handleCategoryChange = (categoryName: string) => {
-    handleFilterChange("category", categoryName);
-  };
-
-  const handleRatingChange = (rating: number) => {
-    handleFilterChange("rating", rating);
-  };
-
-  // Category filters data from the image
-  const categories = [
-    { name: "العناية بالأم والطفل", count: 321 },
-    { name: "المكياج والعناية بالجمال", count: 214 },
-    { name: "العناية بالبشرة", count: 221 },
-    { name: "العناية بالشعر", count: 125 },
-    { name: "العناية الشخصية", count: 50 },
-    { name: "الأدوية والعلاجات", count: 351 },
-    { name: "الفيتامينات والتغذية الصحية", count: 98 },
-  ];
-
-  // Brand filters data from the image
-  const brands = [
-    { name: "كوفي", count: 32 },
-    { name: "لا روش بوزاي", count: 97 },
-    { name: "افين", count: 80 },
-    { name: "فلوريدا باريس", count: 33 },
-    { name: "يوسيرين", count: 37 },
-  ];
-
-  // Featured categories from the image
-  const featuredCategories = [
-    { name: "الأكثر مبيعًا", count: 32 },
-    { name: "وصل حديثًا", count: 97 },
-    { name: "تخفيضات", count: 80 },
-    { name: "سعر خاص", count: 33 },
-  ];
 
   // Flatten product data from multiple pages
   const products = useMemo(() => {
@@ -153,6 +124,12 @@ export default function ProductsPage() {
       Number(data?.pages[0]?.totalPages) * (data?.pages[0]?.limit || 12) || 0
     );
   }, [data]);
+
+  useEffect(() => {
+    return () => {
+      dispatch(resetFilters());
+    };
+  }, []);
 
   return (
     <motion.div
@@ -174,53 +151,30 @@ export default function ProductsPage() {
         {/* Filters sidebar */}
         <div className="lg:w-1/4 space-y-6">
           {/* Categories filter */}
-          <FilterSection
-            title="تسوق بالفئات"
-            items={categories}
-            isCollapsed={collapsedSections.categories}
-            onToggleCollapse={() => toggleCollapse("categories")}
-            onItemSelect={handleCategoryChange}
-            selectedItem={filters.category}
-          />
+          <CategoryFilterSection />
 
           {/* Brands filter */}
-          <FilterSection
-            title="تسوق بالعلامة التجارية"
-            items={brands}
-            isCollapsed={collapsedSections.brands}
-            onToggleCollapse={() => toggleCollapse("brands")}
-            searchInput={<Input placeholder="ابحث عن العلامة التجارية" />}
-          />
-
-          {/* Featured categories */}
-          <FilterSection
-            title="التصنيفات المميزة"
-            items={featuredCategories}
-            isCollapsed={collapsedSections.featured}
-            onToggleCollapse={() => toggleCollapse("featured")}
-          />
+          <BrandFilterSection />
 
           {/* Rating filter */}
-          <RatingFilterSection
-            title="تسوق بالتقييم"
-            isCollapsed={collapsedSections.ratings}
-            onToggleCollapse={() => toggleCollapse("ratings")}
-            selectedRating={filters.rating as number}
-            onRatingSelect={handleRatingChange}
-          />
+          <ConnectedRatingFilterSection />
         </div>
 
         {/* Products grid */}
         <div className="lg:w-3/4">
+          {/* Active filters */}
+          <ActiveFilters />
+
           {/* Top filters and sorting */}
           <div className="flex flex-wrap items-center justify-between p-4 rounded-t-lg mb-6">
             <div className="flex items-center gap-3">
-              <DropdownMenu>
+              <DropdownMenu dir="rtl">
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline">
                     <span className="ms-2 text-sm">
-                      {sortOptions.find((opt) => opt.id === sortOption)
-                        ?.label || "الترتيب الافتراضي"}
+                      {sortOptions.find(
+                        (opt) => opt.id === (activeFilters.sort || "default")
+                      )?.label || "الترتيب الافتراضي"}
                     </span>
                     <ChevronDown size={16} />
                   </Button>
@@ -229,8 +183,10 @@ export default function ProductsPage() {
                   {sortOptions.map((option) => (
                     <DropdownMenuItem
                       key={option.id}
-                      onClick={() => setSortOption(option.id)}
-                      className={sortOption === option.id ? "bg-gray-100" : ""}
+                      onClick={() => handleSortChange(option.id)}
+                      className={
+                        activeFilters.sort === option.id ? "bg-gray-100" : ""
+                      }
                     >
                       {option.label}
                     </DropdownMenuItem>
@@ -259,17 +215,12 @@ export default function ProductsPage() {
               </Button>
             </div>
             <div className="flex items-center gap-3">
-              <div className="text-sm ml-4">
-                عرض 1-{Math.min(products.length, filters.limit || 12)} منتج من{" "}
-                {totalProducts} منتج
-              </div>
-
               <div className="flex items-center gap-2">
                 <Checkbox
                   id="discount-only"
-                  checked={onlyDiscounted}
+                  checked={activeFilters.hasDiscount || false}
                   onCheckedChange={(checked) =>
-                    setOnlyDiscounted(checked === true)
+                    handleDiscountChange(checked === true)
                   }
                 />
                 <label htmlFor="discount-only" className="text-sm">

@@ -1,8 +1,10 @@
 import { Loader2, ShoppingCart } from "lucide-react";
 import { motion } from "motion/react";
 import React from "react";
-import { useCart } from "@/lib/hooks/use-cart";
+import { cartKeys, useCart } from "@/lib/hooks/use-cart";
 import { Product, ProductVariant } from "@/lib/api/products";
+import { productKeys } from "@/lib/hooks/use-products";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface AddToCartProps {
   product: Product;
@@ -18,9 +20,12 @@ const AddToCart = ({
   className = "",
 }: AddToCartProps) => {
   const { addToCart } = useCart();
-
+  const queryClient = useQueryClient();
   const handleAddToCart = () => {
     addToCart.mutate({ product, quantity });
+    queryClient.invalidateQueries({
+      queryKey: cartKeys.itemsCount(),
+    });
   };
 
   return (

@@ -4,8 +4,8 @@ import { useState } from "react";
 import { Star, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ReviewItem } from "./ReviewItem";
-import { Product, addProductReview } from "@/lib/api/products";
-import { useProductReviewStats, productKeys } from "@/lib/hooks/use-products";
+import { Product } from "@/lib/api/products";
+import { reviewKeys, useProductReviews } from "@/lib/hooks/use-reviews";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Progress } from "../ui/progress";
 import { Checkbox } from "../ui/checkbox";
@@ -16,6 +16,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useAppSelector } from "@/lib/redux/hooks";
 import { selectIsAuthenticated } from "@/lib/redux/slices/authSlice";
+import { useProductStats } from "@/lib/hooks/use-reviews";
+import { addProductReview } from "@/lib/api/reviews";
 
 interface ProductTabsProps {
   product: Product;
@@ -30,7 +32,7 @@ interface ReviewFormValues {
 
 export function ProductTabs({ product }: ProductTabsProps) {
   const router = useRouter();
-  const [rating, setRating] = useState<RatingKey | null>(null);
+  const [hoverRating, setHoverRating] = useState<RatingKey | null>(null);
   const [rememberComment, setRememberComment] = useState(false);
   const queryClient = useQueryClient();
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
@@ -55,7 +57,13 @@ export function ProductTabs({ product }: ProductTabsProps) {
     data: reviewStats,
     isLoading: isLoadingStats,
     error,
-  } = useProductReviewStats(product.id);
+  } = useProductStats(product.id);
+  const {
+    data: reviewsRes,
+    isLoading: isLoadingReviews,
+    fetchNextPage,
+    hasNextPage,
+  } = useProductReviews(product.id);
 
   // Calculate rating percentages
   const ratingCounts: Record<RatingKey, number> = {
@@ -85,8 +93,6 @@ export function ProductTabs({ product }: ProductTabsProps) {
     }
 
     try {
-      console.log("Submitting review for product:", product.id);
-
       await addProductReview(product.id, {
         rating: data.rating as number,
         comment: data.comment,
@@ -102,7 +108,7 @@ export function ProductTabs({ product }: ProductTabsProps) {
 
       // Refresh reviews data
       queryClient.invalidateQueries({
-        queryKey: productKeys.reviewStats(product.id),
+        queryKey: reviewKeys.reviewStats(product.id),
       });
     } catch (error: any) {
       console.error("Error submitting review:", error);
@@ -139,7 +145,7 @@ export function ProductTabs({ product }: ProductTabsProps) {
         <div className="flex justify-center border-b border-gray-200 pb-3">
           <TabsList className="flex gap-8 bg-transparent">
             <TabsTrigger
-              value="specifications"
+              value="description"
               className="px-4 py-2 text-sm font-medium rounded-md transition-colors duration-300 data-[state=active]:bg-[#2D9CDB] data-[state=active]:text-white data-[state=inactive]:text-[#2D9CDB] data-[state=inactive]:bg-[#EDF8FF]"
             >
               تفاصيل المنتج
@@ -170,18 +176,6 @@ export function ProductTabs({ product }: ProductTabsProps) {
             </p>
           </TabsContent>
 
-          <TabsContent value="specifications" className="space-y-4 text-right">
-            {/* {product?.specifications?.map((spec, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0"
-              >
-                <span className="text-gray-600">{spec.label}</span>
-                <span className="font-medium text-gray-900">{spec.value}</span>
-              </div>
-            ))} */}
-          </TabsContent>
-
           <TabsContent
             value="shipping"
             className="prose prose-sm max-w-none text-right"
@@ -204,7 +198,7 @@ export function ProductTabs({ product }: ProductTabsProps) {
               </div>
             ) : error ? (
               <div className="text-red-500">
-                Failed to load review statistics
+                <p>حدث خطأ أثناء تحميل التقييمات</p>
               </div>
             ) : (
               <div className="flex gap-8 items-start">
@@ -240,7 +234,7 @@ export function ProductTabs({ product }: ProductTabsProps) {
                 </div>
 
                 {/* Rating Bars */}
-                <div className="flex-1 space-y-2">
+                <div className="basis-1/3 space-y-2">
                   {[5, 4, 3, 2, 1].map((rating) => (
                     <div key={rating} className="flex items-center gap-2">
                       <div className="flex items-center gap-1 w-12">
@@ -267,10 +261,27 @@ export function ProductTabs({ product }: ProductTabsProps) {
 
             {/* Reviews List */}
             <div className="space-y-6">
-              {product?._count?.reviews > 0 ? (
-                // Add code to fetch and display actual reviews
-                <div className="text-gray-500">
-                  Reviews will be displayed here
+              {isLoadingReviews ? (
+                <div className="flex gap-8 items-start animate-pulse">
+                  <div className="w-24 h-24 bg-gray-200 rounded-lg"></div>
+                  <div className="flex-1 space-y-2">
+                    <div className="h-4 bg-gray-200 rounded-full"></div>
+                  </div>
+                </div>
+              ) : reviewsRes && reviewsRes?.length > 0 ? (
+                <div className="space-y-4">
+                  {reviewsRes.map((review) => (
+                    <ReviewItem key={review.id} review={review} />
+                  ))}
+                  {hasNextPage && (
+                    <Button
+                      size={"sm"}
+                      onClick={() => fetchNextPage()}
+                      className="w-fit"
+                    >
+                      عرض المزيد من التقييمات
+                    </Button>
+                  )}
                 </div>
               ) : (
                 <div className="text-gray-500">لم يتم إضافة أي تقييمات بعد</div>
@@ -295,9 +306,6 @@ export function ProductTabs({ product }: ProductTabsProps) {
                 </div>
               ) : (
                 <>
-                  <p className="text-sm text-gray-500">
-                    لن يتم نشر عنوان بريدك الإلكتروني. *
-                  </p>
                   <form
                     onSubmit={handleSubmit(onSubmitReview)}
                     className="space-y-4"
@@ -306,7 +314,10 @@ export function ProductTabs({ product }: ProductTabsProps) {
                       <label className="block text-sm font-medium text-gray-700">
                         تقييمك: *
                       </label>
-                      <div className="flex items-center gap-1">
+                      <div
+                        onMouseLeave={() => setHoverRating(null)}
+                        className="flex items-center gap-1 w-fit"
+                      >
                         {[1, 2, 3, 4, 5].map((value) => (
                           <button
                             type="button"
@@ -314,14 +325,20 @@ export function ProductTabs({ product }: ProductTabsProps) {
                             onClick={() =>
                               setValue("rating", value as RatingKey)
                             }
+                            onMouseEnter={() =>
+                              setHoverRating(value as RatingKey)
+                            }
                             className="focus:outline-none"
                           >
                             <Star
                               className={cn("size-6", {
+                                "text-[#FFA726]/40 fill-[#FFA726]/40":
+                                  value <= (hoverRating || 0),
                                 "text-[#FFA726] fill-[#FFA726]":
                                   value <= (currentRating || 0),
                                 "text-gray-300 fill-gray-300":
-                                  value > (currentRating || 0),
+                                  value > (currentRating || 0) &&
+                                  value > (hoverRating || 0),
                               })}
                             />
                           </button>
@@ -371,7 +388,7 @@ export function ProductTabs({ product }: ProductTabsProps) {
                     <Button
                       type="submit"
                       disabled={isSubmitting}
-                      className="bg-[#27AE60] hover:bg-[#219653] text-white px-6 py-2 rounded-lg transition-colors disabled:opacity-70"
+                      className="px-6 py-2"
                     >
                       {isSubmitting ? "جاري الإرسال..." : "إرسال"}
                     </Button>

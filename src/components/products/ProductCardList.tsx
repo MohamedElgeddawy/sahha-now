@@ -81,11 +81,11 @@ const ProductCardList = ({
           >
             <Link href={`/products/${product.id}`}>
               <h3 className="text-gray-700 font-semibold text-xl rtl:text-right">
-                {product.name}
+                {product.arabicName}
               </h3>
             </Link>
             <div className="text-sm text-gray-500 rtl:text-right">
-              {product.category?.name}
+              {product.category?.arabicName}
             </div>
           </motion.div>
 

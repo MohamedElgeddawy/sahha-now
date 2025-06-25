@@ -32,10 +32,10 @@ export default function ProductPage({
           { label: "الرئيسية", href: "/" },
           { label: "المنتجات", href: "/products" },
           {
-            label: product?.category?.name || "",
+            label: product?.category?.arabicName || "",
             href: `/category/${resolvedParams.id}`,
           },
-          { label: product?.name || "", href: "#" },
+          { label: product?.arabicName || "" },
         ]}
       />
 

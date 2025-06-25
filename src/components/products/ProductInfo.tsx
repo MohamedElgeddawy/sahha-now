@@ -34,7 +34,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         {/* Title */}
-        <h1 className="text-2xl  text-gray-900">{product.name}</h1>
+        <h1 className="text-2xl  text-gray-900">{product.arabicName}</h1>
         <div className="text-sm text-gray-500">رقم المنتج: ({product.id})</div>
       </div>
       {/* Rating and Stock */}
@@ -42,7 +42,9 @@ export function ProductInfo({ product }: ProductInfoProps) {
         {/* Brand Label */}
         <div className="flex items-center gap-2">
           <span className="text-sm text-gray-600">العلامة التجارية:</span>
-          <span className="text-sm text-gray-900">{product.brand?.name}</span>
+          <span className="text-sm text-gray-900">
+            {product.brand?.arabicName}
+          </span>
         </div>
 
         <div className="flex items-center gap-1">
@@ -82,7 +84,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
                   Number(product.price) * (Number(product.discount) / 100)
                 : product.price}
             </span>
-            <span className="text-sm font-medium  text-green-600">ر.س</span>
+            <span className="text-sm font-medium text-green-600">ر.س</span>
           </div>
           {Number(product.discount) > 0 ? (
             <div className="flex items-center gap-1">
@@ -94,7 +96,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
           ) : null}
         </div>
         <div className="flex items-center gap-2 bg-[#F2FBF6] rounded-lg px-3 py-1">
-          <span className="text-[#27AE60] text-sm">20 نقطة</span>
+          <span className="text-green-primary text-sm">20 نقطة</span>
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
             <path
               d="M13.3332 4L5.99984 11.3333L2.6665 8"
@@ -114,14 +116,14 @@ export function ProductInfo({ product }: ProductInfoProps) {
       <div className="flex items-center gap-4">
         <QuantityCounter
           initialValue={quantity}
-          onChange={(value) => setQuantity(value)}
+          onChange={(value) => setQuantity((prev) => prev + value)}
         />
         <Button
           onClick={() => {
             addToCart.mutate({ product, quantity });
             setQuantity(1);
           }}
-          className="w-full bg-[#FF9B07] text-white hover:bg-[#F08C00]"
+          className="flex-1 bg-[#FF9B07] text-white hover:bg-[#F08C00]"
           disabled={addToCart.isPending}
         >
           {addToCart.isPending ? (

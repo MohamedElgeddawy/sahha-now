@@ -2,11 +2,16 @@ import { Product } from "../api/products";
 import { Cart, cartApi } from "../api/cart";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { useLocalStorage } from "usehooks-ts";
 
-export const useCart = () => {
-  const queryClient = useQueryClient();
+export const cartKeys = {
+  all: ["cart"] as const,
+  itemsCount: () => [...cartKeys.all, "itemsCount"] as const,
+};
+
+export const useCartItemsCount = () => {
   const { data: cartItemsCount } = useQuery({
-    queryKey: ["cartItemsCount"],
+    queryKey: cartKeys.itemsCount(),
     queryFn: async () => {
       try {
         const { data } = await cartApi.getCartItemsCount();
@@ -21,14 +26,31 @@ export const useCart = () => {
     },
     initialData: 0,
   });
+  return cartItemsCount;
+};
+
+export const useCart = () => {
+  const queryClient = useQueryClient();
+  const [localCart, setLocalCart] = useLocalStorage<Cart | null>("cart", null, {
+    deserializer(value) {
+      if (value) {
+        return JSON.parse(value);
+      }
+      return null;
+    },
+    serializer(value) {
+      return JSON.stringify(value);
+    },
+  });
 
   // Fetch cart data
   const cart = useQuery<Cart>({
-    queryKey: ["cart"],
+    queryKey: cartKeys.all,
     queryFn: async () => {
       try {
         const { data } = await cartApi.getCart();
-        localStorage.setItem("cart", JSON.stringify(data));
+
+        setLocalCart(data);
         return data;
       } catch (error) {
         const errorMessage =
@@ -37,8 +59,8 @@ export const useCart = () => {
       }
     },
     // Initialize the cart on component mount
-    initialData: !!localStorage.getItem("cart")
-      ? (JSON.parse(localStorage.getItem("cart")!) as Cart)
+    initialData: localCart
+      ? localCart
       : {
           id: "",
           createdAt: "",
@@ -70,8 +92,8 @@ export const useCart = () => {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["cart"] });
-      queryClient.invalidateQueries({ queryKey: ["cartItemsCount"] });
+      queryClient.invalidateQueries({ queryKey: cartKeys.all });
+      queryClient.invalidateQueries({ queryKey: cartKeys.itemsCount() });
       toast.success("تمت الإضافة إلى السلة");
     },
     onError: (error) => {
@@ -96,8 +118,8 @@ export const useCart = () => {
       return data;
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["cart"] });
-      queryClient.invalidateQueries({ queryKey: ["cartItemsCount"] });
+      queryClient.invalidateQueries({ queryKey: cartKeys.all });
+      queryClient.invalidateQueries({ queryKey: cartKeys.itemsCount() });
     },
     onError: (error) => {
       const errorMessage =
@@ -115,6 +137,5 @@ export const useCart = () => {
 
     // Cart
     cart,
-    cartItemsCount,
   };
 };

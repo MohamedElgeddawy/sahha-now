@@ -30,6 +30,9 @@ const FavoriteButton = ({
       return await sahhaInstance.post(`/favourites/${productId}`);
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: productKeys.favoritesCount(),
+      });
       queryClient.invalidateQueries({ queryKey: productKeys.all });
       queryClient.invalidateQueries({
         queryKey: productKeys.detail(productId),

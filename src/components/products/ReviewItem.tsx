@@ -1,4 +1,4 @@
-import { ProductReview } from "@/lib/api/products";
+import { ProductReview } from "@/lib/api/reviews";
 import { Star, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
@@ -21,7 +21,9 @@ export function ReviewItem({ review }: ReviewItemProps) {
           <div className="bg-gray-100 rounded-full p-1">
             <User className="h-5 w-5 text-gray-500" />
           </div>
-          <span className="font-medium text-gray-800">{review.user.name}</span>
+          <span className="font-medium text-gray-800">
+            {review.customer?.fullname || "غير معروف"}
+          </span>
         </div>
         <span className="text-sm text-gray-500">{formattedDate}</span>
       </div>
@@ -31,8 +33,8 @@ export function ReviewItem({ review }: ReviewItemProps) {
           <Star
             key={star}
             className={cn("h-4 w-4", {
-              "text-[#FFA726] fill-[#FFA726]": star <= review.rating,
-              "text-gray-300 fill-gray-300": star > review.rating,
+              "text-[#FFA726] fill-[#FFA726]": star <= Number(review.rating),
+              "text-gray-300 fill-gray-300": star > Number(review.rating),
             })}
           />
         ))}

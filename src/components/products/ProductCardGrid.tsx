@@ -41,11 +41,6 @@ const ProductCardGrid = ({ product, isLoading = false }: Props) => {
     return <ProductCardGridSkeleton />;
   }
 
-  // Return early if product is missing required data
-  // if (!product.id || !product.name || !product.media) {
-  //   return null;
-  // }
-
   return (
     <motion.div
       ref={cardRef}
@@ -127,10 +122,14 @@ const ProductCardGrid = ({ product, isLoading = false }: Props) => {
           transition={{ delay: 0.2 }}
         >
           <h3 className="text-gray-600 line-clamp-2 font-semibold text-lg">
-            {product.name}
+            {product.arabicName}
           </h3>
           <span className="text-xs text-gray-500">
-            {product.category?.name}
+            {product.category?.arabicName}
+          </span>
+          <br />
+          <span className="text-xs text-gray-500">
+            {product.brand?.arabicName}
           </span>
         </motion.div>
         {/* Price */}

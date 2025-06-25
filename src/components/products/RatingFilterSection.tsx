@@ -10,16 +10,10 @@ type RatingFilterProps = {
   onToggleCollapse: () => void;
   selectedRating?: number;
   onRatingSelect?: (rating: number) => void;
+  ratingCounts?: { rating: number; count: number }[];
 };
 
 const ratingOptions = [5, 4, 3, 2, 1];
-const ratingCounts = {
-  5: 321,
-  4: 254,
-  3: 125,
-  2: 81,
-  1: 32,
-};
 
 const RatingFilterSection = ({
   title,
@@ -27,7 +21,13 @@ const RatingFilterSection = ({
   onToggleCollapse,
   selectedRating,
   onRatingSelect,
+  ratingCounts = [],
 }: RatingFilterProps) => {
+  // Convert ratingCounts array to object for easy lookup
+  const ratingCountsMap = ratingCounts.reduce((acc, { rating, count }) => {
+    acc[rating] = count;
+    return acc;
+  }, {} as Record<number, number>);
   return (
     <div className="bg-white rounded-lg shadow p-4">
       <div
@@ -79,7 +79,7 @@ const RatingFilterSection = ({
                     </div>
                   </div>
                   <span className="text-gray-500 text-sm">
-                    {ratingCounts[rating as keyof typeof ratingCounts]}
+                    {ratingCountsMap[rating] || 0}
                   </span>
                 </div>
               ))}

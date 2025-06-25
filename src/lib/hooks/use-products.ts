@@ -1,15 +1,17 @@
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import {
   fetchFavoriteProducts,
+  fetchFavoriteProductsCount,
   fetchOfferProducts,
   fetchProduct,
-  fetchProductReviewStats,
   fetchProducts,
-  fetchProductReviews,
   Product,
   ProductFilters,
   ProductsResponse,
-  ReviewStats,
+  fetchCategories,
+  CategoryResponse,
+  fetchFiltersMetadata,
+  FiltersMetadata,
 } from "../api/products";
 
 export const productKeys = {
@@ -20,11 +22,11 @@ export const productKeys = {
     [...productKeys.lists(), "infinite", filters] as const,
   details: () => [...productKeys.all, "detail"] as const,
   detail: (id: string) => [...productKeys.details(), id] as const,
-  reviews: () => [...productKeys.all, "reviews"] as const,
-  reviewsList: (id: string) => [...productKeys.reviews(), "list", id] as const,
-  reviewStats: (id: string) => [...productKeys.reviews(), "stats", id] as const,
   favorites: () => [...productKeys.all, "favorites"] as const,
   offers: () => [...productKeys.all, "offers"] as const,
+  favoritesCount: () => [...productKeys.all, "favoritesCount"] as const,
+  categories: ["categories"] as const,
+  filtersMetadata: ["filtersMetadata"] as const,
 };
 
 export function useProducts(filters: ProductFilters = {}) {
@@ -42,22 +44,6 @@ export function useProduct(id: string) {
   return useQuery<Product>({
     queryKey: productKeys.detail(id),
     queryFn: () => fetchProduct(id),
-  });
-}
-
-export function useProductReviewStats(productId: string) {
-  return useQuery<ReviewStats>({
-    queryKey: productKeys.reviewStats(productId),
-    queryFn: () => fetchProductReviewStats(productId),
-    enabled: !!productId,
-  });
-}
-
-export function useProductReviews(id: string) {
-  return useQuery({
-    queryKey: productKeys.reviewsList(id),
-    queryFn: () => fetchProductReviews(id),
-    enabled: !!id,
   });
 }
 
@@ -98,6 +84,12 @@ export function useFavoriteProducts() {
     initialPageParam: 1,
   });
 }
+export function useFavoriteProductsCount() {
+  return useQuery<number>({
+    queryKey: productKeys.favoritesCount(),
+    queryFn: fetchFavoriteProductsCount,
+  });
+}
 
 export function useOfferProducts() {
   return useInfiniteQuery<ProductsResponse>({
@@ -115,5 +107,18 @@ export function useOfferProducts() {
       return allPages.length + 1;
     },
     initialPageParam: 1,
+  });
+}
+export function useCategories() {
+  return useQuery<CategoryResponse>({
+    queryKey: productKeys.categories,
+    queryFn: fetchCategories,
+  });
+}
+
+export function useFiltersMetadata() {
+  return useQuery<FiltersMetadata>({
+    queryKey: productKeys.filtersMetadata,
+    queryFn: fetchFiltersMetadata,
   });
 }

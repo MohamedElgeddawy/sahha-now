@@ -14,14 +14,14 @@ interface QuantityCounterProps {
   size?: "sm" | "md" | "lg";
 }
 
-const QuantityCounter: React.FC<QuantityCounterProps> = ({
+const QuantityCounter = ({
   initialValue = 1,
   min = 0,
   max = 99,
   onChange,
   className = "",
   size = "lg",
-}) => {
+}: QuantityCounterProps) => {
   const [count, setCount] = useState(initialValue);
   const [isIncrementing, setIsIncrementing] = useState(true);
   const prevCountRef = useRef(initialValue);

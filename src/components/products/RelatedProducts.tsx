@@ -42,7 +42,7 @@ export function RelatedProducts({ products }: RelatedProductsProps) {
               )}
               <Image
                 src={product.media[0]?.thumbnailUrl || ""}
-                alt={product.name}
+                alt={product.arabicName}
                 fill
                 className="object-contain p-4 group-hover:scale-105 transition-transform"
               />
@@ -50,7 +50,7 @@ export function RelatedProducts({ products }: RelatedProductsProps) {
 
             <div className="mt-3 space-y-2">
               <h3 className="text-sm text-gray-600 line-clamp-2">
-                {product.name}
+                {product.arabicName}
               </h3>
 
               <div className="flex items-center gap-1">

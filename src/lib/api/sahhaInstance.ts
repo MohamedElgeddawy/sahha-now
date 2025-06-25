@@ -1,6 +1,7 @@
 import axios from "axios";
 import { store } from "../redux/store";
 import { clearCredentials, setCredentials } from "../redux/slices/authSlice";
+import { toast } from "sonner";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://104.248.45.73/api";
 
@@ -100,7 +101,7 @@ export default sahhaInstance;
 
 const refreshAccessToken = async () => {
   try {
-    const { data } = await sahhaInstance.post(`/auth/token/refresh`, {
+    const { data } = await axios.post(`${API_URL}/auth/token/refresh`, {
       refreshToken: store.getState().auth.refreshToken, // Assuming refreshToken is stored in the redux store
     });
     store.dispatch(
