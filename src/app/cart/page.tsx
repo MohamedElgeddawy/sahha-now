@@ -8,26 +8,28 @@ import Image from "next/image";
 import { ChevronRight, X } from "lucide-react";
 import QuantityCounter from "@/components/ui/QuantityCounter";
 import Link from "next/link";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Switch } from "@/components/ui/switch";
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
 import ProductCarousel from "@/components/products/ProductCarousel";
 import { useFeaturedProducts } from "@/lib/hooks/use-products";
 import { toast } from "sonner";
-import { useDebounceCallback } from "usehooks-ts";
 import Loader from "../loading";
 
 export default function CartPage() {
-  const { items, subtotal, removeFromCart, updateItemQuantity, isLoading } =
-    useCart();
+  const { cart, addToCart, removeFromCart } = useCart();
+  const { cartItems, totalPrice } = cart.data || {
+    cartItems: [],
+    totalPrice: 0,
+  };
   const [usePoints, setUsePoints] = useState(false);
   const [couponCode, setCouponCode] = useState("");
   const { data: otherProducts, isLoading: otherProductsLoading } =
     useFeaturedProducts();
 
   // Calculate service fee (example: 4% of subtotal)
-  const serviceFee = useMemo(() => subtotal * 0.04, [subtotal]);
+  const serviceFee = useMemo(() => parseFloat(totalPrice) * 0.04, [totalPrice]);
   // Rounded to 2 decimal places
   const serviceFeeFormatted = useMemo(
     () => Math.round(serviceFee * 100) / 100,
@@ -36,8 +38,8 @@ export default function CartPage() {
 
   // Calculate total
   const total = useMemo(
-    () => subtotal + serviceFeeFormatted,
-    [subtotal, serviceFeeFormatted]
+    () => totalPrice + serviceFeeFormatted,
+    [totalPrice, serviceFeeFormatted]
   );
 
   // Format currency
@@ -46,41 +48,23 @@ export default function CartPage() {
   }, []);
 
   // Handle quantity update
-  const handleQuantityChange = (itemId: string, quantity: number) => {
-    if (quantity < 1) {
-      removeFromCart.mutate({ itemId, quantity: 1 });
-      return;
-    }
-    updateItemQuantity.mutate(
-      { itemId, quantity },
-      {
-        onError: () => toast.error("حدث خطأ أثناء تحديث الكمية"),
+  const handleQuantityChange = useCallback(
+    (variantId: string, quantity: number) => {
+      if (quantity < 0) {
+        removeFromCart.mutate({ variantId, quantity: 1 });
+      } else {
+        addToCart.mutate({ variantId, quantity });
       }
-    );
-  };
-  const debouncedUpdateQuantity = useDebounceCallback(
-    (itemId: string, quantity: number) => {
-      handleQuantityChange(itemId, quantity);
     },
-    500
+    []
   );
 
-  // Handle remove item
-  const handleRemoveItem = (itemId: string, quantity?: number) => {
-    removeFromCart.mutate(
-      { itemId, quantity: quantity || 1 },
-      {
-        onError: () => toast.error("حدث خطأ أثناء إزالة المنتج من السلة"),
-      }
-    );
-  };
-
   // Show loading state
-  if (isLoading) {
+  if (cart.isLoading) {
     return <Loader />;
   }
 
-  if (items.length === 0) {
+  if (cartItems.length === 0) {
     return (
       <div className="py-12 flex flex-col items-center text-center">
         <Image
@@ -123,10 +107,10 @@ export default function CartPage() {
             </div>
 
             <AnimatePresence>
-              {items.map((item) => {
+              {cart.data?.cartItems.map((item) => {
                 const finalPrice =
-                  parseFloat(item.product.price) *
-                  (1 - parseFloat(item.product.discount || "0") / 100);
+                  parseFloat(item.variant.price) *
+                  (1 - parseFloat(item.variant.discount || "0") / 100);
 
                 return (
                   <motion.div
@@ -144,17 +128,23 @@ export default function CartPage() {
                         size="icon"
                         disabled={removeFromCart.isPending}
                         className="rounded-full text-gray-400 hover:text-red-500"
-                        onClick={() => handleRemoveItem(item.id, item.quantity)}
+                        onClick={() =>
+                          removeFromCart.mutate({
+                            variantId: item.variant.id,
+                            quantity: item.quantity,
+                          })
+                        }
                       >
-                        <X className="h-5 w-5" />
+                        <X className="size-7" />
                       </Button>
 
                       <div className="relative h-20 w-20 rounded-md overflow-hidden">
                         <Image
                           src={
-                            item.product.media[0]?.url || "/images/product.jpg"
+                            item.variant.product.media[0]?.url ||
+                            "/images/product.jpg"
                           }
-                          alt={item.product.name}
+                          alt={item.variant.product.name}
                           fill
                           className="object-cover"
                         />
@@ -162,7 +152,7 @@ export default function CartPage() {
 
                       <div className="text-right">
                         <h3 className="font-semibold text-sm line-clamp-2">
-                          {item.product.name}
+                          {item.variant.product.name}
                         </h3>
                         {item.variant && (
                           <span className="text-xs text-gray-500">
@@ -177,9 +167,9 @@ export default function CartPage() {
                       <div className="font-semibold">
                         {formatCurrency(finalPrice)}
                       </div>
-                      {parseFloat(item.product.discount || "0") > 0 && (
+                      {parseFloat(item.variant.discount || "0") > 0 && (
                         <span className="text-xs text-gray-500 relative before:content-[''] before:absolute before:top-1/2 before:left-0 before:w-full before:h-[1px] before:bg-gray-500">
-                          {formatCurrency(parseFloat(item.product.price))}
+                          {formatCurrency(parseFloat(item.variant.price))}
                         </span>
                       )}
                     </div>
@@ -188,9 +178,9 @@ export default function CartPage() {
                     <div className="flex justify-center">
                       <QuantityCounter
                         initialValue={item.quantity}
-                        onChange={(value) =>
-                          debouncedUpdateQuantity(item.id, value)
-                        }
+                        onChange={(value) => {
+                          handleQuantityChange(item.variant.id, value);
+                        }}
                         size="md"
                       />
                     </div>
@@ -228,7 +218,7 @@ export default function CartPage() {
               <div className="flex justify-between items-center">
                 <span className="text-gray-600">المجموع الفرعي</span>
                 <span className="font-semibold">
-                  {formatCurrency(subtotal)}
+                  {formatCurrency(parseFloat(totalPrice))}
                 </span>
               </div>
 
@@ -243,7 +233,9 @@ export default function CartPage() {
 
               <div className="flex justify-between items-center text-lg font-bold">
                 <span>الإجمالي</span>
-                <span>{formatCurrency(total)}</span>
+                <span>
+                  {formatCurrency(parseFloat(totalPrice) + serviceFeeFormatted)}
+                </span>
               </div>
             </div>
 

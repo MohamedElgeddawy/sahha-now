@@ -1,170 +1,120 @@
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import {
-  setCartItems,
-  setCartOpen,
-  toggleCart,
-  selectCartItems,
-  selectCartTotalItems,
-  selectCartSubtotal,
-  selectIsCartOpen,
-  selectCartLoading,
-  selectCartError,
-  fetchCartStart,
-  fetchCartSuccess,
-  fetchCartFailure,
-  cartOperationStart,
-  cartOperationSuccess,
-  cartOperationFailure,
-} from "../redux/slices/cartSlice";
-import { Product, ProductVariant } from "../api/products";
-import { cartApi } from "../api/cart";
+import { Product } from "../api/products";
+import { Cart, cartApi } from "../api/cart";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 export const useCart = () => {
-  const dispatch = useAppDispatch();
   const queryClient = useQueryClient();
-
-  // Redux state selectors
-  const cartItems = useAppSelector(selectCartItems);
-  const totalItems = useAppSelector(selectCartTotalItems);
-  const subtotal = useAppSelector(selectCartSubtotal);
-  const isCartOpen = useAppSelector(selectIsCartOpen);
-  const isLoading = useAppSelector(selectCartLoading);
-  const error = useAppSelector(selectCartError);
+  const { data: cartItemsCount } = useQuery({
+    queryKey: ["cartItemsCount"],
+    queryFn: async () => {
+      try {
+        const { data } = await cartApi.getCartItemsCount();
+        return data.count;
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error
+            ? error.message
+            : "Failed to fetch cart items count";
+        throw error;
+      }
+    },
+    initialData: 0,
+  });
 
   // Fetch cart data
-  const { refetch } = useQuery({
+  const cart = useQuery<Cart>({
     queryKey: ["cart"],
     queryFn: async () => {
-      dispatch(fetchCartStart());
       try {
         const { data } = await cartApi.getCart();
-        dispatch(fetchCartSuccess(data.items));
+        localStorage.setItem("cart", JSON.stringify(data));
         return data;
       } catch (error) {
         const errorMessage =
           error instanceof Error ? error.message : "Failed to fetch cart";
-        dispatch(fetchCartFailure(errorMessage));
         throw error;
       }
     },
     // Initialize the cart on component mount
-    initialData: { items: cartItems },
+    initialData: !!localStorage.getItem("cart")
+      ? (JSON.parse(localStorage.getItem("cart")!) as Cart)
+      : {
+          id: "",
+          createdAt: "",
+          cartItems: [],
+          totalPrice: "0",
+          sessionId: "",
+          userId: "",
+          status: "ACTIVE",
+          expiresAt: null,
+          updatedAt: "",
+        },
   });
 
   // Add to cart mutation
   const addToCart = useMutation({
     mutationFn: async ({
       product,
-      variant,
+      variantId,
       quantity = 1,
     }: {
-      product: Product;
-      variant: ProductVariant | null;
+      product?: Product;
+      variantId?: string;
       quantity: number;
     }) => {
-      dispatch(cartOperationStart());
-      const productId = product.id;
-      const variantId = variant?.id || null;
-
-      const { data } = await cartApi.addToCart(productId, variantId, quantity);
+      const { data } = await cartApi.addToCart(
+        variantId ?? product?.variants.find((v) => v.isDefault)?.id!,
+        quantity
+      );
       return data;
     },
-    onSuccess: (data) => {
-      dispatch(setCartItems(data.items));
-      dispatch(cartOperationSuccess());
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["cart"] });
+      queryClient.invalidateQueries({ queryKey: ["cartItemsCount"] });
+      toast.success("تمت الإضافة إلى السلة");
     },
     onError: (error) => {
       const errorMessage =
-        error instanceof Error ? error.message : "Failed to add item to cart";
-      dispatch(cartOperationFailure(errorMessage));
+        error instanceof Error
+          ? error.message
+          : "حدث خطأ أثناء إضافة المنتج إلى السلة";
+      toast.error(errorMessage);
     },
   });
 
   // Remove from cart mutation
   const removeFromCart = useMutation({
     mutationFn: async ({
-      itemId,
+      variantId,
       quantity = 1,
     }: {
-      itemId: string;
+      variantId: string;
       quantity?: number;
     }) => {
-      dispatch(cartOperationStart());
-      const { data } = await cartApi.removeFromCart(itemId, quantity);
+      const { data } = await cartApi.removeFromCart(variantId, quantity);
       return data;
     },
     onSuccess: (data) => {
-      dispatch(setCartItems(data.items));
-      dispatch(cartOperationSuccess());
       queryClient.invalidateQueries({ queryKey: ["cart"] });
+      queryClient.invalidateQueries({ queryKey: ["cartItemsCount"] });
     },
     onError: (error) => {
       const errorMessage =
         error instanceof Error
           ? error.message
           : "Failed to remove item from cart";
-      dispatch(cartOperationFailure(errorMessage));
+      toast.error(errorMessage);
     },
   });
-
-  // Update quantity mutation
-  const updateItemQuantity = useMutation({
-    mutationFn: async ({
-      itemId,
-      quantity = 1,
-    }: {
-      itemId: string;
-      quantity?: number;
-    }) => {
-      dispatch(cartOperationStart());
-      const { data } = await cartApi.updateQuantity(itemId, quantity);
-      return data;
-    },
-    onSuccess: (data) => {
-      dispatch(setCartItems(data.items));
-      dispatch(cartOperationSuccess());
-      queryClient.invalidateQueries({ queryKey: ["cart"] });
-    },
-    onError: (error) => {
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "Failed to update item quantity";
-      dispatch(cartOperationFailure(errorMessage));
-    },
-  });
-
-  const openCart = () => {
-    dispatch(setCartOpen(true));
-  };
-
-  const closeCart = () => {
-    dispatch(setCartOpen(false));
-  };
-
-  const toggleCartOpen = () => {
-    dispatch(toggleCart());
-  };
 
   return {
-    // State
-    items: cartItems,
-    totalItems,
-    subtotal,
-    isCartOpen,
-    isLoading,
-    error,
-
     // Actions
     addToCart,
     removeFromCart,
-    updateItemQuantity,
 
-    openCart,
-    closeCart,
-    toggleCartOpen,
-    refetchCart: refetch,
+    // Cart
+    cart,
+    cartItemsCount,
   };
 };

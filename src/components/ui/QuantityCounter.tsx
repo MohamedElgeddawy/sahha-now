@@ -47,7 +47,7 @@ const QuantityCounter: React.FC<QuantityCounterProps> = ({
       prevCountRef.current = count;
       const newValue = count + 1;
       setCount(newValue);
-      onChange?.(newValue);
+      onChange?.(1);
     }
   };
 
@@ -58,7 +58,7 @@ const QuantityCounter: React.FC<QuantityCounterProps> = ({
       prevCountRef.current = count;
       const newValue = count - 1;
       setCount(newValue);
-      onChange?.(newValue);
+      onChange?.(-1);
     }
   };
 

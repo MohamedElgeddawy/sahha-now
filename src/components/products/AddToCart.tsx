@@ -3,7 +3,6 @@ import { motion } from "motion/react";
 import React from "react";
 import { useCart } from "@/lib/hooks/use-cart";
 import { Product, ProductVariant } from "@/lib/api/products";
-import { toast } from "sonner";
 
 interface AddToCartProps {
   product: Product;
@@ -18,21 +17,10 @@ const AddToCart = ({
   quantity = 1,
   className = "",
 }: AddToCartProps) => {
-  const { addToCart, openCart } = useCart();
+  const { addToCart } = useCart();
 
   const handleAddToCart = () => {
-    addToCart.mutate(
-      { product, variant, quantity },
-      {
-        onSuccess: () => {
-          toast.success("تمت الإضافة إلى السلة");
-          openCart();
-        },
-        onError: () => {
-          toast.error("حدث خطأ أثناء إضافة المنتج إلى السلة");
-        },
-      }
-    );
+    addToCart.mutate({ product, quantity });
   };
 
   return (

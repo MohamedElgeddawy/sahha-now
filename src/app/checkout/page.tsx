@@ -15,7 +15,7 @@ import { useRouter } from "next/navigation";
 
 const CheckoutPage = () => {
   const router = useRouter();
-  const { items, subtotal } = useCart();
+  const { cart } = useCart();
   const [paymentMethod, setPaymentMethod] = useState<"cash" | "card" | "apple">(
     "cash"
   );
@@ -42,8 +42,8 @@ const CheckoutPage = () => {
 
   const shippingCost = useMemo(() => 16.32, []);
   const totalCost = useMemo(
-    () => subtotal + shippingCost,
-    [subtotal, shippingCost]
+    () => parseFloat(cart.data?.totalPrice || "0") + shippingCost,
+    [cart.data?.totalPrice, shippingCost]
   );
 
   return (
@@ -287,25 +287,25 @@ const CheckoutPage = () => {
           </h2>
 
           <div className="space-y-4">
-            {items.map((item) => (
+            {cart.data?.cartItems.map((item) => (
               <div key={item.id} className="flex items-center gap-4 pb-4">
                 <div className="relative size-20 rounded-md overflow-hidden">
                   <Image
-                    src={item.product.media?.[0]?.url}
-                    alt={item.product.name}
+                    src={item.variant.product.media?.[0]?.url}
+                    alt={item.variant.product.name}
                     fill
                     className="object-cover"
                   />
                 </div>
                 <div className="flex-1 text-start space-y-1">
-                  <p className="font-medium">{item.product.name}</p>
+                  <p className="font-medium">{item.variant.product.name}</p>
                   <p className="text-sm text-gray-500">
-                    {item.product.brand?.name || ""}
+                    {item.variant.product.brandId || ""}
                   </p>
                   <div className="flex justify-between items-center">
                     <p className="text-sm font-semibold">
                       {item.quantity} ×{" "}
-                      {parseFloat(item.product.price).toFixed(2)} ر.س
+                        {parseFloat(item.variant.price).toFixed(2)} ر.س
                     </p>
                   </div>
                 </div>
@@ -328,7 +328,7 @@ const CheckoutPage = () => {
             <div className="flex justify-between">
               <span>المجموع الفرعي</span>
               <span className="font-medium text-green-700">
-                {subtotal.toFixed(2)} ر.س
+                {parseFloat(cart.data?.totalPrice || "0").toFixed(2)} ر.س
               </span>
             </div>
             <div className="flex justify-between">

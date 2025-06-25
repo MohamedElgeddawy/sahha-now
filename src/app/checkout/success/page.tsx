@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 
 const CheckoutSuccessPage = () => {
   const router = useRouter();
-  const { items, subtotal } = useCart();
+  const { cart } = useCart();
   const [orderDetails] = useState({
     orderNumber: "1202101",
     orderDate: new Date().toLocaleDateString("ar-SA", {
@@ -29,13 +29,13 @@ const CheckoutSuccessPage = () => {
   const shippingCost = 16.32;
 
   // Calculate total
-  const total = subtotal + shippingCost;
+  const total = parseFloat(cart.data?.totalPrice || "0") + shippingCost;
 
   // Effect to clear cart after successful order
   useEffect(() => {
     // If there are no items and we've not been redirected here through normal flow,
     // redirect to the home page
-    if (items.length === 0) {
+    if (cart.data?.cartItems.length === 0) {
       // In a real app, you'd check if this is a fresh visit vs. after checkout
       // For now, we'll use a timeout to simulate checking the order status
       const timer = setTimeout(() => {
@@ -43,7 +43,7 @@ const CheckoutSuccessPage = () => {
       }, 5000);
       return () => clearTimeout(timer);
     }
-  }, [items.length, router]);
+  }, [cart.data?.cartItems.length, router]);
 
   const handleContinueShopping = () => {
     router.push("/");
@@ -148,7 +148,7 @@ const CheckoutSuccessPage = () => {
 
         {/* Order Items */}
         <div className="mb-4 space-y-4 border-y border-gray-300 py-2">
-          {items.map((item, index) => (
+            {cart.data?.cartItems.map((item, index) => (
             <motion.div
               key={item.id}
               className="flex items-center justify-between"
@@ -160,20 +160,20 @@ const CheckoutSuccessPage = () => {
                 <div className="relative size-16 rounded-md overflow-hidden">
                   <Image
                     src={
-                      item.product.media?.[0]?.url ||
+                      item.variant.product.media?.[0]?.url ||
                       "/images/products/pantene-shampoo.png"
                     }
-                    alt={item.product.name}
+                    alt={item.variant.product.name}
                     fill
                     className="object-contain"
                   />
                 </div>
                 <div>
                   <div className="flex flex-col">
-                    <p className="text-gray-800">{item.product.name}</p>
+                    <p className="text-gray-800">{item.variant.product.name}</p>
                     <p className="text-gray-800 text-sm whitespace-nowrap">
                       {item.quantity} ×{" "}
-                      {parseFloat(item.product.price).toFixed(2)} ر.س
+                      {parseFloat(item.variant.price).toFixed(2)} ر.س
                     </p>
                   </div>
                 </div>
@@ -192,7 +192,7 @@ const CheckoutSuccessPage = () => {
           <div className="flex justify-between text-gray-600">
             <span>المجموع الفرعي</span>
             <span className="font-medium text-green-primary">
-              {subtotal.toFixed(2)} ر.س
+              {parseFloat(cart.data?.totalPrice || "0").toFixed(2)} ر.س
             </span>
           </div>
           <div className="flex justify-between text-gray-600 pb-2 border-b border-gray-300">

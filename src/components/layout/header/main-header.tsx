@@ -27,7 +27,7 @@ import { useCart } from "@/lib/hooks/use-cart";
 
 export function MainHeader() {
   const [open, setOpen] = useState(false);
-  const { totalItems } = useCart();
+  const { cartItemsCount } = useCart();
 
   const categories = [
     { name: "جميع المنتجات", href: "/categories/all" },
@@ -146,7 +146,7 @@ export function MainHeader() {
             <ActionButton
               icon={<ShoppingCart className="size-6" />}
               href="/cart"
-              count={totalItems}
+              count={cartItemsCount}
             />
             <ActionButton
               icon={<Heart className="size-6" />}

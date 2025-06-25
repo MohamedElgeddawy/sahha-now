@@ -2,12 +2,11 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Star, Truck, Info, MessageSquare, Loader2 , X} from "lucide-react";
+import { Star, Truck, Info, MessageSquare, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Product } from "@/lib/api/products";
 import Image from "next/image";
 import QuantityCounter from "../ui/QuantityCounter";
-import { toast } from "sonner";
 import { useCart } from "@/lib/hooks/use-cart";
 
 interface ProductInfoProps {
@@ -16,7 +15,7 @@ interface ProductInfoProps {
 
 export function ProductInfo({ product }: ProductInfoProps) {
   const [quantity, setQuantity] = useState(1);
-  const { addToCart, openCart } = useCart();
+  const { addToCart } = useCart();
   const [showQuestionForm, setShowQuestionForm] = useState(false);
   const [questionForm, setQuestionForm] = useState({
     name: "",
@@ -119,9 +118,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
         />
         <Button
           onClick={() => {
-            addToCart.mutate({ product, variant: null, quantity });
-            toast.success("تمت الإضافة إلى السلة");
-            openCart();
+            addToCart.mutate({ product, quantity });
             setQuantity(1);
           }}
           className="w-full bg-[#FF9B07] text-white hover:bg-[#F08C00]"

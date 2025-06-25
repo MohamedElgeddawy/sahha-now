@@ -13,9 +13,9 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { useQueryClient } from "@tanstack/react-query";
-import { useSelector } from "react-redux";
-import { RootState } from "@/lib/redux/store";
 import { useRouter } from "next/navigation";
+import { useAppSelector } from "@/lib/redux/hooks";
+import { selectIsAuthenticated } from "@/lib/redux/slices/authSlice";
 
 interface ProductTabsProps {
   product: Product;
@@ -33,7 +33,7 @@ export function ProductTabs({ product }: ProductTabsProps) {
   const [rating, setRating] = useState<RatingKey | null>(null);
   const [rememberComment, setRememberComment] = useState(false);
   const queryClient = useQueryClient();
-  const { accessToken } = useSelector((state: RootState) => state.auth);
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
 
   const {
     register,
@@ -72,11 +72,7 @@ export function ProductTabs({ product }: ProductTabsProps) {
 
   const onSubmitReview = async (data: ReviewFormValues) => {
     // Check if user is authenticated - first check Redux state, then localStorage as backup
-    const token =
-      accessToken ||
-      (typeof window !== "undefined" && localStorage.getItem("accessToken"));
-
-    if (!token) {
+    if (!isAuthenticated) {
       toast.error("يرجى تسجيل الدخول لإضافة تقييم");
       router.push("/auth/login");
       return;
@@ -285,7 +281,7 @@ export function ProductTabs({ product }: ProductTabsProps) {
             <div className="bg-gray-50 p-6 rounded-lg space-y-4">
               <h3 className="font-medium text-gray-900">إضافة تقييم</h3>
 
-              {!accessToken ? (
+              {!isAuthenticated ? (
                 <div className="text-center py-4">
                   <p className="text-gray-600 mb-4">
                     يجب تسجيل الدخول لإضافة تقييم
