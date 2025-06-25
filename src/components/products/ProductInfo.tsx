@@ -2,11 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-<<<<<<< Updated upstream
 import { Star, Truck, Info, MessageSquare, Loader2 } from "lucide-react";
-=======
-import { Star, Truck, Info, MessageSquare, X } from "lucide-react";
->>>>>>> Stashed changes
 import { cn } from "@/lib/utils";
 import { Product } from "@/lib/api/products";
 import Image from "next/image";
