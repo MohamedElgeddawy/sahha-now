@@ -1,41 +1,46 @@
-import { Star } from "lucide-react";
+import { ProductReview } from "@/lib/api/products";
+import { Star, User } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { format } from "date-fns";
+import { ar } from "date-fns/locale";
 
 interface ReviewItemProps {
-  userName: string;
-  rating: number;
-  date: string;
-  comment: string;
+  review: ProductReview;
 }
 
-export function ReviewItem({
-  userName,
-  rating,
-  date,
-  comment,
-}: ReviewItemProps) {
+export function ReviewItem({ review }: ReviewItemProps) {
+  // Format the date in Arabic
+  const formattedDate = format(new Date(review.createdAt), "dd MMMM yyyy", {
+    locale: ar,
+  });
+
   return (
-    <div className="space-y-3 border-b border-gray-100 pb-4">
-      <div className="flex items-center justify-between">
+    <div className="border-b border-gray-100 pb-4 mb-4 last:border-0 last:mb-0">
+      <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
-          <span className="font-medium text-gray-900">{userName}</span>
-          <div className="flex items-center gap-1">
-            {Array(5)
-              .fill(0)
-              .map((_, i) => (
-                <Star
-                  key={i}
-                  className={cn("size-4", {
-                    "text-yellow-400 fill-yellow-400": i < rating,
-                    "text-gray-300 fill-gray-300": i >= rating,
-                  })}
-                />
-              ))}
+          <div className="bg-gray-100 rounded-full p-1">
+            <User className="h-5 w-5 text-gray-500" />
           </div>
+          <span className="font-medium text-gray-800">{review.user.name}</span>
         </div>
-        <span className="text-sm text-gray-500">{date}</span>
+        <span className="text-sm text-gray-500">{formattedDate}</span>
       </div>
-      <p className="text-gray-600">{comment}</p>
+
+      <div className="flex items-center mb-2">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <Star
+            key={star}
+            className={cn("h-4 w-4", {
+              "text-[#FFA726] fill-[#FFA726]": star <= review.rating,
+              "text-gray-300 fill-gray-300": star > review.rating,
+            })}
+          />
+        ))}
+      </div>
+
+      {review.comment && (
+        <p className="text-gray-600 text-sm">{review.comment}</p>
+      )}
     </div>
   );
 }

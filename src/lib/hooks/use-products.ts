@@ -5,6 +5,7 @@ import {
   fetchProduct,
   fetchProductReviewStats,
   fetchProducts,
+  fetchProductReviews,
   Product,
   ProductFilters,
   ProductsResponse,
@@ -20,8 +21,7 @@ export const productKeys = {
   details: () => [...productKeys.all, "detail"] as const,
   detail: (id: string) => [...productKeys.details(), id] as const,
   reviews: () => [...productKeys.all, "reviews"] as const,
-  // reviewsList: (id: string, filters: ReviewFilters = {}) =>
-  //   [...productKeys.reviews(), "list", id, filters] as const,
+  reviewsList: (id: string) => [...productKeys.reviews(), "list", id] as const,
   reviewStats: (id: string) => [...productKeys.reviews(), "stats", id] as const,
   favorites: () => [...productKeys.all, "favorites"] as const,
   offers: () => [...productKeys.all, "offers"] as const,
@@ -53,6 +53,14 @@ export function useProductReviewStats(productId: string) {
   });
 }
 
+export function useProductReviews(id: string) {
+  return useQuery({
+    queryKey: productKeys.reviewsList(id),
+    queryFn: () => fetchProductReviews(id),
+    enabled: !!id,
+  });
+}
+
 export function useInfiniteProducts(filters: ProductFilters = {}) {
   return useInfiniteQuery<ProductsResponse>({
     queryKey: productKeys.infinite(filters),
@@ -71,17 +79,6 @@ export function useInfiniteProducts(filters: ProductFilters = {}) {
     initialPageParam: 1,
   });
 }
-
-// export function useProductReviews(
-//   productId: string,
-//   filters: ReviewFilters = {}
-// ) {
-//   return useQuery<ReviewsResponse>({
-//     queryKey: productKeys.reviewsList(productId, filters),
-//     queryFn: () => fetchProductReviews(productId, filters),
-//     enabled: !!productId,
-//   });
-// }
 
 export function useFavoriteProducts() {
   return useInfiniteQuery<Product[]>({

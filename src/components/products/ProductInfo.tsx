@@ -1,8 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+<<<<<<< Updated upstream
 import { Star, Truck, Info, MessageSquare, Loader2 } from "lucide-react";
+=======
+import { Star, Truck, Info, MessageSquare, X } from "lucide-react";
+>>>>>>> Stashed changes
 import { cn } from "@/lib/utils";
 import { Product } from "@/lib/api/products";
 import Image from "next/image";
@@ -24,12 +28,40 @@ export function ProductInfo({ product }: ProductInfoProps) {
     email: "",
     message: "",
   });
+  const modalRef = useRef<HTMLDivElement>(null);
 
   const handleQuestionSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Question submitted:", questionForm);
+    toast.success("تم إرسال سؤالك بنجاح");
     setShowQuestionForm(false);
+    setQuestionForm({
+      name: "",
+      phone: "",
+      email: "",
+      message: "",
+    });
   };
+
+  // Close modal when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
+        setShowQuestionForm(false);
+      }
+    };
+
+    if (showQuestionForm) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showQuestionForm]);
 
   return (
     <div className="space-y-6">
@@ -148,39 +180,82 @@ export function ProductInfo({ product }: ProductInfoProps) {
           </div>
         </div>
 
-        {/* Ask Question Section */}
-        <div className="space-y-4">
-          <button
-            onClick={() => setShowQuestionForm(!showQuestionForm)}
-            className="flex items-center gap-2 text-[#2D9CDB] hover:text-[#1E88C5] transition-colors"
-          >
-            <MessageSquare className="h-5 w-5" />
-            <span className="text-sm">ترغب فى طرح سؤال؟</span>
-          </button>
+        {/* Ask Question Button */}
+        <button
+          onClick={() => setShowQuestionForm(true)}
+          className="flex items-center gap-2 text-[#2D9CDB] hover:text-[#1E88C5] transition-colors"
+        >
+          <MessageSquare className="h-5 w-5" />
+          <span className="text-sm">ترغب فى طرح سؤال؟</span>
+        </button>
+      </div>
 
-          {showQuestionForm && (
-            <form
-              onSubmit={handleQuestionSubmit}
-              className="space-y-4 bg-gray-50 p-4 rounded-lg"
-            >
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  الاسم*
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={questionForm.name}
-                  onChange={(e) =>
-                    setQuestionForm({ ...questionForm, name: e.target.value })
-                  }
-                  placeholder="يرجاء إدخال الاسم"
-                  className="w-full p-2 border border-gray-300 rounded-md focus:ring-[#2D9CDB] focus:border-[#2D9CDB]"
-                />
+      {/* Question Form Modal */}
+      {showQuestionForm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-brightness-75 backdrop-blur-md ">
+          <div
+            ref={modalRef}
+            className="bg-white rounded-lg shadow-lg w-full max-w-md mx-4 overflow-hidden"
+          >
+            <div className="flex justify-between items-center p-4 border-b">
+              <h2 className="text-xl font-semibold text-[#2C3E50]">
+                ترغب فى طرح سؤال؟
+              </h2>
+              <button
+                onClick={() => setShowQuestionForm(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleQuestionSubmit} className="p-4 space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Name Field */}
+                <div className="text-right">
+                  <label className="block text-gray-700 text-sm font-medium mb-2">
+                    الاسم*
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={questionForm.name}
+                    onChange={(e) =>
+                      setQuestionForm({ ...questionForm, name: e.target.value })
+                    }
+                    placeholder="يرجاء إدخال الاسم"
+                    className="w-full p-3 border border-gray-300 rounded-lg text-right
+                        focus:ring-2 focus:ring-[#2D9CDB] focus:border-[#2D9CDB]
+                        placeholder-gray-400 text-gray-700"
+                  />
+                </div>
+
+                {/* Email Field */}
+                <div className="text-right">
+                  <label className="block text-gray-700 text-sm font-medium mb-2">
+                    البريد الإلكتروني*
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    value={questionForm.email}
+                    onChange={(e) =>
+                      setQuestionForm({
+                        ...questionForm,
+                        email: e.target.value,
+                      })
+                    }
+                    placeholder="يرجاء إدخال البريد الإلكتروني"
+                    className="w-full p-3 border border-gray-300 rounded-lg text-right
+                        focus:ring-2 focus:ring-[#2D9CDB] focus:border-[#2D9CDB]
+                        placeholder-gray-400 text-gray-700"
+                  />
+                </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+              {/* Phone Field */}
+              <div className="text-right">
+                <label className="block text-gray-700 text-sm font-medium mb-2">
                   رقم هاتف
                 </label>
                 <input
@@ -190,28 +265,15 @@ export function ProductInfo({ product }: ProductInfoProps) {
                     setQuestionForm({ ...questionForm, phone: e.target.value })
                   }
                   placeholder="يرجاء إدخال رقم هاتفك"
-                  className="w-full p-2 border border-gray-300 rounded-md focus:ring-[#2D9CDB] focus:border-[#2D9CDB]"
+                  className="w-full p-3 border border-gray-300 rounded-lg text-right
+                      focus:ring-2 focus:ring-[#2D9CDB] focus:border-[#2D9CDB]
+                      placeholder-gray-400 text-gray-700"
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  البريد الإلكتروني*
-                </label>
-                <input
-                  type="email"
-                  required
-                  value={questionForm.email}
-                  onChange={(e) =>
-                    setQuestionForm({ ...questionForm, email: e.target.value })
-                  }
-                  placeholder="يرجاء إدخال البريد الإلكتروني"
-                  className="w-full p-2 border border-gray-300 rounded-md focus:ring-[#2D9CDB] focus:border-[#2D9CDB]"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+              {/* Message Field */}
+              <div className="text-right">
+                <label className="block text-gray-700 text-sm font-medium mb-2">
                   الرسالة
                 </label>
                 <textarea
@@ -224,17 +286,23 @@ export function ProductInfo({ product }: ProductInfoProps) {
                   }
                   placeholder="يرجاء إدخال رسالتك"
                   rows={4}
-                  className="w-full p-2 border border-gray-300 rounded-md focus:ring-[#2D9CDB] focus:border-[#2D9CDB]"
+                  className="w-full p-3 border border-gray-300 rounded-lg text-right
+                      focus:ring-2 focus:ring-[#2D9CDB] focus:border-[#2D9CDB]
+                      placeholder-gray-400 text-gray-700"
                 />
               </div>
 
-              <Button type="submit" className="bg-[#27AE60] hover:bg-[#219653]">
+              <Button
+    type="submit"
+    className="bg-[#27AE60] hover:bg-[#219653] flex items-center justify-center mx-auto w-full sm:w-auto px-6 py-3 rounded-md text-white font-medium transition-colors duration-200"
+  >
                 إرسال
               </Button>
             </form>
-          )}
+          </div>
         </div>
-      </div>
+      )}
+
       {/* Divider after Question Section */}
       <div className="h-[1px] w-full bg-[#E0E0E0]" />
 

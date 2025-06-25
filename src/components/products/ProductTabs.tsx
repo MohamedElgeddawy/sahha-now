@@ -4,10 +4,18 @@ import { useState } from "react";
 import { Star, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ReviewItem } from "./ReviewItem";
-import { Product } from "@/lib/api/products";
-import { useProductReviewStats } from "@/lib/hooks/use-products";
+import { Product, addProductReview } from "@/lib/api/products";
+import { useProductReviewStats, productKeys } from "@/lib/hooks/use-products";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Progress } from "../ui/progress";
+import { Checkbox } from "../ui/checkbox";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { Button } from "../ui/button";
+import { useQueryClient } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
+import { RootState } from "@/lib/redux/store";
+import { useRouter } from "next/navigation";
 
 interface ProductTabsProps {
   product: Product;
@@ -15,9 +23,33 @@ interface ProductTabsProps {
 
 type RatingKey = 1 | 2 | 3 | 4 | 5;
 
+interface ReviewFormValues {
+  rating: RatingKey | null;
+  comment: string;
+}
+
 export function ProductTabs({ product }: ProductTabsProps) {
+  const router = useRouter();
   const [rating, setRating] = useState<RatingKey | null>(null);
-  const [comment, setComment] = useState("");
+  const [rememberComment, setRememberComment] = useState(false);
+  const queryClient = useQueryClient();
+  const { accessToken } = useSelector((state: RootState) => state.auth);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+    setValue,
+    watch,
+  } = useForm<ReviewFormValues>({
+    defaultValues: {
+      rating: null,
+      comment: "",
+    },
+  });
+
+  const currentRating = watch("rating");
 
   const {
     data: reviewStats,
@@ -38,6 +70,72 @@ export function ProductTabs({ product }: ProductTabsProps) {
   const averageRating =
     reviewStats?.averageRating || parseInt(product.averageRating) || 0;
 
+  const onSubmitReview = async (data: ReviewFormValues) => {
+    // Check if user is authenticated - first check Redux state, then localStorage as backup
+    const token =
+      accessToken ||
+      (typeof window !== "undefined" && localStorage.getItem("accessToken"));
+
+    if (!token) {
+      toast.error("يرجى تسجيل الدخول لإضافة تقييم");
+      router.push("/auth/login");
+      return;
+    }
+
+    // Validate rating
+    if (!data.rating) {
+      toast.error("يرجى اختيار تقييم");
+      return;
+    }
+
+    try {
+      console.log("Submitting review for product:", product.id);
+
+      await addProductReview(product.id, {
+        rating: data.rating as number,
+        comment: data.comment,
+      });
+
+      toast.success("تم إضافة تقييمك بنجاح");
+
+      // Reset form but keep comment if remember is checked
+      reset({
+        rating: null,
+        comment: rememberComment ? data.comment : "",
+      });
+
+      // Refresh reviews data
+      queryClient.invalidateQueries({
+        queryKey: productKeys.reviewStats(product.id),
+      });
+    } catch (error: any) {
+      console.error("Error submitting review:", error);
+
+      // Handle authentication errors
+      if (
+        error.message?.includes("Authentication") ||
+        error.response?.status === 401 ||
+        error.response?.status === 403
+      ) {
+        toast.error("يرجى تسجيل الدخول لإضافة تقييم");
+
+        // Clear token if it's invalid
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("accessToken");
+        }
+
+        router.push("/auth/login");
+      } else {
+        // Handle other errors
+        toast.error(error.message || "حدث خطأ أثناء إرسال التقييم");
+      }
+    }
+  };
+
+  const handleLoginClick = () => {
+    router.push("/auth/login");
+  };
+
   return (
     <div className="w-full">
       <Tabs dir="rtl" defaultValue="description" className="w-full">
@@ -45,16 +143,10 @@ export function ProductTabs({ product }: ProductTabsProps) {
         <div className="flex justify-center border-b border-gray-200 pb-3">
           <TabsList className="flex gap-8 bg-transparent">
             <TabsTrigger
-              value="description"
-              className="px-4 py-2 text-sm font-medium rounded-md transition-colors duration-300 data-[state=active]:bg-[#2D9CDB] data-[state=active]:text-white data-[state=inactive]:text-[#2D9CDB] data-[state=inactive]:bg-[#EDF8FF]"
-            >
-              وصف المنتج
-            </TabsTrigger>
-            <TabsTrigger
               value="specifications"
               className="px-4 py-2 text-sm font-medium rounded-md transition-colors duration-300 data-[state=active]:bg-[#2D9CDB] data-[state=active]:text-white data-[state=inactive]:text-[#2D9CDB] data-[state=inactive]:bg-[#EDF8FF]"
             >
-              مواصفات المنتج
+              تفاصيل المنتج
             </TabsTrigger>
             <TabsTrigger
               value="shipping"
@@ -66,7 +158,7 @@ export function ProductTabs({ product }: ProductTabsProps) {
               value="reviews"
               className="px-4 py-2 text-sm font-medium rounded-md transition-colors duration-300 data-[state=active]:bg-[#2D9CDB] data-[state=active]:text-white data-[state=inactive]:text-[#2D9CDB] data-[state=inactive]:bg-[#EDF8FF]"
             >
-              تقييم المنتج
+              تعليقات المنتج
             </TabsTrigger>
           </TabsList>
         </div>
@@ -192,40 +284,104 @@ export function ProductTabs({ product }: ProductTabsProps) {
             {/* Add Review Form */}
             <div className="bg-gray-50 p-6 rounded-lg space-y-4">
               <h3 className="font-medium text-gray-900">إضافة تقييم</h3>
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-600">تقييمك:</span>
-                <div className="flex items-center gap-1">
-                  {[1, 2, 3, 4, 5].map((value) => (
-                    <button
-                      key={value}
-                      onClick={() => setRating(value as RatingKey)}
-                      className="focus:outline-none"
-                    >
-                      <Star
-                        className={cn("size-6", {
-                          "text-[#FFA726] fill-[#FFA726]":
-                            value <= (rating || 0),
-                          "text-gray-300 fill-gray-300": value > (rating || 0),
-                        })}
-                      />
-                    </button>
-                  ))}
+
+              {!accessToken ? (
+                <div className="text-center py-4">
+                  <p className="text-gray-600 mb-4">
+                    يجب تسجيل الدخول لإضافة تقييم
+                  </p>
+                  <Button
+                    onClick={handleLoginClick}
+                    className="bg-[#2D9CDB] hover:bg-[#2589BD] text-white"
+                  >
+                    تسجيل الدخول
+                  </Button>
                 </div>
-              </div>
-              <div className="space-y-2">
-                <textarea
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
-                  placeholder="اكتب تقييمك هنا..."
-                  className="w-full h-32 p-3 border border-gray-200 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-[#4184F3] focus:border-transparent"
-                />
-                <p className="text-xs text-gray-500">
-                  * احفظ اسمي وبريدي الإلكتروني في هذا المتصفح لاستخدامهم المرة القادمة التي أعلق فيها.
-                </p>
-              </div>
-              <button className="bg-[#27AE60] text-white px-6 py-2 rounded-lg hover:bg-[#219653] transition-colors">
-                إرسال
-              </button>
+              ) : (
+                <>
+                  <p className="text-sm text-gray-500">
+                    لن يتم نشر عنوان بريدك الإلكتروني. *
+                  </p>
+                  <form
+                    onSubmit={handleSubmit(onSubmitReview)}
+                    className="space-y-4"
+                  >
+                    <div className="space-y-2">
+                      <label className="block text-sm font-medium text-gray-700">
+                        تقييمك: *
+                      </label>
+                      <div className="flex items-center gap-1">
+                        {[1, 2, 3, 4, 5].map((value) => (
+                          <button
+                            type="button"
+                            key={value}
+                            onClick={() =>
+                              setValue("rating", value as RatingKey)
+                            }
+                            className="focus:outline-none"
+                          >
+                            <Star
+                              className={cn("size-6", {
+                                "text-[#FFA726] fill-[#FFA726]":
+                                  value <= (currentRating || 0),
+                                "text-gray-300 fill-gray-300":
+                                  value > (currentRating || 0),
+                              })}
+                            />
+                          </button>
+                        ))}
+                      </div>
+                      {errors.rating && (
+                        <p className="text-red-500 text-sm mt-1">
+                          التقييم مطلوب
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="space-y-2">
+                      <label
+                        htmlFor="comment"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        التعليق
+                      </label>
+                      <textarea
+                        id="comment"
+                        {...register("comment")}
+                        rows={4}
+                        placeholder="برجاء إدخال التقييم..."
+                        className="w-full p-3 border border-gray-200 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-[#4184F3] focus:border-transparent text-right"
+                      />
+                    </div>
+
+                    {/* Remember comment */}
+                    <div className="flex items-center gap-2 justify-start">
+                      <Checkbox
+                        id="remember"
+                        checked={rememberComment}
+                        onCheckedChange={(checked) =>
+                          setRememberComment(checked === true)
+                        }
+                        className="border-gray-400"
+                      />
+                      <label
+                        htmlFor="remember"
+                        className="text-sm text-gray-600"
+                      >
+                        احفظ التعليق لاستخدامه في المرة القادمة
+                      </label>
+                    </div>
+
+                    <Button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="bg-[#27AE60] hover:bg-[#219653] text-white px-6 py-2 rounded-lg transition-colors disabled:opacity-70"
+                    >
+                      {isSubmitting ? "جاري الإرسال..." : "إرسال"}
+                    </Button>
+                  </form>
+                </>
+              )}
             </div>
           </TabsContent>
         </div>
