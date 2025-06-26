@@ -1,7 +1,6 @@
 import axios from "axios";
 import { store } from "../redux/store";
 import { clearCredentials, setCredentials } from "../redux/slices/authSlice";
-import { toast } from "sonner";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://104.248.45.73/api";
 
@@ -10,6 +9,26 @@ const sahhaInstance = axios.create({
   baseURL: API_URL, // Your API base URL
   headers: {
     "Content-Type": "application/json",
+  },
+  paramsSerializer: {
+    serialize: (params) => {
+      const searchParams = new URLSearchParams();
+
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          if (Array.isArray(value)) {
+            // Serialize arrays without brackets
+            value.forEach((item) => {
+              searchParams.append(key, String(item));
+            });
+          } else {
+            searchParams.set(key, String(value));
+          }
+        }
+      });
+
+      return searchParams.toString();
+    },
   },
 });
 

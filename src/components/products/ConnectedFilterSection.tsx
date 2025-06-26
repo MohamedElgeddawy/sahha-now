@@ -204,7 +204,10 @@ export function ConnectedRatingFilterSection() {
   };
 
   // Get rating counts from metadata
-  const ratingCounts = metadata?.ratings || [];
+  const ratingCounts = useMemo(
+    () => metadata?.ratings || [],
+    [metadata]
+  );
 
   return (
     <RatingFilterSection
