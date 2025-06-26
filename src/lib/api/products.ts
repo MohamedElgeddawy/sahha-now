@@ -7,7 +7,8 @@ export interface Product {
   name: string;
   arabicName: string;
   sku: string | null;
-  description: string;
+  shortDescription: string;
+  longDescription: string;
   price: string;
   discount: string;
   averageRating: string;
@@ -44,7 +45,7 @@ export interface Category {
   updatedAt: string;
   name: string;
   arabicName: string;
-  description: string;
+  shortDescription: string;
   logoKey: string | null;
   logo: string | null;
 }

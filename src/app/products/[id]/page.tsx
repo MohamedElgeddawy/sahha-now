@@ -43,6 +43,7 @@ export default function ProductPage({
         <ProductGallery
           images={product?.media || []}
           discount={product?.discount || "0"}
+          product={product || ({} as Product)}
         />
         <ProductInfo product={product || ({} as Product)} />
       </div>

@@ -79,7 +79,7 @@ const ProductCardGrid = ({ product, isLoading = false }: Props) => {
             >
               <FavoriteButton
                 productId={product.id!}
-                isFavorite={product.isFavourite}
+                isFavourite={product.isFavourite}
               />
               <motion.button
                 className="bg-white rounded-full p-2 shadow-sm"

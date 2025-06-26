@@ -13,13 +13,13 @@ import { cn } from "@/lib/utils";
 
 interface FavoriteButtonProps {
   productId: string;
-  isFavorite?: boolean;
+  isFavourite?: boolean;
   className?: string;
 }
 
 const FavoriteButton = ({
   productId,
-  isFavorite,
+  isFavourite,
   className,
 }: FavoriteButtonProps) => {
   const router = useRouter();
@@ -78,8 +78,8 @@ const FavoriteButton = ({
       ) : (
         <Heart
           className={cn("size-5", {
-            "fill-red-500 text-red-500": isFavorite,
-            "text-gray-600": !isFavorite,
+            "fill-red-500 text-red-500": isFavourite,
+            "text-gray-600": !isFavourite,
           })}
         />
       )}

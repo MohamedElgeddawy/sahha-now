@@ -172,7 +172,7 @@ export function ProductTabs({ product }: ProductTabsProps) {
             className="prose prose-sm max-w-none text-right"
           >
             <p className="text-gray-600 leading-relaxed">
-              {product.description}
+              {product.longDescription}
             </p>
           </TabsContent>
 
@@ -181,7 +181,7 @@ export function ProductTabs({ product }: ProductTabsProps) {
             className="prose prose-sm max-w-none text-right"
           >
             <p className="text-gray-600 leading-relaxed">
-              {product.description || "سياسة الشحن والإرجاع ستظهر هنا"}
+              {product.longDescription || "سياسة الشحن والإرجاع ستظهر هنا"}
             </p>
           </TabsContent>
 
