@@ -150,7 +150,7 @@ const ProductCardList = ({
             <AnimatePresence>
               <FavoriteButton
                 productId={product.id!}
-                isFavorite={product?.isFavourite || isFavorite}
+                isFavourite={product?.isFavourite || isFavorite}
               />
               <motion.button
                 className="bg-white rounded-full p-2 shadow-sm"
