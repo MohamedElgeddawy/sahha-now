@@ -86,7 +86,7 @@ export const useCart = () => {
       quantity: number;
     }) => {
       const { data } = await cartApi.addToCart(
-        variantId ?? product?.variants.find((v) => v.isDefault)?.id!,
+        variantId ?? product?.variants.find((v) => v.isDefault)?.id,
         quantity
       );
       return data;

@@ -57,7 +57,7 @@ export interface CartItem {
 
 export const cartApi = {
   getCart: () => sahhaInstance.get("/carts"),
-  addToCart: (variantId: string | null, quantity: number) =>
+  addToCart: (variantId: string | null | undefined, quantity: number) =>
     sahhaInstance.patch("/carts/add-to-cart", {
       variantId,
       quantity,
