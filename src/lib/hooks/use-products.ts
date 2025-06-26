@@ -12,6 +12,7 @@ import {
   CategoryResponse,
   fetchFiltersMetadata,
   FiltersMetadata,
+  FavoriteProductsResponse,
 } from "../api/products";
 
 export const productKeys = {
@@ -67,15 +68,16 @@ export function useInfiniteProducts(filters: ProductFilters = {}) {
 }
 
 export function useFavoriteProducts() {
-  return useInfiniteQuery<Product[]>({
+  return useInfiniteQuery({
     queryKey: productKeys.favorites(),
     queryFn: async ({ pageParam = 1 }) => {
       // Pass the current page as pageParam
       return fetchFavoriteProducts({ page: pageParam as number });
     },
+    select: (data) => data.pages.flatMap((page) => page.favourites),
     getNextPageParam: (lastPage, allPages) => {
       // If there are products in the last page, there might be more
-      if (lastPage.length === 0) {
+      if (lastPage.favourites.length === 0) {
         return undefined;
       }
       // Return the next page number

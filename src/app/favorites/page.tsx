@@ -27,9 +27,7 @@ export default function FavoritesPage() {
   }, [isAuthenticated, router]);
 
   const hasFavorites = useMemo(
-    () =>
-      favoriteProducts?.pages.flatMap((page) => page).length &&
-      favoriteProducts?.pages.flatMap((page) => page).length > 0,
+    () => favoriteProducts?.length && favoriteProducts?.length > 0,
     [favoriteProducts]
   );
 
@@ -55,15 +53,13 @@ export default function FavoritesPage() {
         </div>
       ) : hasFavorites ? (
         <div className="grid grid-cols-1 gap-6">
-          {favoriteProducts?.pages
-            .flatMap((page) => page)
-            .map((product) => (
-              <ProductCardList
-                key={product.id}
-                product={product}
-                isFavorite={true}
-              />
-            ))}
+          {favoriteProducts?.map((product) => (
+            <ProductCardList
+              key={product.id}
+              product={product}
+              isFavorite={true}
+            />
+          ))}
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center py-16 text-center">

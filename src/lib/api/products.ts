@@ -84,6 +84,13 @@ export interface ProductFilters {
   hasDiscount?: boolean;
 }
 
+export interface FavoriteProductsResponse {
+  favourites: Product[];
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
 export interface FiltersMetadata {
   categories: {
     id: string;
@@ -131,7 +138,7 @@ export async function fetchProduct(id: string) {
 
 export async function fetchFavoriteProducts(
   filters: ProductFilters = {}
-): Promise<Product[]> {
+): Promise<FavoriteProductsResponse> {
   try {
     const response = await sahhaInstance.get("/favourites", {
       params: filters,
@@ -139,7 +146,12 @@ export async function fetchFavoriteProducts(
     return response.data;
   } catch (error) {
     console.error("Error fetching favorite products:", error);
-    return [];
+    return {
+      favourites: [],
+      page: 1,
+      limit: 10,
+      totalPages: 1,
+    };
   }
 }
 export async function fetchFavoriteProductsCount(): Promise<number> {
