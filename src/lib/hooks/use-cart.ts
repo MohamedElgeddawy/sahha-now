@@ -3,6 +3,8 @@ import { Cart, cartApi } from "../api/cart";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useLocalStorage } from "usehooks-ts";
+import { useAppSelector } from "../redux/hooks";
+import { selectIsAuthenticated } from "../redux/slices/authSlice";
 
 export const cartKeys = {
   all: ["cart"] as const,
@@ -10,8 +12,9 @@ export const cartKeys = {
 };
 
 export const useCartItemsCount = () => {
+  const isAuth = useAppSelector(selectIsAuthenticated);
   const { data: cartItemsCount } = useQuery({
-    queryKey: cartKeys.itemsCount(),
+    queryKey: [...cartKeys.itemsCount(), isAuth],
     queryFn: async () => {
       try {
         const { data } = await cartApi.getCartItemsCount();
@@ -25,11 +28,13 @@ export const useCartItemsCount = () => {
       }
     },
     initialData: 0,
+    enabled: isAuth,
   });
   return cartItemsCount;
 };
 
 export const useCart = () => {
+  const isAuth = useAppSelector(selectIsAuthenticated);
   const queryClient = useQueryClient();
   const [localCart, setLocalCart] = useLocalStorage<Cart | null>("cart", null, {
     deserializer(value) {
@@ -45,7 +50,7 @@ export const useCart = () => {
 
   // Fetch cart data
   const cart = useQuery<Cart>({
-    queryKey: cartKeys.all,
+    queryKey: [...cartKeys.all, isAuth],
     queryFn: async () => {
       try {
         const { data } = await cartApi.getCart();
@@ -72,6 +77,7 @@ export const useCart = () => {
           expiresAt: null,
           updatedAt: "",
         },
+    enabled: isAuth,
   });
 
   // Add to cart mutation

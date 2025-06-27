@@ -14,6 +14,8 @@ import {
   FiltersMetadata,
   FavoriteProductsResponse,
 } from "../api/products";
+import { useAppSelector } from "../redux/hooks";
+import { selectIsAuthenticated } from "../redux/slices/authSlice";
 
 export const productKeys = {
   all: ["products"] as const,
@@ -68,8 +70,9 @@ export function useInfiniteProducts(filters: ProductFilters = {}) {
 }
 
 export function useFavoriteProducts() {
+  const isAuth = useAppSelector(selectIsAuthenticated);
   return useInfiniteQuery({
-    queryKey: productKeys.favorites(),
+    queryKey: [...productKeys.favorites(), isAuth],
     queryFn: async ({ pageParam = 1 }) => {
       // Pass the current page as pageParam
       return fetchFavoriteProducts({ page: pageParam as number });
@@ -83,13 +86,17 @@ export function useFavoriteProducts() {
       // Return the next page number
       return allPages.length + 1;
     },
+    enabled: isAuth,
     initialPageParam: 1,
   });
 }
 export function useFavoriteProductsCount() {
+  const isAuth = useAppSelector(selectIsAuthenticated);
+
   return useQuery<number>({
-    queryKey: productKeys.favoritesCount(),
+    queryKey: [...productKeys.favoritesCount(), isAuth],
     queryFn: fetchFavoriteProductsCount,
+    enabled: isAuth,
   });
 }
 
