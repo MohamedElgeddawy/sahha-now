@@ -5,10 +5,12 @@ import { Textarea } from "./ui/textarea";
 import Image from "next/image";
 import { Mail, Phone, Clock, MapPin, Send, Loader2 } from "lucide-react";
 import { FormField } from "./auth/FormField";
-import { motion } from "motion/react";
+import { motion } from "framer-motion"; // Assuming you meant framer-motion, not motion/react
 import { z } from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useSendContactMessage } from "../lib/hooks/use-contactUs"; // <--- Import the new hook
+import { toast } from "sonner"; // Assuming you have a toast notification library
 
 // Define Zod schema for form validation
 const contactFormSchema = z.object({
@@ -17,6 +19,7 @@ const contactFormSchema = z.object({
     .string()
     .min(1, { message: "هذا الحقل مطلوب" })
     .email({ message: "بريد إلكتروني غير صالح" }),
+  // Make sure 'phone' in frontend maps to 'mobile' in backend payload
   phone: z
     .string()
     .min(1, { message: "هذا الحقل مطلوب" })
@@ -65,26 +68,24 @@ export function ContactUs() {
     },
   });
 
+  const { mutateAsync, isPending, isSuccess, isError, error } =
+    useSendContactMessage(); // <--- Use the new mutation hook
+
   const onSubmit = async (data: ContactFormData) => {
     try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (response.ok) {
-        alert("تم إرسال رسالتك بنجاح");
-        reset();
-      } else {
-        throw new Error("فشل إرسال الرسالة");
-      }
-    } catch (error) {
-      alert("حدث خطأ أثناء إرسال الرسالة");
+      await mutateAsync(data); // <--- Call the mutation function
+      toast.success("تم إرسال رسالتك بنجاح");
+      reset();
+    } catch (err: any) {
+      console.error("Submission error:", err);
+      toast.error(
+        `حدث خطأ أثناء إرسال الرسالة: ${
+          err.message || "الرجاء المحاولة مرة أخرى"
+        }`
+      ); // Show specific error
     }
   };
+
   return (
     <motion.div
       className="max-w-7xl mx-auto py-8"
@@ -156,13 +157,13 @@ export function ContactUs() {
                       label="البريد الإلكتروني"
                       {...field}
                       error={fieldState.error}
-            type="email"
+                      type="email"
                       placeholder="برجاء إدخال البريد الإلكتروني"
                       required
                     />
                   )}
                 />
-        </div>
+              </div>
 
               <Controller
                 name="phone"
@@ -172,7 +173,7 @@ export function ContactUs() {
                     label="رقم الهاتف"
                     {...field}
                     error={fieldState.error}
-            type="tel"
+                    type="tel"
                     placeholder="برجاء إدخال رقم الهاتف"
                     required
                   />
@@ -189,9 +190,9 @@ export function ContactUs() {
                       className="block text-sm font-medium text-gray-700"
                     >
                       الرسالة <span className="text-red-500">*</span>
-          </label>
-          <Textarea
-            id="message"
+                    </label>
+                    <Textarea
+                      id="message"
                       {...field}
                       placeholder="برجاء إدخال رسالتك"
                       className="w-full min-h-[80px] sm:min-h-[100px] md:min-h-[120px] text-right text-sm md:text-base md:mb-4"
@@ -200,17 +201,17 @@ export function ContactUs() {
                       <p className="text-sm text-red-500 text-right">
                         {fieldState.error.message}
                       </p>
-          )}
-        </div>
+                    )}
+                  </div>
                 )}
               />
 
-        <Button
-          type="submit"
+              <Button
+                type="submit"
                 className="w-full bg-green-500 hover:bg-green-600 text-white h-12 text-lg"
-          disabled={isSubmitting}
-        >
-                {isSubmitting ? (
+                disabled={isPending} // <--- Use isPending from React Query hook
+              >
+                {isPending ? (
                   <span className="flex items-center gap-2">
                     <Loader2 className="size-4 animate-spin" />
                     جاري الإرسال...
@@ -220,7 +221,7 @@ export function ContactUs() {
                     إرسال <Send className="size-4" />
                   </span>
                 )}
-        </Button>
+              </Button>
             </motion.form>
           </div>
 
@@ -239,7 +240,7 @@ export function ContactUs() {
                 <span className="text-gray-700 text-sm">{item.text}</span>
               </motion.div>
             ))}
-        </div>
+          </div>
         </motion.div>
 
         {/* Right Column - Map Section */}

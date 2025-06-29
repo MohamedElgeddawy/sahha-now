@@ -142,23 +142,23 @@ export function ProductTabs({ product }: ProductTabsProps) {
     <div className="w-full">
       <Tabs dir="rtl" defaultValue="description" className="w-full">
         {/* Centered Tabs */}
-        <div className="flex justify-center border-b border-gray-200 pb-3">
-          <TabsList className="flex gap-8 bg-transparent">
+        <div className="flex justify-center ">
+          <TabsList className="flex gap-2 bg-transparent">
             <TabsTrigger
               value="description"
-              className="px-4 py-2 text-sm font-medium rounded-md transition-colors duration-300 data-[state=active]:bg-[#2D9CDB] data-[state=active]:text-white data-[state=inactive]:text-[#2D9CDB] data-[state=inactive]:bg-[#EDF8FF]"
+              className="w-40 h-10  px-4 py-2 text-sm font-medium rounded-md transition-colors duration-300 data-[state=active]:bg-[#2D9CDB] data-[state=active]:text-white data-[state=inactive]:text-[#2D9CDB] data-[state=inactive]:bg-[#EDF8FF]"
             >
               تفاصيل المنتج
             </TabsTrigger>
             <TabsTrigger
               value="shipping"
-              className="px-4 py-2 text-sm font-medium rounded-md transition-colors duration-300 data-[state=active]:bg-[#2D9CDB] data-[state=active]:text-white data-[state=inactive]:text-[#2D9CDB] data-[state=inactive]:bg-[#EDF8FF]"
+              className="w-40 h-10  px-4 py-2 text-sm font-medium rounded-md transition-colors duration-300 data-[state=active]:bg-[#2D9CDB] data-[state=active]:text-white data-[state=inactive]:text-[#2D9CDB] data-[state=inactive]:bg-[#EDF8FF]"
             >
               سياسة الشحن والإرجاع
             </TabsTrigger>
             <TabsTrigger
               value="reviews"
-              className="px-4 py-2 text-sm font-medium rounded-md transition-colors duration-300 data-[state=active]:bg-[#2D9CDB] data-[state=active]:text-white data-[state=inactive]:text-[#2D9CDB] data-[state=inactive]:bg-[#EDF8FF]"
+              className="w-40 h-10  px-4 py-2 text-sm font-medium rounded-md transition-colors duration-300 data-[state=active]:bg-[#2D9CDB] data-[state=active]:text-white data-[state=inactive]:text-[#2D9CDB] data-[state=inactive]:bg-[#EDF8FF]"
             >
               تعليقات المنتج
             </TabsTrigger>
@@ -166,7 +166,7 @@ export function ProductTabs({ product }: ProductTabsProps) {
         </div>
 
         {/* Tab Content */}
-        <div className="py-6">
+        <div className="py-4">
           <TabsContent
             value="description"
             className="prose prose-sm max-w-none text-right"
@@ -185,10 +185,11 @@ export function ProductTabs({ product }: ProductTabsProps) {
             </p>
           </TabsContent>
 
-          <TabsContent value="reviews" className="space-y-8 text-right">
+          <TabsContent value="reviews" className="space-y-2 text-right">
             {/* Rating Statistics */}
+            <h2 className="text-xl text-right mb-2">تقييم المنتج</h2>
             {isLoadingStats ? (
-              <div className="flex gap-8 items-start animate-pulse">
+              <div className="flex gap-8 items-start animate-pulse ">
                 <div className="w-24 h-24 bg-gray-200 rounded-lg"></div>
                 <div className="flex-1 space-y-2">
                   {[1, 2, 3, 4, 5].map((i) => (
@@ -201,7 +202,7 @@ export function ProductTabs({ product }: ProductTabsProps) {
                 <p>حدث خطأ أثناء تحميل التقييمات</p>
               </div>
             ) : (
-              <div className="flex gap-8 items-start">
+              <div className="flex gap-8 items-start border-b border-gray-200 pb-3">
                 {/* Overall Rating */}
                 <div className="text-center flex items-center gap-4">
                   <div className="text-4xl font-bold text-green-600">
@@ -234,9 +235,9 @@ export function ProductTabs({ product }: ProductTabsProps) {
                 </div>
 
                 {/* Rating Bars */}
-                <div className="basis-1/3 space-y-2">
-                  {[5, 4, 3, 2, 1].map((rating) => (
-                    <div key={rating} className="flex items-center gap-2">
+                <div className="flex-1 space-y-2">
+                  {[5, 4, 3, 2, 1].map((rating) => ( 
+                    <div key={rating} className="flex items-center gap-2 w-118">
                       <div className="flex items-center gap-1 w-12">
                         <span className="text-sm text-gray-600">{rating}</span>
                         <Star className="size-4 shrink-0 text-[#FFA726] fill-[#FFA726]" />
@@ -252,6 +253,7 @@ export function ProductTabs({ product }: ProductTabsProps) {
                               100
                             : 0
                         }
+                        
                       />
                     </div>
                   ))}
@@ -289,7 +291,7 @@ export function ProductTabs({ product }: ProductTabsProps) {
             </div>
 
             {/* Add Review Form */}
-            <div className="bg-gray-50 p-6 rounded-lg space-y-4">
+            <div className="bg-gray-50 p-2 rounded-lg space-y-4">
               <h3 className="font-medium text-gray-900">إضافة تقييم</h3>
 
               {!isAuthenticated ? (
@@ -312,7 +314,7 @@ export function ProductTabs({ product }: ProductTabsProps) {
                   >
                     <div className="space-y-2">
                       <label className="block text-sm font-medium text-gray-700">
-                        تقييمك: *
+                        تقييمك:
                       </label>
                       <div
                         onMouseLeave={() => setHoverRating(null)}
@@ -356,7 +358,7 @@ export function ProductTabs({ product }: ProductTabsProps) {
                         htmlFor="comment"
                         className="block text-sm font-medium text-gray-700"
                       >
-                        التعليق
+                        التقييم
                       </label>
                       <textarea
                         id="comment"

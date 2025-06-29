@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Star, Truck, Zap,Gift, MessageSquare, Loader2 } from "lucide-react";
+import { Star, Truck, Zap, Gift, MessageSquare, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Product } from "@/lib/api/products";
 import Image from "next/image";
@@ -135,8 +135,8 @@ export function ProductInfo({ product }: ProductInfoProps) {
         <div className="flex items-center gap-2 text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">
           <Truck className="h-5 w-5 -scale-x-100" />
           <div>
-            <span>توصيل مجاني للطلبات أعلى من </span>
-            <span className="font-medium">375 ر.س</span>
+            <span>توصيل مجاني </span>
+            <span className="text-sm text-gray-400">للطلبات فوق 375 ر س</span>
           </div>
         </div>
 
@@ -144,7 +144,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
         <div className="space-y-4">
           <button
             onClick={() => setShowQuestionForm(!showQuestionForm)}
-            className="flex items-center gap-2 text-[#2D9CDB] hover:text-[#1E88C5] transition-colors"
+            className="flex items-center gap-2 text-gray-600 transition-colors hover:text-gray-800"
           >
             <MessageSquare className="h-5 w-5" />
             <span className="text-sm">ترغب فى طرح سؤال؟</span>
@@ -157,7 +157,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
       {/* Payment Methods */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <span className="text-sm text-gray-600">طرق الدفع المتاحة</span>
+          <span className="text-sm text-gray-600">طرق دفع آمنة</span>
           <div className="flex items-center gap-2">
             <Image
               src="/icons/payment/VISA.svg"
