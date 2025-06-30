@@ -102,8 +102,8 @@ export function ProductInfo({ product }: ProductInfoProps) {
         </div>
       </div>
 
-      {/* shortDescription */}
-      <p className="text-gray-600">{product.shortDescription}</p>
+      {/* arabicShortDescription */}
+      <p className="text-gray-600">{product.arabicShortDescription}</p>
 
       {/* Quantity and Add to Cart */}
       <div className="flex items-center gap-4">

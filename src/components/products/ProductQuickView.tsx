@@ -123,7 +123,7 @@ export default function ProductQuickView({
           </div>
           {/* Fourth row: description */}
           <p className="text-gray-600 text-base mt-2 line-clamp-3">
-            {product.shortDescription}
+            {product.arabicShortDescription}
           </p>
           {/* Quantity and Add to Cart */}
           <div className="flex items-center gap-4 mt-4">
