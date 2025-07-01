@@ -160,7 +160,7 @@ export default function LoginPage() {
               تذكرني
             </label>
           </motion.div>
-
+          
           <Button
             type="submit"
             className="w-full h-12 bg-green-600 hover:bg-green-700 text-white rounded-lg text-base font-medium mt-6"
@@ -178,8 +178,8 @@ export default function LoginPage() {
           transition={{ delay: 0.5, duration: 0.5 }}
         >
           <span className="text-[#2C3E50]">ليس لديك حساب؟ </span>
-          <Link
-            href="/auth/register"
+          <Link 
+            href="/auth/register" 
             prefetch
             className="text-blue-600 hover:underline font-medium"
           >

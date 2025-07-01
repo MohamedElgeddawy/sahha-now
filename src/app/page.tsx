@@ -2,6 +2,7 @@
 
 import HeroSection from "@/components/HeroSection";
 import ProductCarousel from "@/components/products/ProductCarousel";
+import BrandCarousel from "@/components/products/BrandCarousel";
 import { useProducts } from "@/lib/hooks/use-products";
 
 export default function HomePage() {
@@ -15,6 +16,7 @@ export default function HomePage() {
         products={data?.products || []}
         isLoading={isLoading}
       />
+      <BrandCarousel />
     </main>
   );
 }

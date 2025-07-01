@@ -104,7 +104,7 @@ export default function ProductCarousel({
           {displayProducts?.map((product) => (
             <CarouselItem
               key={product.id}
-              className="pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
+              className="pl-4 basis-1/2 sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
             >
               <ProductCardGrid product={product} isLoading={isLoading} />
             </CarouselItem>

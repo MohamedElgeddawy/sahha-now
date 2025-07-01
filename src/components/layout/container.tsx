@@ -8,12 +8,7 @@ interface ContainerProps {
 
 export function Container({ children, className }: ContainerProps) {
   return (
-    <main
-      className={cn(
-        "mx-auto flex-1 container px-4 py-8",
-        className
-      )}
-    >
+    <main className={cn("mx-auto flex-1 container px-4 py-8", className)}>
       {children}
     </main>
   );
