@@ -1,23 +1,15 @@
-import { useState } from "react";
+"use client";
 import Link from "next/link";
 import Image from "next/image";
 import {
   X,
-  ChevronDown,
-  ChevronUp,
   MapPin,
-  Phone,
   ChevronRight,
   User,
   Download,
-  Globe,
-  Search,
-  Mic,
-  Camera,
   LanguagesIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Drawer,
   DrawerContent,
@@ -26,6 +18,7 @@ import {
 } from "@/components/ui/drawer";
 import { SahhaNowArabicLogo } from "./icons/brand-logos/SahhaNowArabicLogo";
 import { SahhaNowEnglishLogo } from "./icons/brand-logos/SahhaNowEnglishLogo";
+import { SearchBar } from "./header/SearchBar";
 
 interface MobileNavProps {
   open: boolean;
@@ -33,67 +26,33 @@ interface MobileNavProps {
   trigger?: React.ReactNode;
 }
 
+function MenuItem({
+  icon,
+  label,
+  href,
+  onClick,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  href: string;
+  onClick?: (e: React.MouseEvent) => void;
+}) {
+  return (
+    <Link
+      href={href}
+      className="flex items-center justify-between py-3 text-[#2C3E50] text-lg"
+      onClick={onClick}
+    >
+      <ChevronRight className="size-5 text-gray-400" />
+      <div className="flex items-center gap-3">
+        <span>{label}</span>
+        <div className="text-gray-500">{icon}</div>
+      </div>
+    </Link>
+  );
+}
+
 export function MobileNav({ open, onOpenChange, trigger }: MobileNavProps) {
-  const [expandedCategories, setExpandedCategories] = useState<number[]>([]);
-
-  const categories = [
-    {
-      title: "الفئات",
-      links: [
-        "الأدوية",
-        "العناية الشخصية",
-        "الأجهزة الطبية",
-        "الفيتامينات والمكملات",
-        "العروض",
-      ],
-    },
-    {
-      title: "حسابي",
-      links: ["تسجيل الدخول", "إنشاء حساب", "المفضلة", "الطلبات"],
-    },
-    {
-      title: "المساعدة",
-      links: [
-        "تواصل معنا",
-        "الأسئلة الشائعة",
-        "سياسة الخصوصية",
-        "الشروط والأحكام",
-      ],
-    },
-  ];
-
-  const toggleCategory = (index: number) => {
-    setExpandedCategories((prev) =>
-      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
-    );
-  };
-
-  function MenuItem({
-    icon,
-    label,
-    href,
-    onClick,
-  }: {
-    icon: React.ReactNode;
-    label: string;
-    href: string;
-    onClick?: (e: React.MouseEvent) => void;
-  }) {
-    return (
-      <Link
-        href={href}
-        className="flex items-center justify-between py-3 text-[#2C3E50] text-lg"
-        onClick={onClick}
-      >
-        <ChevronRight className="size-5 text-gray-400" />
-        <div className="flex items-center gap-3">
-          <span>{label}</span>
-          <div className="text-gray-500">{icon}</div>
-        </div>
-      </Link>
-    );
-  }
-
   return (
     <Drawer open={open} onOpenChange={onOpenChange} direction="left">
       {trigger && <DrawerTrigger asChild>{trigger}</DrawerTrigger>}
@@ -121,33 +80,7 @@ export function MobileNav({ open, onOpenChange, trigger }: MobileNavProps) {
         </div>
 
         {/* Search Bar */}
-        <div className="px-4 pb-4">
-          <div className="flex h-[56px] rounded-md overflow-hidden border border-gray-200">
-            <Button
-              variant="default"
-              size="icon"
-              className="h-[56px] w-[56px] rounded-r-none bg-[#2C3E50] hover:bg-[#243342]"
-            >
-              <Search className="size-5 text-white" />
-            </Button>
-
-            <div className="flex-1 flex items-center">
-              <Input
-                type="text"
-                placeholder="ابحث"
-                className="flex-1 h-full border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-right"
-              />
-            </div>
-
-            <div className="flex items-center px-3 border-r border-gray-200">
-              <Mic className="size-5 text-gray-500" />
-            </div>
-
-            <div className="flex items-center px-3 border-r border-gray-200">
-              <Camera className="size-5 text-gray-500" />
-            </div>
-          </div>
-        </div>
+        <SearchBar variant="mobile" />
 
         {/* Menu Items */}
         <div className="px-4 space-y-6">

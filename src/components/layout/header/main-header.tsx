@@ -1,7 +1,6 @@
 "use client";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,9 +11,6 @@ import { SahhaNowArabicLogo } from "@/components/layout/icons/brand-logos/SahhaN
 import { SahhaNowEnglishLogo } from "@/components/layout/icons/brand-logos/SahhaNowEnglishLogo";
 import {
   ChevronDown,
-  Search,
-  Mic,
-  Camera,
   Heart,
   ShoppingCart,
   Gift,
@@ -33,12 +29,12 @@ import {
 import { useIsClient } from "usehooks-ts";
 import { useAppSelector } from "@/lib/redux/hooks";
 import { selectIsAuthenticated } from "@/lib/redux/slices/authSlice";
+import { SearchBar } from "./SearchBar";
 
 export function MainHeader() {
   const [open, setOpen] = useState(false);
   const cartItemsCount = useCartItemsCount();
   const { data: favoritesCount } = useFavoriteProductsCount();
-  const { data: categoriesResponse } = useCategories();
   const isClient = useIsClient();
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
 
@@ -69,74 +65,7 @@ export function MainHeader() {
           </motion.div>
 
           {/* Center Section - Search Bar (hidden on mobile) */}
-          <div className="hidden md:block flex-1 max-w-[800px]">
-            <motion.div
-              className="flex h-[48px]"
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.1 }}
-            >
-              {/* Categories Dropdown */}
-              <DropdownMenu dir="rtl">
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    className="h-[48px] px-4 border border-[#DADADA] border-l-0 rounded-r-[8px] rounded-l-none flex items-center gap-2 hover:bg-gray-50 text-[16px] text-[#2C3E50] font-medium"
-                  >
-                    <span>الفئات</span>
-                    <ChevronDown className="w-5 h-5" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-56">
-                  {categoriesResponse?.categories?.map((category) => (
-                    <DropdownMenuItem key={category.id} asChild>
-                      <Link
-                        prefetch
-                        href={`/products?categoryIds=${category.id}`}
-                        className="w-full text-right py-2 px-4 hover:bg-gray-50 text-[#2C3E50] text-[16px]"
-                      >
-                        {category.arabicName}
-                      </Link>
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-              {/* Search Input */}
-              <div className="flex-1 flex items-center border border-[#DADADA] rounded-none">
-                <Input
-                  type="text"
-                  placeholder="ابحث عن دواء، منتج أو ماركة"
-                  className="flex-1 h-full border-0 focus-visible:ring-0 focus-visible:ring-offset-0 rounded-none text-[16px] text-[#2C3E50] placeholder:text-gray-400 py-3 px-6"
-                />
-                <div className="flex items-center gap-4 px-4 border-r border-[#DADADA]">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 w-8 p-0 text-[#2C3E50]"
-                  >
-                    <Camera className="size-5" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 w-8 p-0 text-[#2C3E50]"
-                  >
-                    <Mic className="size-5" />
-                  </Button>
-                </div>
-              </div>
-
-              {/* Search Button */}
-              <Button
-                variant="default"
-                size="icon"
-                className="size-[48px] rounded-r-none rounded-l-[8px] bg-[#2C3E50] hover:bg-[#243342]"
-              >
-                <Search className="size-5 text-white" />
-              </Button>
-            </motion.div>
-          </div>
+          <SearchBar variant="desktop" />
 
           {/* Left Section - Action Icons */}
           <motion.div
@@ -145,7 +74,10 @@ export function MainHeader() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3, delay: 0.2 }}
           >
-            <ActionButton icon={<Gift className="size-5 md:size-6" />} href="/gifts" />
+            <ActionButton
+              icon={<Gift className="size-5 md:size-6" />}
+              href="/gifts"
+            />
             <ActionButton
               icon={<ShoppingCart className="size-5 md:size-6" />}
               href="/cart"
@@ -189,68 +121,7 @@ export function MainHeader() {
           </motion.div>
         </div>
         {/* Mobile Search Bar */}
-        <div className="block md:hidden mt-3">
-          <form className="flex h-10 w-full rounded-lg overflow-hidden bg-white border border-[#DADADA]">
-            {/* Categories Dropdown */}
-            <DropdownMenu dir="rtl">
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="h-10 px-2 border-0 rounded-none rounded-l-none flex items-center gap-1 text-xs text-[#2C3E50] font-medium"
-                >
-                  <span>الفئات</span>
-                  <ChevronDown className="size-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-44">
-                {categoriesResponse?.categories?.map((category) => (
-                  <DropdownMenuItem key={category.id} asChild>
-                    <Link
-                      prefetch
-                      href={`/products?categoryIds=${category.id}`}
-                      className="w-full text-right py-2 px-3 hover:bg-gray-50 text-[#2C3E50] text-xs"
-                    >
-                      {category.arabicName}
-                    </Link>
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-            {/* Search Input */}
-            <div className="flex-1 flex items-center border-l border-[#DADADA]">
-              <input
-                type="text"
-                placeholder="ابحث عن دواء، منتج أو ماركة"
-                className="flex-1 h-full border-0 focus:ring-0 focus:outline-none rounded-none text-xs text-[#2C3E50] placeholder:text-gray-400 py-2 px-2"
-                dir="rtl"
-              />
-              <div className="flex items-center gap-2 px-2 border-r border-[#DADADA]">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 p-0 text-[#2C3E50]"
-                >
-                  <Camera className="w-4 h-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 p-0 text-[#2C3E50]"
-                >
-                  <Mic className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
-            {/* Search Button */}
-            <Button
-              variant="default"
-              size="icon"
-              className="h-10 w-10 rounded-r-none rounded-l-lg bg-[#2C3E50] hover:bg-[#243342]"
-            >
-              <Search className="w-4 h-4 text-white" />
-            </Button>
-          </form>
-        </div>
+        <SearchBar variant="mobile" />
       </div>
     </motion.header>
   );

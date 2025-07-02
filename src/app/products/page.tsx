@@ -13,6 +13,10 @@ import {
   BrandFilterSection,
   ConnectedRatingFilterSection,
 } from "@/components/products/ConnectedFilterSection";
+import {
+  FilterDrawer,
+  MobileFilterTrigger,
+} from "@/components/products/FilterDrawer";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
@@ -147,157 +151,145 @@ export default function ProductsPage() {
         المنتجات
       </motion.h1>
 
-      <div className="flex flex-col lg:flex-row gap-8">
-        {/* Filters sidebar */}
-        <div className="lg:w-1/4 space-y-6">
-          {/* Categories filter */}
-          <CategoryFilterSection />
+      <FilterDrawer>
+        {/* Active filters */}
+        <ActiveFilters />
 
-          {/* Brands filter */}
-          <BrandFilterSection />
+        {/* Top filters and sorting */}
+        <div className="flex flex-wrap items-center justify-between p-4 rounded-t-lg mb-6">
+          <div className="flex items-center gap-3">
+            {/* Mobile Filter Trigger */}
+            <MobileFilterTrigger />
 
-          {/* Rating filter */}
-          <ConnectedRatingFilterSection />
-        </div>
-
-        {/* Products grid */}
-        <div className="lg:w-3/4">
-          {/* Active filters */}
-          <ActiveFilters />
-
-          {/* Top filters and sorting */}
-          <div className="flex flex-wrap items-center justify-between p-4 rounded-t-lg mb-6">
-            <div className="flex items-center gap-3">
-              <DropdownMenu dir="rtl">
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline">
-                    <span className="ms-2 text-sm">
-                      {sortOptions.find(
-                        (opt) => opt.id === (activeFilters.sort || "default")
-                      )?.label || "الترتيب الافتراضي"}
-                    </span>
-                    <ChevronDown size={16} />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56 text-right">
-                  {sortOptions.map((option) => (
-                    <DropdownMenuItem
-                      key={option.id}
-                      onClick={() => handleSortChange(option.id)}
-                      className={
-                        activeFilters.sort === option.id ? "bg-gray-100" : ""
-                      }
-                    >
-                      {option.label}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-              <Button
-                variant="ghost"
-                size="sm"
-                className={`p-1 ${
-                  view === "grid" ? "bg-green-500/20 text-green-500" : ""
-                }`}
-                onClick={() => setView("grid")}
-              >
-                <Grid size={18} />
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className={`p-1 ${
-                  view === "list" ? "bg-green-500/20 text-green-500" : ""
-                }`}
-                onClick={() => setView("list")}
-              >
-                <List size={18} />
-              </Button>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2">
-                <Checkbox
-                  id="discount-only"
-                  checked={activeFilters.hasDiscount || false}
-                  onCheckedChange={(checked) =>
-                    handleDiscountChange(checked === true)
-                  }
-                />
-                <label htmlFor="discount-only" className="text-sm">
-                  المنتجات ذات الخصم فقط
-                </label>
-              </div>
+            {/* <DropdownMenu dir="rtl">
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline">
+                  <span className="ms-2 text-sm">
+                    {sortOptions.find(
+                      (opt) => opt.id === (activeFilters.sort || "default")
+                    )?.label || "الترتيب الافتراضي"}
+                  </span>
+                  <ChevronDown size={16} />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56 text-right">
+                {sortOptions.map((option) => (
+                  <DropdownMenuItem
+                    key={option.id}
+                    onClick={() => handleSortChange(option.id)}
+                    className={
+                      activeFilters.sort === option.id ? "bg-gray-100" : ""
+                    }
+                  >
+                    {option.label}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu> */}
+            <Button
+              variant="ghost"
+              size="sm"
+              className={`p-1 ${
+                view === "grid" ? "bg-green-500/20 text-green-500" : ""
+              }`}
+              onClick={() => setView("grid")}
+            >
+              <Grid size={18} />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className={`p-1 ${
+                view === "list" ? "bg-green-500/20 text-green-500" : ""
+              }`}
+              onClick={() => setView("list")}
+            >
+              <List size={18} />
+            </Button>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="discount-only"
+                checked={activeFilters.hasDiscount || false}
+                onCheckedChange={(checked) =>
+                  handleDiscountChange(checked === true)
+                }
+              />
+              <label htmlFor="discount-only" className="text-sm">
+                المنتجات ذات الخصم فقط
+              </label>
             </div>
           </div>
-
-          {/* Product list */}
-          {isLoading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {Array(6)
-                .fill(0)
-                .map((_, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: i * 0.1 }}
-                  >
-                    <ProductCardGrid product={{}} isLoading />
-                  </motion.div>
-                ))}
-            </div>
-          ) : isError ? (
-            <motion.div
-              className="text-center py-10"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5 }}
-            >
-              <p className="text-red-500">حدث خطأ أثناء تحميل المنتجات</p>
-            </motion.div>
-          ) : (
-            <>
-              <div
-                className={
-                  view === "grid"
-                    ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
-                    : "flex flex-col gap-4"
-                }
-              >
-                {products.map((product, index) => (
-                  <motion.div
-                    key={product.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: index * 0.05 }}
-                    className={view === "list" ? "w-full" : ""}
-                  >
-                    {view === "grid" ? (
-                      <ProductCardGrid product={product} />
-                    ) : (
-                      <ProductCardList product={product} />
-                    )}
-                  </motion.div>
-                ))}
-              </div>
-
-              {/* Load more trigger */}
-              <div ref={ref} className="flex justify-center mt-8">
-                {isFetchingNextPage && (
-                  <motion.div
-                    className="py-4"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    جاري التحميل...
-                  </motion.div>
-                )}
-              </div>
-            </>
-          )}
         </div>
-      </div>
+
+        {/* Product list */}
+        {isLoading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {Array(6)
+              .fill(0)
+              .map((_, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: i * 0.1 }}
+                >
+                  <ProductCardGrid product={{}} isLoading />
+                </motion.div>
+              ))}
+          </div>
+        ) : isError ? (
+          <motion.div
+            className="text-center py-10"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            <p className="text-red-500">حدث خطأ أثناء تحميل المنتجات</p>
+          </motion.div>
+        ) : (
+          <>
+            <div
+              className={
+                view === "grid"
+                  ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+                  : "flex flex-col gap-4"
+              }
+            >
+              {products.map((product, index) => (
+                <motion.div
+                  key={product.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.05 }}
+                  className={view === "list" ? "w-full" : ""}
+                >
+                  {view === "grid" ? (
+                    <ProductCardGrid product={product} />
+                  ) : (
+                    <ProductCardList product={product} />
+                  )}
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Load more trigger */}
+            <div ref={ref} className="flex justify-center mt-8">
+              {isFetchingNextPage && (
+                <motion.div
+                  className="py-4"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  جاري التحميل...
+                </motion.div>
+              )}
+            </div>
+          </>
+        )}
+      </FilterDrawer>
     </motion.div>
   );
 }

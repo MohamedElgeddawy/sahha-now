@@ -17,189 +17,286 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
+  PaginationEllipsis,
 } from "@/components/ui/pagination";
-import { OrderDetails } from "./OrderDetails";
 import { useRouter } from "next/navigation";
+import { useOrders } from "@/lib/hooks/use-orders";
+import { Order } from "@/lib/api/orders";
+import Link from "next/link";
+import {
+  CardLoading,
+  ProfileLoadingMessages,
+} from "@/components/ui/LoadingComponent";
 
-type OrderStatus = "قيد التجهيز" | "تم الشحن" | "تم التوصيل" | "تم الالغاء";
-
-type Order = {
-  id: string;
-  date: string;
-  status: OrderStatus;
-  total: number;
-};
-
-const getStatusVariant = (
-  status: OrderStatus
-): "default" | "destructive" | "secondary" | "outline" => {
+// Status mapping from English to Arabic
+const getStatusInArabic = (status: Order["status"]): string => {
   switch (status) {
-    case "قيد التجهيز":
-      return "default"; // Orange
-    case "تم الشحن":
-      return "secondary"; // Blue
-    case "تم التوصيل":
-      return "outline"; // Green
-    case "تم الالغاء":
-      return "destructive"; // Red
+    case "PENDING":
+      return "قيد الانتظار";
+    case "CONFIRMED":
+      return "تم التأكيد";
+    case "SHIPPED":
+      return "تم الشحن";
+    case "DELIVERED":
+      return "تم التوصيل";
+    case "CANCELLED":
+      return "تم الإلغاء";
+    case "RETURNED":
+      return "تم الإرجاع";
     default:
-      return "default";
+      return status;
   }
 };
 
-const getStatusColor = (status: OrderStatus): string => {
+const getStatusColor = (status: Order["status"]): string => {
   switch (status) {
-    case "قيد التجهيز":
+    case "PENDING":
       return "bg-orange-100 px-4 py-2 text-orange-600";
-    case "تم الشحن":
+    case "CONFIRMED":
       return "bg-blue-100 px-4 py-2 text-blue-600";
-    case "تم التوصيل":
+    case "SHIPPED":
+      return "bg-blue-100 px-4 py-2 text-blue-600";
+    case "DELIVERED":
       return "bg-green-100 px-4 py-2 text-green-600";
-    case "تم الالغاء":
+    case "CANCELLED":
       return "bg-red-100 px-4 py-2 text-red-600";
+    case "RETURNED":
+      return "bg-purple-100 px-4 py-2 text-purple-600";
     default:
-      return "";
+      return "bg-gray-100 px-4 py-2 text-gray-600";
   }
 };
 
 export function OrdersTab() {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
-  // Mock orders data
-  const orders: Order[] = [
-    {
-      id: "123455",
-      date: "13/05/2025",
-      status: "قيد التجهيز",
-      total: 365,
-    },
-    {
-      id: "123455",
-      date: "13/05/2025",
-      status: "تم الشحن",
-      total: 365,
-    },
-    {
-      id: "123455",
-      date: "13/05/2025",
-      status: "تم التوصيل",
-      total: 365,
-    },
-    {
-      id: "123455",
-      date: "13/05/2025",
-      status: "تم الالغاء",
-      total: 365,
-    },
-    {
-      id: "123455",
-      date: "13/05/2025",
-      status: "تم التوصيل",
-      total: 365,
-    },
-    {
-      id: "123455",
-      date: "13/05/2025",
-      status: "تم الشحن",
-      total: 365,
-    },
-    {
-      id: "123455",
-      date: "13/05/2025",
-      status: "قيد التجهيز",
-      total: 365,
-    },
-    {
-        id: "123455",
-      date: "13/05/2025",
-      status: "تم الشحن",
-      total: 365,
-    },
-  ];
+  const limit = 5;
+
+  const {
+    data: ordersData,
+    isLoading,
+    isError,
+    error,
+  } = useOrders({
+    page: currentPage,
+    limit,
+  });
+
+  const orders = ordersData?.orders || [];
+  const totalPages = ordersData?.totalPages || 1;
+  const total = ordersData?.total || 0;
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <CardLoading message={ProfileLoadingMessages.orders} animation="wave" />
+    );
+  }
+
+  // Error state
+  if (isError) {
+    return (
+      <div className="bg-white rounded-lg border border-gray-300 p-8">
+        <div className="text-center">
+          <p className="text-red-600 mb-4">حدث خطأ أثناء تحميل الطلبات</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="text-green-600 hover:text-green-700 font-medium"
+          >
+            إعادة المحاولة
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Generate page numbers for pagination
+  const generatePageNumbers = () => {
+    const pages = [];
+    const maxVisiblePages = 5;
+
+    if (totalPages <= maxVisiblePages) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      if (currentPage <= 3) {
+        for (let i = 1; i <= 4; i++) {
+          pages.push(i);
+        }
+        pages.push("ellipsis");
+        pages.push(totalPages);
+      } else if (currentPage >= totalPages - 2) {
+        pages.push(1);
+        pages.push("ellipsis");
+        for (let i = totalPages - 3; i <= totalPages; i++) {
+          pages.push(i);
+        }
+      } else {
+        pages.push(1);
+        pages.push("ellipsis");
+        for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+          pages.push(i);
+        }
+        pages.push("ellipsis");
+        pages.push(totalPages);
+      }
+    }
+
+    return pages;
+  };
 
   return (
-    <div className="bg-white rounded-lg border border-gray-300">
+    <div className="bg-white rounded-lg border border-gray-300 overflow-hidden">
       {orders.length > 0 ? (
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="text-start">رقم الطلب</TableHead>
-              <TableHead className="text-start">التاريخ</TableHead>
-              <TableHead className="text-start">الحالة</TableHead>
-              <TableHead className="text-start">الإجمالي</TableHead>
-              <TableHead className="sr-only">عرض التفاصيل</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {orders.map((order, index) => (
-              <TableRow key={index}>
-                <TableCell className="text-start">{order.id}</TableCell>
-                <TableCell className="text-start">{order.date}</TableCell>
-                <TableCell className="text-start">
-                  <Badge
-                    className={`${getStatusColor(order.status)} border-none`}
-                  >
-                    {order.status}
-                  </Badge>
-                </TableCell>
-                <TableCell className="text-start">{order.total} ر.س</TableCell>
-
-                <TableCell className="text-center">
-                  <button
-                    className="text-red-500 text-sm font-medium hover:underline"
-                    onClick={() => router.push(`/account/${order.id}`)}
-                  >
+        <>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="text-start min-w-[120px]">
+                    رقم الطلب
+                  </TableHead>
+                  <TableHead className="text-start min-w-[100px]">
+                    التاريخ
+                  </TableHead>
+                  <TableHead className="text-start min-w-[120px]">
+                    الحالة
+                  </TableHead>
+                  <TableHead className="text-start min-w-[100px]">
+                    الإجمالي
+                  </TableHead>
+                  <TableHead className="text-start min-w-[120px]">
                     عرض التفاصيل
-                  </button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      ) : (
-        <div className="text-start py-10">
-          <p className="text-gray-500">لا توجد طلبات حالية</p>
-        </div>
-      )}
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {orders.map((order) => (
+                  <TableRow key={order.id}>
+                    <TableCell className="text-start font-medium">
+                      {order.orderNumber}
+                    </TableCell>
+                    <TableCell className="text-start text-sm text-gray-600">
+                      {new Date(order.createdAt).toLocaleDateString("ar-SA")}
+                    </TableCell>
+                    <TableCell className="text-start">
+                      <Badge
+                        className={`${getStatusColor(
+                          order.status
+                        )} border-none text-xs px-2 py-1`}
+                      >
+                        {getStatusInArabic(order.status)}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-start font-semibold">
+                      {parseFloat(order.totalPriceAfterFees).toFixed(2)} ر.س
+                    </TableCell>
+                    <TableCell className="text-start">
+                      <Link
+                        className="text-red-500 text-sm font-medium hover:underline"
+                        href={`/account/${order.id}`}
+                      >
+                        عرض التفاصيل
+                      </Link>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
 
-      {orders.length > 0 && (
-        <div className="p-4">
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setCurrentPage((p) => Math.max(1, p - 1));
-                  }}
-                />
-              </PaginationItem>
-              {[1, 2, 3].map((page) => (
-                <PaginationItem key={page}>
-                  <PaginationLink
-                    href="#"
-                    isActive={page === currentPage}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setCurrentPage(page);
-                    }}
-                  >
-                    {page}
-                  </PaginationLink>
-                </PaginationItem>
-              ))}
-              <PaginationItem>
-                <PaginationNext
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setCurrentPage((p) => Math.min(3, p + 1));
-                  }}
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="p-4 border-t">
+              <div className="flex items-center justify-between text-sm text-gray-600 mb-4">
+                <span>
+                  عرض {(currentPage - 1) * limit + 1} إلى{" "}
+                  {Math.min(currentPage * limit, total)} من {total} طلب
+                </span>
+                <span>
+                  صفحة {currentPage} من {totalPages}
+                </span>
+              </div>
+
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious
+                      onClick={() => {
+                        if (currentPage > 1) {
+                          setCurrentPage(currentPage - 1);
+                        }
+                      }}
+                      className={
+                        currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
+                      }
+                    />
+                  </PaginationItem>
+
+                  {generatePageNumbers().map((page, index) => (
+                    <PaginationItem key={index}>
+                      {page === "ellipsis" ? (
+                        <PaginationEllipsis />
+                      ) : (
+                        <PaginationLink
+                          isActive={page === currentPage}
+                          onClick={() => {
+                            setCurrentPage(page as number);
+                          }}
+                        >
+                          {page}
+                        </PaginationLink>
+                      )}
+                    </PaginationItem>
+                  ))}
+
+                  <PaginationItem>
+                    <PaginationNext
+                      onClick={() => {
+                        if (currentPage < totalPages) {
+                          setCurrentPage(currentPage + 1);
+                        }
+                      }}
+                      className={
+                        currentPage === totalPages
+                          ? "opacity-50 cursor-not-allowed"
+                          : ""
+                      }
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            </div>
+          )}
+        </>
+      ) : (
+        <div className="text-center py-16">
+          <div className="text-gray-400 mb-4">
+            <svg
+              className="mx-auto h-12 w-12"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1}
+                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+              />
+            </svg>
+          </div>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">
+            لا توجد طلبات
+          </h3>
+          <p className="text-gray-500 mb-6">لم تقم بإجراء أي طلبات حتى الآن</p>
+          <button
+            onClick={() => router.push("/products")}
+            className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors"
+          >
+            تصفح المنتجات
+          </button>
         </div>
       )}
     </div>

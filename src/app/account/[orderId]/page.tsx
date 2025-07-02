@@ -1,7 +1,15 @@
 import { OrderDetails } from "@/components/account/OrderDetails";
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
 
-export default function OrderDetailsPage() {
+interface OrderDetailsPageProps {
+  params: {
+    orderId: string;
+  };
+}
+
+export default function OrderDetailsPage({ params }: OrderDetailsPageProps) {
+  const { orderId } = params;
+
   return (
     <>
       <Breadcrumb
@@ -11,7 +19,7 @@ export default function OrderDetailsPage() {
           { label: "تفاصيل الطلب" },
         ]}
       />
-      <OrderDetails />
+      <OrderDetails orderId={orderId} />
     </>
   );
 }

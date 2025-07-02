@@ -12,6 +12,11 @@ import {
   type UserProfileData,
 } from "@/lib/hooks/use-user-profile";
 import { FormField } from "../auth/FormField";
+import {
+  LoadingComponent,
+  InlineLoading,
+  ProfileLoadingMessages,
+} from "@/components/ui/LoadingComponent";
 
 export function PersonalInfoTab() {
   const { userProfile, isLoading, isError, updateProfile, isPending } =
@@ -54,9 +59,13 @@ export function PersonalInfoTab() {
   // Handle loading state
   if (isLoading) {
     return (
-      <div className="bg-gray-50 rounded-lg flex items-center justify-center min-h-[400px]">
-        <Loader2 className="h-8 w-8 animate-spin text-green-600" />
-      </div>
+      <LoadingComponent
+        variant="centered"
+        size="lg"
+        animation="particles"
+        message={ProfileLoadingMessages.personalInfo}
+        className="bg-gray-50 rounded-lg min-h-[400px]"
+      />
     );
   }
 
@@ -137,7 +146,13 @@ export function PersonalInfoTab() {
             control={control}
             name="age"
             render={({ field, fieldState: { error } }) => (
-              <FormField label="العمر" type="number" error={error} {...field} required />
+              <FormField
+                label="العمر"
+                type="number"
+                error={error}
+                {...field}
+                required
+              />
             )}
           />
         </div>
@@ -149,10 +164,11 @@ export function PersonalInfoTab() {
             disabled={isPending}
           >
             {isPending ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                جاري الحفظ...
-              </>
+              <InlineLoading
+                message={ProfileLoadingMessages.saving}
+                animation="dots"
+                size="sm"
+              />
             ) : (
               "حفظ التعديلات"
             )}

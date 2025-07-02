@@ -7,6 +7,26 @@
 @theme inline {
   --color-green-primary: var(--primary);
   --color-green-hover: var(--primary-hover);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
 }
 
 :root {
@@ -29,6 +49,8 @@
   --background: #f8fafc;
   --foreground: #0f172a;
   --radius: 0.5rem;
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
 }
 
 input[type="number"] {
@@ -133,7 +155,6 @@ input[type="number"]::-webkit-inner-spin-button {
   height: 90px;
   animation: roadAnimation 1.4s linear infinite;
 }
-
 
 @keyframes roadAnimation {
   0% {

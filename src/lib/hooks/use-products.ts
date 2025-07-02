@@ -101,12 +101,13 @@ export function useFavoriteProductsCount() {
 }
 
 export function useOfferProducts() {
-  return useInfiniteQuery<ProductsResponse>({
+  return useInfiniteQuery({
     queryKey: productKeys.offers(),
     queryFn: async ({ pageParam = 1 }) => {
       // Pass the current page as pageParam
       return fetchOfferProducts({ page: pageParam as number });
     },
+    select: (data) => data.pages.flatMap((page) => page.products),
     getNextPageParam: (lastPage, allPages) => {
       // If there are products in the last page, there might be more
       if (lastPage.products.length === 0) {

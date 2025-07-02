@@ -10,6 +10,7 @@ import { useIntersectionObserver } from "usehooks-ts";
 import ProductCardGrid, {
   ProductCardGridSkeleton,
 } from "@/components/products/ProductCardGrid";
+import { InlineLoading } from "@/components/ui/LoadingComponent";
 
 export default function OffersPage() {
   const {
@@ -35,9 +36,7 @@ export default function OffersPage() {
   ]);
 
   const hasOffers = useMemo(
-    () =>
-      offerProducts?.pages.flatMap((page) => page.products).length &&
-      offerProducts?.pages.flatMap((page) => page.products).length > 0,
+    () => offerProducts?.length && offerProducts?.length > 0,
     [offerProducts]
   );
 
@@ -65,11 +64,9 @@ export default function OffersPage() {
       ) : hasOffers ? (
         <>
           <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-4">
-            {offerProducts?.pages
-              .flatMap((page) => page.products)
-              .map((product) => (
-                <ProductCardGrid key={product.id} product={product} />
-              ))}
+            {offerProducts?.map((product) => (
+              <ProductCardGrid key={product.id} product={product} />
+            ))}
           </div>
 
           {/* Load more trigger element */}
@@ -78,7 +75,11 @@ export default function OffersPage() {
             className="h-10 flex items-center justify-center my-8"
           >
             {isFetchingNextPage && (
-              <div className="w-6 h-6 border-2 border-green-600 border-t-transparent rounded-full animate-spin"></div>
+              <InlineLoading
+                message="جاري تحميل المزيد..."
+                animation="pulse"
+                size="md"
+              />
             )}
           </div>
         </>

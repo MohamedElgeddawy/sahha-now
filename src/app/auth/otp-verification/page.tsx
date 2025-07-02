@@ -64,7 +64,7 @@ const OTPInput = memo(({ control }: { control: any }) => {
           transition={{ duration: 0.3 }}
         >
           <InputOTP maxLength={6} {...field}>
-            <InputOTPGroup className="gap-3">
+            <InputOTPGroup className="gap-2 sm:gap-3">
               {Array.from({ length: 6 }).map((_, index) => (
                 <AnimatedOTPSlot
                   initial={{ opacity: 0, scale: 0.8 }}
@@ -80,13 +80,14 @@ const OTPInput = memo(({ control }: { control: any }) => {
                   }}
                   key={index}
                   index={index}
+                  className="w-12 h-12 sm:w-14 sm:h-14 text-lg sm:text-xl font-semibold"
                 />
               ))}
             </InputOTPGroup>
           </InputOTP>
           {error && (
             <motion.span
-              className="text-sm text-red-500"
+              className="text-xs sm:text-sm text-red-500 text-center px-2"
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ type: "spring", stiffness: 300, damping: 15 }}
@@ -107,15 +108,15 @@ const ResendTimer = memo(
   ({ count, onResend }: { count: number; onResend: () => void }) => {
     return (
       <motion.div
-        className="text-center text-sm text-gray-500 mb-6"
+        className="text-center text-xs sm:text-sm text-gray-500 mb-4 sm:mb-6 px-4"
         variants={itemVariants}
       >
-        لم يصلك الرمز؟{" "}
+        <span className="block sm:inline">لم يصلك الرمز؟</span>{" "}
         <motion.button
           type="button"
           onClick={onResend}
           disabled={count > 0}
-          className={`font-medium ${
+          className={`font-medium block sm:inline mt-1 sm:mt-0 ${
             count > 0
               ? "text-gray-400"
               : "text-green-600 hover:text-green-700 hover:underline"
@@ -216,7 +217,7 @@ export default function OTPVerificationPage() {
     >
       <motion.form
         onSubmit={handleSubmit(onSubmit)}
-        className="space-y-6"
+        className="space-y-4 sm:space-y-6 px-4 sm:px-0"
         initial="hidden"
         animate="visible"
         exit="exit"
@@ -224,7 +225,7 @@ export default function OTPVerificationPage() {
       >
         {/* OTP inputs */}
         <motion.div
-          className="flex justify-center gap-3 mb-8"
+          className="flex justify-center mb-6 sm:mb-8"
           variants={itemVariants}
         >
           <OTPInput control={control} />
@@ -235,7 +236,7 @@ export default function OTPVerificationPage() {
 
         <Button
           type="submit"
-          className="w-full h-12 bg-green-600 hover:bg-green-700 text-white rounded-lg text-base font-semibold"
+          className="w-full h-11 sm:h-12 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm sm:text-base font-semibold mt-6 sm:mt-8"
           disabled={isSubmitting}
         >
           {isSubmitting ? "جاري التحقق..." : "تحقق وأكمل التسجيل"}

@@ -3,17 +3,17 @@
 import HeroSection from "@/components/HeroSection";
 import ProductCarousel from "@/components/products/ProductCarousel";
 import BrandCarousel from "@/components/products/BrandCarousel";
-import { useProducts } from "@/lib/hooks/use-products";
+import { useOfferProducts } from "@/lib/hooks/use-products";
 
 export default function HomePage() {
-  const { data, isLoading } = useProducts();
+  const { data: products, isLoading } = useOfferProducts();
 
   return (
     <main className="flex-1 flex flex-col">
       <HeroSection />
       <ProductCarousel
         title="لا تفوت عروض هذا الأسبوع"
-        products={data?.products || []}
+        products={products || []}
         isLoading={isLoading}
       />
       <BrandCarousel />
