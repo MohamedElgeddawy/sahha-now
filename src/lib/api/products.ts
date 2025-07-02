@@ -27,7 +27,7 @@ export interface Product {
     name: string;
     arabicName: string;
     isBestBrand: boolean;
-    logoUrl: string | null;
+    logoUrl: string;
     logoKey: string | null;
     logoFileName: string | null;
   };
@@ -103,6 +103,7 @@ export interface FiltersMetadata {
     name: string;
     arabicName: string;
     productCount: number;
+    logoUrl: string;
   }[];
   ratings: {
     rating: number;

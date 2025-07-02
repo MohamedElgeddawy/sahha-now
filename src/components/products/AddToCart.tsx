@@ -30,16 +30,16 @@ const AddToCart = ({
 
   return (
     <motion.button
-      className={`bg-green-500 rounded-full cursor-pointer hover:bg-green-600 p-2 shadow-sm ${className}`}
+      className={`bg-green-500 rounded-full cursor-pointer hover:bg-green-600 p-1.5 md:p-2 shadow-sm ${className}`}
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.9 }}
       onClick={handleAddToCart}
       aria-label="إضافة إلى السلة"
     >
       {addToCart.isPending ? (
-        <Loader2 className="w-5 h-5 text-white animate-spin" />
+        <Loader2 className="w-4 h-4 md:w-5 md:h-5 text-white animate-spin" />
       ) : (
-        <ShoppingCart className="w-5 h-5 text-white" />
+        <ShoppingCart className="w-4 h-4 md:w-5 md:h-5 text-white" />
       )}
     </motion.button>
   );
