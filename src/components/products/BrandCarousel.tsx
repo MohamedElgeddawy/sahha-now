@@ -81,10 +81,22 @@ export default function BrandCarousel() {
                 className="pl-4 basis-1/2 sm:basis-1/2 md:basis-1/3 lg:basis-1/5"
               >
                 <div className="flex flex-col items-center bg-white rounded-2xl shadow-sm border border-gray-100 p-6 h-full min-h-[340px] justify-between">
-                  {/* Always show placeholder for now */}
-                  <div className="w-[120px] h-[120px] bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                    <span className="text-gray-400 text-4xl font-bold">?</span>
-                  </div>
+                  {brand.logoUrl ? (
+                    <Image
+                      src={brand.logoUrl}
+                      alt={brand.arabicName || brand.name}
+                      width={120}
+                      height={120}
+                      className="object-contain mb-4"
+                      
+                    />
+                  ) : (
+                    <div className="w-[120px] h-[120px] bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                      <span className="text-gray-400 text-4xl font-bold">
+                        ?
+                      </span>
+                    </div>
+                  )}
                   <span className="text-2xl font-bold text-[#2d3748] mt-2 text-center">
                     {brand.arabicName || brand.name}
                   </span>
@@ -95,9 +107,9 @@ export default function BrandCarousel() {
         </Carousel>
       </div>
       <Link href="/products">
-      <Button className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-8 rounded-lg text-lg mt-8">
-        تسوق الآن
-      </Button>
+        <Button className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-8 rounded-lg text-lg mt-8">
+          تسوق الآن
+        </Button>
       </Link>
     </div>
   );
