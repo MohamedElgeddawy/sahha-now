@@ -1,14 +1,13 @@
 import { OrderDetails } from "@/components/account/OrderDetails";
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
+import { use } from "react";
 
 interface OrderDetailsPageProps {
-  params: {
-    orderId: string;
-  };
+  params: Promise<{ orderId: string }>;
 }
 
 export default function OrderDetailsPage({ params }: OrderDetailsPageProps) {
-  const { orderId } = params;
+  const { orderId } = use(params);
 
   return (
     <>
