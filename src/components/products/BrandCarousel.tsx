@@ -10,6 +10,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 export default function BrandCarousel() {
   const { data, isLoading } = useFiltersMetadata();
@@ -93,9 +94,11 @@ export default function BrandCarousel() {
           </CarouselContent>
         </Carousel>
       </div>
+      <Link href="/products">
       <Button className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-8 rounded-lg text-lg mt-8">
         تسوق الآن
       </Button>
+      </Link>
     </div>
   );
 }
