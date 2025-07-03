@@ -116,7 +116,7 @@ const ProductCardList = ({
           </Link>
 
           {/* Action buttons overlay - Responsive for tablet and mobile */}
-          <div className="absolute top-2 right-2 flex flex-col gap-1.5 sm:gap-2 z-10 md:hidden">
+          <div className="absolute top-2 right-2 items-center flex flex-col gap-1.5 sm:gap-2 z-10 md:hidden">
             <FavoriteButton
               productId={product.id!}
               isFavourite={product?.isFavourite || isFavorite}
