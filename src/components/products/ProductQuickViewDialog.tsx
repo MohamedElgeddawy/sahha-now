@@ -1,6 +1,8 @@
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import ProductQuickView from "./ProductQuickView";
 import { Product } from "@/lib/api/products";
+import { useIsClient, useMediaQuery } from "usehooks-ts";
+import { Drawer, DrawerContent } from "../ui/drawer";
 
 interface ProductQuickViewDialogProps {
   product: Product | null;
@@ -13,6 +15,21 @@ export default function ProductQuickViewDialog({
   open,
   onOpenChange,
 }: ProductQuickViewDialogProps) {
+  const isMobile = useMediaQuery("(max-width: 768px)");
+  const isClient = useIsClient();
+
+  if (isMobile && isClient) {
+    return (
+      <Drawer direction="bottom" open={open} onOpenChange={onOpenChange}>
+        <DrawerContent className="h-[80vh]">
+          <div className="overflow-y-auto">
+            {product && <ProductQuickView product={product} />}
+          </div>
+        </DrawerContent>
+      </Drawer>
+    );
+  }
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
