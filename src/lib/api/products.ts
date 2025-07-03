@@ -116,6 +116,27 @@ export interface CategoryResponse {
   total: number;
 }
 
+export interface Brand {
+  id: string;
+  name: string;
+  arabicName: string;
+  productCount?: number;
+  logoUrl: string;
+  isBestBrand?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+  logoKey?: string | null;
+  logoFileName?: string | null;
+}
+
+export interface BrandsResponse {
+  brands: Brand[];
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}
+
 export async function fetchProducts(
   filters: ProductFilters = {}
 ): Promise<ProductsResponse> {
@@ -212,3 +233,23 @@ export const fetchFiltersMetadata = async (): Promise<FiltersMetadata> => {
     };
   }
 };
+
+export async function fetchBrands(
+  params: { page?: number; limit?: number } = {}
+): Promise<BrandsResponse> {
+  try {
+    const response = await sahhaInstance.get<BrandsResponse>("/brands", {
+      params,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching brands:", error);
+    return {
+      brands: [],
+      page: 1,
+      limit: params.limit || 10,
+      total: 0,
+      totalPages: 1,
+    };
+  }
+}

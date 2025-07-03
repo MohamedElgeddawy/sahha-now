@@ -50,6 +50,20 @@ function DrawerContent({
   children,
   ...props
 }: React.ComponentProps<typeof DrawerPrimitive.Content>) {
+  // Determine animation class based on direction
+  // Vaul sets data-vaul-drawer-direction on the content
+  const getAnimationClass = (props: any) => {
+    if (props["data-vaul-drawer-direction"] === "top")
+      return "data-[state=open]:drawer-slide-in-top data-[state=closed]:drawer-slide-out-top";
+    if (props["data-vaul-drawer-direction"] === "bottom")
+      return "data-[state=open]:drawer-slide-in-bottom data-[state=closed]:drawer-slide-out-bottom";
+    if (props["data-vaul-drawer-direction"] === "left")
+      return "data-[state=open]:drawer-slide-in-left data-[state=closed]:drawer-slide-out-left";
+    if (props["data-vaul-drawer-direction"] === "right")
+      return "data-[state=open]:drawer-slide-in-right data-[state=closed]:drawer-slide-out-right";
+    return "";
+  };
+
   return (
     <DrawerPortal data-slot="drawer-portal">
       <DrawerOverlay />
@@ -61,6 +75,7 @@ function DrawerContent({
           "data-[vaul-drawer-direction=bottom]:inset-x-0 data-[vaul-drawer-direction=bottom]:bottom-0 data-[vaul-drawer-direction=bottom]:mt-24 data-[vaul-drawer-direction=bottom]:max-h-[80vh] data-[vaul-drawer-direction=bottom]:rounded-t-lg data-[vaul-drawer-direction=bottom]:border-t",
           "data-[vaul-drawer-direction=right]:inset-y-0 data-[vaul-drawer-direction=right]:right-0 data-[vaul-drawer-direction=right]:w-3/4 data-[vaul-drawer-direction=right]:border-l data-[vaul-drawer-direction=right]:sm:max-w-sm",
           "data-[vaul-drawer-direction=left]:inset-y-0 data-[vaul-drawer-direction=left]:left-0 data-[vaul-drawer-direction=left]:w-3/4 data-[vaul-drawer-direction=left]:border-r data-[vaul-drawer-direction=left]:sm:max-w-sm",
+          getAnimationClass(props),
           className
         )}
         {...props}

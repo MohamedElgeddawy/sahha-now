@@ -1,15 +1,13 @@
 import React, { useRef, useState } from "react";
-import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
-import { Heart, Eye, ShoppingCart, Star } from "lucide-react";
+import { Eye, Star } from "lucide-react";
 import Image from "next/image";
 import { Product } from "@/lib/api/products";
 import Link from "next/link";
-import { useHover } from "usehooks-ts";
-import { motion, AnimatePresence } from "motion/react";
-import ProductQuickView from "./ProductQuickView";
+import { motion } from "motion/react";
 import FavoriteButton from "./FavoriteButton";
 import AddToCart from "./AddToCart";
+import ProductQuickViewDialog from "./ProductQuickViewDialog";
 
 type Props = {
   product: Partial<Product>;
@@ -34,9 +32,7 @@ export const ProductCardGridSkeleton = () => {
 
 const ProductCardGrid = ({ product, isLoading = false }: Props) => {
   const cardRef = useRef<HTMLDivElement>(null);
-  const isHovering = useHover<HTMLDivElement>(
-    cardRef as React.RefObject<HTMLDivElement>
-  );
+
   const [showQuickView, setShowQuickView] = useState(false);
 
   // Render skeleton UI when loading
@@ -48,7 +44,7 @@ const ProductCardGrid = ({ product, isLoading = false }: Props) => {
     <>
       <motion.div
         ref={cardRef}
-        className="group relative block bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden h-full lg:h-[488px] flex flex-col"
+        className="group relative bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden h-full lg:h-[488px] flex flex-col"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
@@ -74,7 +70,7 @@ const ProductCardGrid = ({ product, isLoading = false }: Props) => {
           {/* Right Side Action Buttons - Always Visible on Mobile, Hover on Desktop */}
           <div
             className={cn(
-              "absolute top-2 right-2 sm:top-3 sm:right-3 flex flex-col gap-3 z-20 transition-opacity duration-200",
+              "absolute top-2 right-2  sm:top-3 sm:right-3 flex flex-col items-center gap-3 z-20 transition-opacity duration-200",
               "opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
             )}
           >
@@ -84,11 +80,11 @@ const ProductCardGrid = ({ product, isLoading = false }: Props) => {
               className="bg-white rounded-full p-2 sm:p-2.5 shadow-md border border-gray-100 hover:shadow-lg transition-all"
             />
             <motion.button
-              className="bg-white rounded-full p-2 sm:p-2.5 shadow-md border border-gray-100 hover:shadow-lg transition-all"
+              className="bg-white cursor-pointer rounded-full p-2 sm:p-2.5 shadow-md border border-gray-100 hover:shadow-lg transition-all"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={(e) => {
-                e.preventDefault();
+                e.stopPropagation();
                 setShowQuickView(true);
               }}
             >
@@ -214,14 +210,12 @@ const ProductCardGrid = ({ product, isLoading = false }: Props) => {
         </div>
       </motion.div>
 
-      {/* Product Quick View Modal */}
-      {showQuickView && (
-        <ProductQuickView
-          product={product as Product}
-          isOpen={showQuickView}
-          onClose={() => setShowQuickView(false)}
-        />
-      )}
+      {/* Quick View Dialog */}
+      <ProductQuickViewDialog
+        product={product as Product}
+        open={showQuickView}
+        onOpenChange={setShowQuickView}
+      />
     </>
   );
 };

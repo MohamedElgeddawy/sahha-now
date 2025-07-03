@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import ProductCardGrid from "./ProductCardGrid";
 import type { Product } from "@/lib/api/products";
+import { motion } from "motion/react";
 
 interface ProductCarouselProps {
   title?: string;
@@ -18,6 +19,7 @@ interface ProductCarouselProps {
   className?: string;
   isLoading?: boolean;
 }
+const AnimatedBrandCard = motion.create(CarouselItem);
 
 export default function ProductCarousel({
   title = "اكتشف منتجات أخرى قد تهمك",
@@ -103,14 +105,27 @@ export default function ProductCarousel({
       >
         <CarouselContent className="-ml-2 sm:-ml-3 md:-ml-4 lg:-ml-6">
           {displayProducts?.map((product) => (
-            <CarouselItem
+            <AnimatedBrandCard
+              initial={{ y: -40, scale: 0.8, opacity: 0 }}
+              animate={{ y: 0, scale: 1, opacity: 1 }}
+              transition={{
+                type: "spring",
+                stiffness: 120,
+                damping: 14,
+              }}
+              whileHover={{
+                scale: 1.05,
+                transition: {
+                  type: "spring",
+                  stiffness: 120,
+                  damping: 14,
+                },
+              }}
               key={product.id}
               className="pl-2 sm:pl-3 md:pl-4 lg:pl-6 basis-1/2 sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/4"
             >
-              <div className="w-full h-auto lg:w-[288px] lg:h-[488px] lg:min-h-[488px] flex flex-col">
-                <ProductCardGrid product={product} isLoading={isLoading} />
-              </div>
-            </CarouselItem>
+              <ProductCardGrid product={product} isLoading={isLoading} />
+            </AnimatedBrandCard>
           ))}
         </CarouselContent>
       </Carousel>

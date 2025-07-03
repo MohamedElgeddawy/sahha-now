@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { Heart, Share2, HeartIcon, Loader2 } from "lucide-react";
+import { Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Product } from "@/lib/api/products";
-import ProductQuickView from "./ProductQuickView";
 import FavoriteButton from "./FavoriteButton";
+import ProductQuickViewDialog from "./ProductQuickViewDialog";
 
 interface ProductGalleryProps {
   images: Product["media"] | [];
@@ -91,10 +91,10 @@ export function ProductGallery({
           ) : null}
         </div>
       </div>
-      <ProductQuickView
+      <ProductQuickViewDialog
         product={product}
-        isOpen={showQuickView}
-        onClose={() => setShowQuickView(false)}
+        open={showQuickView}
+        onOpenChange={setShowQuickView}
       />
     </>
   );

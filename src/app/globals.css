@@ -164,3 +164,250 @@ input[type="number"]::-webkit-inner-spin-button {
     transform: translateX(-350px);
   }
 }
+
+/* Enhanced Dialog Animations */
+@keyframes dialog-overlay-fade-in {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(4px);
+  }
+}
+
+@keyframes dialog-overlay-fade-out {
+  from {
+    opacity: 1;
+    backdrop-filter: blur(4px);
+  }
+  to {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+}
+
+@keyframes dialog-content-slide-in {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes dialog-content-slide-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
+@keyframes dialog-content-bounce-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes dialog-content-bounce-out {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+}
+
+/* Dialog Animation Classes */
+@utility dialog-overlay-enter {
+  animation: dialog-overlay-fade-in 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-animation: dialog-overlay-fade-in 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@utility dialog-overlay-exit {
+  animation: dialog-overlay-fade-out 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-animation: dialog-overlay-fade-out 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@utility dialog-content-enter {
+  animation: dialog-content-bounce-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  -webkit-animation: dialog-content-bounce-in 0.4s
+    cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@utility dialog-content-exit {
+  animation: dialog-content-bounce-out 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-animation: dialog-content-bounce-out 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@utility dialog-content-slide-enter {
+  animation: dialog-content-slide-in 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-animation: dialog-content-slide-in 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@utility dialog-content-slide-exit {
+  animation: dialog-content-slide-out 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-animation: dialog-content-slide-out 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --- Select & Dropdown Popover Animations --- */
+@keyframes popover-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes popover-fade-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+@utility popover-enter {
+  animation: popover-fade-in 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-animation: popover-fade-in 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+@utility popover-exit {
+  animation: popover-fade-out 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-animation: popover-fade-out 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --- Drawer Animations --- */
+@keyframes drawer-slide-in-bottom {
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes drawer-slide-out-bottom {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+}
+@keyframes drawer-slide-in-top {
+  from {
+    opacity: 0;
+    transform: translateY(-32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes drawer-slide-out-top {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-32px);
+  }
+}
+@keyframes drawer-slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-48px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@keyframes drawer-slide-out-left {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-48px);
+  }
+}
+@keyframes drawer-slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(48px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@keyframes drawer-slide-out-right {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(48px);
+  }
+}
+@utility drawer-slide-in-bottom {
+  animation: drawer-slide-in-bottom 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-animation: drawer-slide-in-bottom 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+}
+@utility drawer-slide-out-bottom {
+  animation: drawer-slide-out-bottom 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-animation: drawer-slide-out-bottom 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+@utility drawer-slide-in-top {
+  animation: drawer-slide-in-top 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-animation: drawer-slide-in-top 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+}
+@utility drawer-slide-out-top {
+  animation: drawer-slide-out-top 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-animation: drawer-slide-out-top 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+@utility drawer-slide-in-left {
+  animation: drawer-slide-in-left 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-animation: drawer-slide-in-left 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+}
+@utility drawer-slide-out-left {
+  animation: drawer-slide-out-left 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-animation: drawer-slide-out-left 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+@utility drawer-slide-in-right {
+  animation: drawer-slide-in-right 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-animation: drawer-slide-in-right 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+}
+@utility drawer-slide-out-right {
+  animation: drawer-slide-out-right 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-animation: drawer-slide-out-right 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}

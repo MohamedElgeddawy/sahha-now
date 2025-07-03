@@ -13,6 +13,9 @@ import {
   fetchFiltersMetadata,
   FiltersMetadata,
   FavoriteProductsResponse,
+  fetchBrands,
+  Brand,
+  BrandsResponse,
 } from "../api/products";
 import { useAppSelector } from "../redux/hooks";
 import { selectIsAuthenticated } from "../redux/slices/authSlice";
@@ -130,5 +133,21 @@ export function useFiltersMetadata() {
   return useQuery<FiltersMetadata>({
     queryKey: productKeys.filtersMetadata,
     queryFn: fetchFiltersMetadata,
+  });
+}
+
+export function useInfiniteBrands(limit: number = 10) {
+  return useInfiniteQuery({
+    queryKey: ["brands", "infinite", limit],
+    queryFn: async ({ pageParam = 1 }) =>
+      fetchBrands({ page: pageParam as number, limit }),
+    select: (data) => data.pages.flatMap((page) => page.brands),
+    getNextPageParam: (lastPage, allPages) => {
+      if (lastPage.page < lastPage.totalPages) {
+        return lastPage.page + 1;
+      }
+      return undefined;
+    },
+    initialPageParam: 1,
   });
 }
