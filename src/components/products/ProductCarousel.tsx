@@ -97,16 +97,19 @@ export default function ProductCarousel({
         opts={{
           align: "start",
           direction: "rtl",
+          slidesToScroll: 1,
         }}
         className="w-full"
       >
-        <CarouselContent className="-ml-4">
+        <CarouselContent className="-ml-2 sm:-ml-3 md:-ml-4 lg:-ml-6">
           {displayProducts?.map((product) => (
             <CarouselItem
               key={product.id}
-              className="pl-4 basis-1/2 sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
+              className="pl-2 sm:pl-3 md:pl-4 lg:pl-6 basis-1/2 sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/4"
             >
-              <ProductCardGrid product={product} isLoading={isLoading} />
+              <div className="w-full h-auto lg:w-[348px] lg:h-[488px] lg:min-h-[488px] flex flex-col">
+                <ProductCardGrid product={product} isLoading={isLoading} />
+              </div>
             </CarouselItem>
           ))}
         </CarouselContent>

@@ -77,7 +77,7 @@ const ProductCardList = ({
       }}
     >
       {/* Clean layout - Simple for mobile, Enhanced design for desktop */}
-      <div className="flex flex-row p-3 sm:p-4 md:p-6 lg:p-8">
+      <div className="flex flex-row p-2 sm:p-3 md:p-4 lg:p-4 gap-8 sm:gap-0">
         {/* Product Image */}
         <div className="w-[140px] sm:w-[160px] md:w-[200px] lg:w-[240px] h-[140px] sm:h-[160px] md:h-[200px] lg:h-[240px] relative flex-shrink-0">
           <Link href={`/products/${product.id}`}>
@@ -142,13 +142,14 @@ const ProductCardList = ({
         <div className="flex-1 px-3 sm:px-4 md:px-6 lg:px-8 flex flex-col justify-between">
           <div className="space-y-2 md:space-y-3 lg:space-y-4">
             {/* Product Title - Enhanced typography for desktop */}
+
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
             >
               <Link href={`/products/${product.id}`}>
-                <h3 className="text-gray-900 font-bold text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl leading-tight rtl:text-right line-clamp-2 hover:text-gray-700 transition-colors">
+                <h3 className="text-gray-900 text-sm sm:text-lg md:text-xl lg:text-2xl xl:text-3xl leading-tight rtl:text-right line-clamp-2 hover:text-gray-700 transition-colors">
                   {productName}
                 </h3>
               </Link>
@@ -160,7 +161,7 @@ const ProductCardList = ({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.25 }}
-                className="text-sm md:text-base lg:text-lg text-gray-600 font-medium rtl:text-right"
+                className="text-sm md:text-base lg:text-lg text-gray-400 font-medium rtl:text-right"
               >
                 {brandName}
               </motion.div>
@@ -192,7 +193,7 @@ const ProductCardList = ({
               )}
             </motion.div>
 
-            {/* Rating - Show on all screens */}
+            {/* Rating - desktop */}
             {rating > 0 && (
               <motion.div
                 className="hidden md:flex items-center gap-1"
@@ -218,7 +219,7 @@ const ProductCardList = ({
             )}
           </div>
 
-          {/* Buy Button - Enhanced design for desktop (Mobile/Tablet only) */}
+          {/* Buy Button - Enhanced design Mobile/Tablet only) */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -227,7 +228,8 @@ const ProductCardList = ({
           >
             <Link
               href={`/products/${product.id}`}
-              className="inline-block py-2 sm:py-2.5 md:py-3 px-4 sm:px-6 md:px-8 bg-gradient-to-r from-[#FF9B07] to-[#F08C00] text-white rounded-lg hover:from-[#F08C00] hover:to-[#E07B00] transition-all duration-300 font-bold text-sm md:text-base shadow-sm hover:shadow-md transform hover:scale-105"
+              className="inline-block w-40 py-2 sm:py-2.5 md:py-3 px-4 sm:px-6 md:px-8 bg-gradient-to-r from-[#FF9B07] to-[#D35400] text-white text-center rounded-lg hover:from-[#F08C00] hover:to-[#E07B00] transition-all duration-300 font-bold text-sm md:text-base shadow-sm hover:shadow-md transform hover:scale-105"
+            
             >
               اشتري الآن
             </Link>
@@ -235,10 +237,10 @@ const ProductCardList = ({
         </div>
 
         {/* Desktop Right Section - Action Icons, Counter & Buy Button */}
-        <div className="hidden lg:flex flex-col justify-between items-end min-w-[160px] xl:min-w-[180px]">
+        <div className="hidden lg:flex flex-col justify-between items-end min-w-[180px] xl:min-w-[200px]">
           {/* Top - Action Icons */}
           <motion.div
-            className="flex items-center gap-2"
+            className="flex items-center gap-4"
             initial={{ opacity: 0, x: 10 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
@@ -263,9 +265,7 @@ const ProductCardList = ({
             />
           </motion.div>
 
-        
-
-{/* Bottom - Counter and Buy Button */}
+          {/* Bottom - Counter and Buy Button */}
           <motion.div
             className="flex items-center gap-3"
             initial={{ opacity: 0, y: 10 }}
@@ -280,12 +280,12 @@ const ProductCardList = ({
             />
             <Link
               href={`/products/${product.id}`}
-              className="py-3 px-6 bg-gradient-to-r from-[#FF9B07] to-[#F08C00] text-white rounded-lg hover:from-[#F08C00] hover:to-[#E07B00] transition-all duration-300 font-bold text-sm shadow-md hover:shadow-lg transform hover:scale-105"
+              className="w-64 h-12 flex items-center justify-center gap-2 bg-gradient-to-r from-[#FF9B07] to-[#F08C00] text-white rounded-lg hover:from-[#F08C00] hover:to-[#E07B00] transition-all duration-300 font-bold text-sm shadow-md hover:shadow-lg transform hover:scale-105 p-4"
             >
               اشتري الآن
             </Link>
           </motion.div>
-          </div>
+        </div>
       </div>
     </motion.div>
   );
