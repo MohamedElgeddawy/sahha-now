@@ -91,7 +91,7 @@ export default function RegisterPage() {
   };
 
   const socialLoginSection = (
-    <>
+    <div className="hidden md:block">
       <motion.div
         className="text-center"
         initial="hidden"
@@ -113,7 +113,7 @@ export default function RegisterPage() {
         </motion.div>
       </motion.div>
       <AuthSeparator />
-    </>
+    </div>
   );
 
   return (
