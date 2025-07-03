@@ -10,7 +10,7 @@ import VitaminIcon from "../../public/icons/home/vitamin.svg";
 import MedicineIcon from "../../public/icons/home/medicine.svg";
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { Star } from "lucide-react";
 import Link from "next/link";
 import { useCategories } from "@/lib/hooks/use-products";

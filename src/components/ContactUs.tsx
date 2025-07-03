@@ -5,7 +5,7 @@ import { Textarea } from "./ui/textarea";
 import Image from "next/image";
 import { Mail, Phone, Clock, MapPin, Send, Loader2 } from "lucide-react";
 import { FormField } from "./auth/FormField";
-import { motion } from "framer-motion"; // Assuming you meant framer-motion, not motion/react
+import { motion } from "motion/react";
 import { z } from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";

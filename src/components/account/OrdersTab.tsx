@@ -84,7 +84,6 @@ export function OrdersTab() {
 
   const orders = ordersData?.orders || [];
   const totalPages = ordersData?.totalPages || 1;
-  const total = ordersData?.total || 0;
 
   // Loading state
   if (isLoading) {
@@ -195,7 +194,7 @@ export function OrdersTab() {
                     <TableCell className="text-start">
                       <Link
                         className="text-red-500 text-sm font-medium hover:underline"
-                        href={`/account/${order.id}`}
+                        href={`/account/orders/${order.id}`}
                       >
                         عرض التفاصيل
                       </Link>
@@ -208,66 +207,54 @@ export function OrdersTab() {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="p-4 border-t">
-              <div className="flex items-center justify-between text-sm text-gray-600 mb-4">
-                <span>
-                  عرض {(currentPage - 1) * limit + 1} إلى{" "}
-                  {Math.min(currentPage * limit, total)} من {total} طلب
-                </span>
-                <span>
-                  صفحة {currentPage} من {totalPages}
-                </span>
-              </div>
-
-              <Pagination>
-                <PaginationContent>
-                  <PaginationItem>
-                    <PaginationPrevious
-                      onClick={() => {
-                        if (currentPage > 1) {
-                          setCurrentPage(currentPage - 1);
-                        }
-                      }}
-                      className={
-                        currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    onClick={() => {
+                      if (currentPage > 1) {
+                        setCurrentPage(currentPage - 1);
                       }
-                    />
+                    }}
+                    className={
+                      currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
+                    }
+                  />
+                </PaginationItem>
+
+                {generatePageNumbers().map((page, index) => (
+                  <PaginationItem key={index}>
+                    {page === "ellipsis" ? (
+                      <PaginationEllipsis />
+                    ) : (
+                      <PaginationLink
+                        isActive={page === currentPage}
+                        onClick={() => {
+                          setCurrentPage(page as number);
+                        }}
+                      >
+                        {page}
+                      </PaginationLink>
+                    )}
                   </PaginationItem>
+                ))}
 
-                  {generatePageNumbers().map((page, index) => (
-                    <PaginationItem key={index}>
-                      {page === "ellipsis" ? (
-                        <PaginationEllipsis />
-                      ) : (
-                        <PaginationLink
-                          isActive={page === currentPage}
-                          onClick={() => {
-                            setCurrentPage(page as number);
-                          }}
-                        >
-                          {page}
-                        </PaginationLink>
-                      )}
-                    </PaginationItem>
-                  ))}
-
-                  <PaginationItem>
-                    <PaginationNext
-                      onClick={() => {
-                        if (currentPage < totalPages) {
-                          setCurrentPage(currentPage + 1);
-                        }
-                      }}
-                      className={
-                        currentPage === totalPages
-                          ? "opacity-50 cursor-not-allowed"
-                          : ""
+                <PaginationItem>
+                  <PaginationNext
+                    onClick={() => {
+                      if (currentPage < totalPages) {
+                        setCurrentPage(currentPage + 1);
                       }
-                    />
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>
-            </div>
+                    }}
+                    className={
+                      currentPage === totalPages
+                        ? "opacity-50 cursor-not-allowed"
+                        : ""
+                    }
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
           )}
         </>
       ) : (

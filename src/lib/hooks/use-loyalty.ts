@@ -41,8 +41,7 @@ export function useRedeemPoints() {
       toast.success("تم استبدال النقاط بنجاح!");
     },
     onError: (error: any) => {
-      const errorMessage =
-        error?.response?.data?.message || "حدث خطأ أثناء استبدال النقاط";
+      const errorMessage = "حدث خطأ أثناء استبدال النقاط";
       toast.error(errorMessage);
     },
   });

@@ -13,6 +13,7 @@ import {
 import {
   Pagination,
   PaginationContent,
+  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
@@ -23,34 +24,35 @@ import { Button } from "../ui/button";
 import {
   useLoyaltyTransactions,
   useLoyaltyBalance,
-  useRedeemPoints,
 } from "@/lib/hooks/use-loyalty";
 import {
   CardLoading,
-  InlineLoading,
   ProfileLoadingMessages,
 } from "@/components/ui/LoadingComponent";
 import { LoyaltyTransaction } from "@/lib/api/loyalty";
-import { Loader2 } from "lucide-react";
+import { RedeemPointsModal } from "./RedeemPointsModal";
+import { RedeemSuccessModal } from "./RedeemSuccessModal";
+import { useRouter } from "next/navigation";
 
 // Transaction type mapping from English to Arabic
 const transactionTypeMap: Record<string, string> = {
-  earned: "نقاط متاحة",
-  spent: "نقاط مستهلكة",
-  bonus: "نقاط مكافأة",
-  refund: "نقاط مسترجعة",
-  expired: "نقاط منتهية الصلاحية",
-  adjustment: "تعديل نقاط",
+  PURCHASE_AWARD: "نقاط من المشتريات",
+  ADMIN_ADJUSTMENT_ADD: "إضافة نقاط إدارية",
+  ADMIN_ADJUSTMENT_DEDUCT: "خصم نقاط إدارية",
+  REDEMPTION_SPEND: "استهلاك نقاط",
+  BONUS_AWARD: "نقاط مكافأة",
+  REFUND_AWARD: "نقاط مسترجعة",
+  EXPIRED_DEDUCT: "نقاط منتهية الصلاحية",
 };
 
 // Status mapping from English to Arabic
 const statusMap: Record<string, string> = {
-  completed: "مكتملة",
-  pending: "قيد المعالجة",
-  approved: "مقبولة",
-  rejected: "مرفوضة",
-  expired: "منتهية الصلاحية",
-  cancelled: "ملغية",
+  DONE: "مكتملة",
+  PENDING: "قيد المعالجة",
+  APPROVED: "مقبولة",
+  REJECTED: "مرفوضة",
+  EXPIRED: "منتهية الصلاحية",
+  CANCELLED: "ملغية",
 };
 
 // Helper function to get badge variant based on status
@@ -87,18 +89,24 @@ const getBadgeVariant = (status: string) => {
 };
 
 // Helper function to get text color based on points
-const getPointsColor = (points: string) => {
-  return points.startsWith("+")
+const getPointsColor = (pointsChanged: number) => {
+  return pointsChanged > 0
     ? "text-green-600"
-    : points.startsWith("-")
+    : pointsChanged < 0
     ? "text-red-500"
     : "text-gray-700";
 };
 
 export function PointsTab() {
   const [currentPage, setCurrentPage] = useState(1);
+  const [showRedeemModal, setShowRedeemModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [lastRedemption, setLastRedemption] = useState<{
+    points: number;
+    amount: number;
+  } | null>(null);
   const limit = 10;
-
+  const router = useRouter();
   const {
     data: transactionsData,
     isLoading: transactionsLoading,
@@ -111,17 +119,15 @@ export function PointsTab() {
     isError: balanceError,
   } = useLoyaltyBalance();
 
-  const { mutate: redeemPoints, isPending: isRedeeming } = useRedeemPoints();
-
   // Loading state
-  if (transactionsLoading || balanceLoading) {
+  if (transactionsLoading) {
     return (
       <CardLoading message={ProfileLoadingMessages.points} animation="pulse" />
     );
   }
 
   // Error state
-  if (transactionsError || balanceError) {
+  if (transactionsError) {
     return (
       <div className="bg-white rounded-lg border border-gray-300 p-8">
         <div className="text-center">
@@ -137,9 +143,9 @@ export function PointsTab() {
     );
   }
 
-  const transactions = transactionsData?.data || [];
-  const pagination = transactionsData?.pagination;
-  const balance = transactionsData?.balance || balanceData;
+  const transactions = transactionsData?.transactions || [];
+  const pagination = transactionsData;
+  const balance = balanceData;
   const totalPages = pagination?.totalPages || 1;
 
   // Format date for Arabic locale
@@ -152,22 +158,65 @@ export function PointsTab() {
   };
 
   // Format points display
-  const formatPoints = (amount: number, type: string) => {
-    const prefix =
-      type === "earned" || type === "bonus" || type === "refund"
-        ? "+"
-        : type === "spent" || type === "expired"
-        ? "-"
-        : "";
-    return `${prefix}${Math.abs(amount)} نقطة`;
+  const formatPoints = (pointsChanged: number) => {
+    const prefix = pointsChanged > 0 ? "+" : "";
+    return `${prefix}${pointsChanged} نقطة`;
   };
 
-  // Handle redeem points
-  const handleRedeemPoints = () => {
-    if (balance?.currentPoints && balance.currentPoints >= 100) {
-      const pointsToRedeem = Math.floor(balance.currentPoints / 100) * 100; // Redeem in multiples of 100
-      redeemPoints(pointsToRedeem);
+  // Handle redeem points button click
+  const handleRedeemPointsClick = () => {
+    setShowRedeemModal(true);
+  };
+
+  // Handle successful redemption
+  const handleRedeemSuccess = (
+    redeemedPoints: number,
+    earnedAmount: number
+  ) => {
+    setLastRedemption({ points: redeemedPoints, amount: earnedAmount });
+    setShowRedeemModal(false);
+    setShowSuccessModal(true);
+  };
+
+  // Handle continue shopping
+  const handleContinueShopping = () => {
+    setShowSuccessModal(false);
+    router.push("/products");
+  };
+
+  const generatePageNumbers = () => {
+    const pages = [];
+    const maxVisiblePages = 5;
+
+    if (totalPages <= maxVisiblePages) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      if (currentPage <= 3) {
+        for (let i = 1; i <= 4; i++) {
+          pages.push(i);
+        }
+        pages.push("ellipsis");
+        pages.push(totalPages);
+      } else if (currentPage >= totalPages - 2) {
+        pages.push(1);
+        pages.push("ellipsis");
+        for (let i = totalPages - 3; i <= totalPages; i++) {
+          pages.push(i);
+        }
+      } else {
+        pages.push(1);
+        pages.push("ellipsis");
+        for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+          pages.push(i);
+        }
+        pages.push("ellipsis");
+        pages.push(totalPages);
+      }
     }
+
+    return pages;
   };
 
   return (
@@ -182,27 +231,15 @@ export function PointsTab() {
             <Button
               variant="link"
               className="text-amber-600 p-0 h-auto text-sm"
-              onClick={handleRedeemPoints}
-              disabled={
-                isRedeeming ||
-                !balance?.currentPoints ||
-                balance.currentPoints < 100
-              }
+              onClick={handleRedeemPointsClick}
+              disabled={!balance?.pointsBalance || balance.pointsBalance < 15}
             >
-              {isRedeeming ? (
-                <InlineLoading
-                  message="جاري الاستبدال..."
-                  animation="dots"
-                  size="sm"
-                />
-              ) : (
-                "استبدل نقاطك"
-              )}
+              استبدل نقاطك
             </Button>
           </div>
           <div className="flex items-end justify-between gap-2">
             <p className="font-medium text-gray-800">
-              {balance?.currentPoints?.toLocaleString() || 0} نقطة
+              {balance?.pointsBalance?.toLocaleString() || 0} نقطة
             </p>
             <Image src="/icons/gift.svg" alt="gift" width={32} height={32} />
           </div>
@@ -213,7 +250,7 @@ export function PointsTab() {
           </div>
           <div className="flex items-end justify-between gap-2">
             <p className="font-medium text-gray-800">
-              {balance?.walletBalance?.toFixed(2) || "0.00"} ر.س
+              {parseFloat(balance?.accountBalance || "0").toFixed(2)} ر.س
             </p>
             <Image
               src="/icons/wallet.svg"
@@ -252,14 +289,13 @@ export function PointsTab() {
               {transactions.map((transaction: LoyaltyTransaction) => (
                 <TableRow key={transaction.id}>
                   <TableCell className="font-medium">
-                    {transactionTypeMap[transaction.type] || transaction.type}
+                    {transactionTypeMap[transaction.transactionType] ||
+                      transaction.transactionType}
                   </TableCell>
                   <TableCell
-                    className={getPointsColor(
-                      formatPoints(transaction.amount, transaction.type)
-                    )}
+                    className={getPointsColor(transaction.pointsChanged)}
                   >
-                    {formatPoints(transaction.amount, transaction.type)}
+                    {formatPoints(transaction.pointsChanged)}
                   </TableCell>
                   <TableCell className="text-gray-600">
                     {formatDate(transaction.createdAt)}
@@ -281,7 +317,7 @@ export function PointsTab() {
                     </Badge>
                   </TableCell>
                   <TableCell className="text-gray-600">
-                    {transaction.source}
+                    {transaction.notes}
                   </TableCell>
                 </TableRow>
               ))}
@@ -291,75 +327,73 @@ export function PointsTab() {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-between px-6 py-4 bg-gray-50 border-t border-gray-300">
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <span>
-                الصفحة {currentPage} من {totalPages}
-              </span>
-            </div>
-
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious
-                    onClick={() => {
-                      if (currentPage > 1) {
-                        setCurrentPage(currentPage - 1);
-                      }
-                    }}
-                    className={
-                      currentPage <= 1
-                        ? "pointer-events-none opacity-50"
-                        : "cursor-pointer"
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={() => {
+                    if (currentPage > 1) {
+                      setCurrentPage(currentPage - 1);
                     }
-                  />
-                </PaginationItem>
-
-                {/* Page numbers */}
-                {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
-                  let page: number;
-                  if (totalPages <= 5) {
-                    page = i + 1;
-                  } else if (currentPage <= 3) {
-                    page = i + 1;
-                  } else if (currentPage >= totalPages - 2) {
-                    page = totalPages - 4 + i;
-                  } else {
-                    page = currentPage - 2 + i;
+                  }}
+                  className={
+                    currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
                   }
+                />
+              </PaginationItem>
 
-                  return (
-                    <PaginationItem key={page}>
-                      <PaginationLink
-                        isActive={page === currentPage}
-                        onClick={() => setCurrentPage(page)}
-                        className="cursor-pointer"
-                      >
-                        {page}
-                      </PaginationLink>
-                    </PaginationItem>
-                  );
-                })}
-
-                <PaginationItem>
-                  <PaginationNext
-                    onClick={() => {
-                      if (currentPage < totalPages) {
-                        setCurrentPage(currentPage + 1);
-                      }
-                    }}
-                    className={
-                      currentPage >= totalPages
-                        ? "pointer-events-none opacity-50"
-                        : "cursor-pointer"
-                    }
-                  />
+              {generatePageNumbers().map((page, index) => (
+                <PaginationItem key={index}>
+                  {page === "ellipsis" ? (
+                    <PaginationEllipsis />
+                  ) : (
+                    <PaginationLink
+                      isActive={page === currentPage}
+                      onClick={() => {
+                        setCurrentPage(page as number);
+                      }}
+                    >
+                      {page}
+                    </PaginationLink>
+                  )}
                 </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          </div>
+              ))}
+
+              <PaginationItem>
+                <PaginationNext
+                  onClick={() => {
+                    if (currentPage < totalPages) {
+                      setCurrentPage(currentPage + 1);
+                    }
+                  }}
+                  className={
+                    currentPage === totalPages
+                      ? "opacity-50 cursor-not-allowed"
+                      : ""
+                  }
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
         )}
       </div>
+
+      {/* Redeem Points Modal */}
+      <RedeemPointsModal
+        open={showRedeemModal}
+        onOpenChange={setShowRedeemModal}
+        onSuccess={handleRedeemSuccess}
+        availablePoints={balance?.pointsBalance || 0}
+      />
+
+      {/* Success Modal */}
+      <RedeemSuccessModal
+        open={showSuccessModal}
+        onOpenChange={setShowSuccessModal}
+        onContinueShopping={handleContinueShopping}
+        redeemedPoints={lastRedemption?.points}
+        earnedAmount={lastRedemption?.amount}
+      />
     </div>
   );
 }

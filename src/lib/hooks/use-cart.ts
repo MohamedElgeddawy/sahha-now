@@ -20,10 +20,7 @@ export const useCartItemsCount = () => {
         const { data } = await cartApi.getCartItemsCount();
         return data.count;
       } catch (error) {
-        const errorMessage =
-          error instanceof Error
-            ? error.message
-            : "Failed to fetch cart items count";
+        const errorMessage = "حدث خطأ أثناء جلب عدد العناصر في السلة";
         throw error;
       }
     },
@@ -58,8 +55,7 @@ export const useCart = () => {
         setLocalCart(data);
         return data;
       } catch (error) {
-        const errorMessage =
-          error instanceof Error ? error.message : "Failed to fetch cart";
+        const errorMessage = "حدث خطأ أثناء جلب السلة";
         throw error;
       }
     },
@@ -103,10 +99,7 @@ export const useCart = () => {
       toast.success("تمت الإضافة إلى السلة");
     },
     onError: (error) => {
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "حدث خطأ أثناء إضافة المنتج إلى السلة";
+      const errorMessage = "حدث خطأ أثناء إضافة المنتج إلى السلة";
       toast.error(errorMessage);
     },
   });
@@ -128,10 +121,7 @@ export const useCart = () => {
       queryClient.invalidateQueries({ queryKey: cartKeys.itemsCount() });
     },
     onError: (error) => {
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "Failed to remove item from cart";
+      const errorMessage = "حدث خطأ أثناء إزالة المنتج من السلة";
       toast.error(errorMessage);
     },
   });

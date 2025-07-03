@@ -6,7 +6,7 @@ interface OrderDetailsPageProps {
   params: Promise<{ orderId: string }>;
 }
 
-export default function OrderDetailsPage({ params }: OrderDetailsPageProps) {
+const OrderDetailsPage = ({ params }: OrderDetailsPageProps) => {
   const { orderId } = use(params);
 
   return (
@@ -21,4 +21,6 @@ export default function OrderDetailsPage({ params }: OrderDetailsPageProps) {
       <OrderDetails orderId={orderId} />
     </>
   );
-}
+};
+
+export default OrderDetailsPage;
