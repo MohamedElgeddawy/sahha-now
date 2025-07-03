@@ -107,7 +107,7 @@ export default function ProductCarousel({
               key={product.id}
               className="pl-2 sm:pl-3 md:pl-4 lg:pl-6 basis-1/2 sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/4"
             >
-              <div className="w-full h-auto lg:w-[348px] lg:h-[488px] lg:min-h-[488px] flex flex-col">
+              <div className="w-full h-auto lg:w-[288px] lg:h-[488px] lg:min-h-[488px] flex flex-col">
                 <ProductCardGrid product={product} isLoading={isLoading} />
               </div>
             </CarouselItem>
