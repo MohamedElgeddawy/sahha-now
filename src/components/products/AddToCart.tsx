@@ -5,6 +5,7 @@ import { cartKeys, useCart } from "@/lib/hooks/use-cart";
 import { Product, ProductVariant } from "@/lib/api/products";
 import { productKeys } from "@/lib/hooks/use-products";
 import { useQueryClient } from "@tanstack/react-query";
+import { cn } from "@/lib/utils";
 
 interface AddToCartProps {
   product: Product;
@@ -30,7 +31,10 @@ const AddToCart = ({
 
   return (
     <motion.button
-      className={`bg-green-500 rounded-full cursor-pointer hover:bg-green-600 p-1.5 md:p-2 shadow-sm ${className}`}
+      className={cn(
+        "bg-green-500 rounded-full cursor-pointer hover:bg-green-600 p-1.5 md:p-2 shadow-sm",
+        className
+      )}
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.9 }}
       onClick={handleAddToCart}

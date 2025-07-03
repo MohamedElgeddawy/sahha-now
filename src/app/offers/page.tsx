@@ -54,8 +54,8 @@ export default function OffersPage() {
       </h1>
 
       {offersLoading ? (
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-4">
-          {Array(3)
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {Array(4)
             .fill(null)
             .map((_, idx) => (
               <ProductCardGridSkeleton key={idx} />
@@ -63,7 +63,7 @@ export default function OffersPage() {
         </div>
       ) : hasOffers ? (
         <>
-          <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {offerProducts?.map((product) => (
               <ProductCardGrid key={product.id} product={product} />
             ))}
