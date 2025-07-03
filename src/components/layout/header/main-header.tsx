@@ -76,7 +76,7 @@ export function MainHeader() {
           >
             <ActionButton
               icon={<Gift className="size-5 md:size-6" />}
-              href="/gifts"
+              href="/account/points"
             />
             <ActionButton
               icon={<ShoppingCart className="size-5 md:size-6" />}

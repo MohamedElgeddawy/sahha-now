@@ -33,7 +33,7 @@ export default function ProductPage({
           { label: "المنتجات", href: "/products" },
           {
             label: product?.category?.arabicName || "",
-            href: `/category/${resolvedParams.id}`,
+            href: `/products?categoryIds=${product?.category?.id}`,
           },
           { label: product?.arabicName || "" },
         ]}

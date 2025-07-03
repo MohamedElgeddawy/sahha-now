@@ -19,6 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { toast } from "sonner";
 
 interface AccountLayoutProps {
   children: React.ReactNode;
@@ -35,7 +36,7 @@ const AccountLayout = ({ children }: AccountLayoutProps) => {
     if (!isAuthenticated) {
       router.push("/auth/login");
     }
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated]);
 
   const menuItems = [
     {
