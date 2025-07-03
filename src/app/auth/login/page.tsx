@@ -197,7 +197,7 @@ const SocialLoginSection = () => {
     console.log(`Logging in with ${provider}`);
   };
   return (
-    <>
+    <div className="hidden md:block">
       <motion.div
         className="text-center"
         initial="hidden"
@@ -219,6 +219,6 @@ const SocialLoginSection = () => {
         </motion.div>
       </motion.div>
       <AuthSeparator />
-    </>
+    </div>
   );
 };

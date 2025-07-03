@@ -81,7 +81,7 @@ const ProductCardGrid = ({ product, isLoading = false }: Props) => {
             <FavoriteButton
               productId={product.id!}
               isFavourite={product.isFavourite}
-              className="bg-white rounded-full p-2 sm:p-2.5 shadow-md border border-gray-100 hover:shadow-lg transition-all"
+              className="!bg-white !rounded-full !p-2 sm:!p-2.5 !shadow-md !border !border-gray-100 hover:!shadow-lg !transition-all"
             />
             <motion.button
               className="bg-white rounded-full p-2 sm:p-2.5 shadow-md border border-gray-100 hover:shadow-lg transition-all"
@@ -97,7 +97,7 @@ const ProductCardGrid = ({ product, isLoading = false }: Props) => {
             <AddToCart
               product={product as Product}
               quantity={1}
-              className="bg-green-500 hover:bg-green-600 active:bg-green-600 rounded-full p-2 sm:p-2.5 shadow-md transition-all"
+              className="!bg-green-500 hover:!bg-green-600 active:!bg-green-600 !text-white !rounded-full !p-2 sm:!p-2.5 !shadow-md !transition-all"
             />
           </div>
 
