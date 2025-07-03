@@ -33,6 +33,7 @@ import { LoyaltyTransaction } from "@/lib/api/loyalty";
 import { RedeemPointsModal } from "./RedeemPointsModal";
 import { RedeemSuccessModal } from "./RedeemSuccessModal";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 // Transaction type mapping from English to Arabic
 const transactionTypeMap: Record<string, string> = {
@@ -264,119 +265,145 @@ export function PointsTab() {
 
       <h3 className="text-lg font-semibold text-[#2C3E50] mb-6">جدول النقاط</h3>
 
-      {/* Points Table */}
-      <div className="rounded-lg overflow-x-auto border border-gray-300 mb-6">
-        <div>
-          <Table>
-            <TableHeader>
-              <TableRow className="bg-gray-50">
-                <TableHead className="font-bold text-gray-700">النوع</TableHead>
-                <TableHead className="font-bold text-gray-700">
-                  عدد النقاط
-                </TableHead>
-                <TableHead className="font-bold text-gray-700">
-                  التاريخ
-                </TableHead>
-                <TableHead className="font-bold text-gray-700">
-                  الحالة
-                </TableHead>
-                <TableHead className="font-bold text-gray-700">
-                  المرجع
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {transactions.map((transaction: LoyaltyTransaction) => (
-                <TableRow key={transaction.id}>
-                  <TableCell className="font-medium">
-                    {transactionTypeMap[transaction.transactionType] ||
-                      transaction.transactionType}
-                  </TableCell>
-                  <TableCell
-                    className={getPointsColor(transaction.pointsChanged)}
-                  >
-                    {formatPoints(transaction.pointsChanged)}
-                  </TableCell>
-                  <TableCell className="text-gray-600">
-                    {formatDate(transaction.createdAt)}
-                  </TableCell>
-                  <TableCell>
-                    <Badge
-                      variant={
-                        getBadgeVariant(
-                          statusMap[transaction.status] || transaction.status
-                        ).variant as any
-                      }
-                      className={
-                        getBadgeVariant(
-                          statusMap[transaction.status] || transaction.status
-                        ).className
-                      }
-                    >
-                      {statusMap[transaction.status] || transaction.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-gray-600">
-                    {transaction.notes}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+      {/* Empty State */}
+      {transactions.length === 0 ? (
+        <div className="py-12 flex flex-col items-center text-center">
+          <Image
+            src="/images/emptyCart.svg"
+            alt="لا توجد معاملات نقاط"
+            width={200}
+            height={200}
+            className="mb-6"
+          />
+          <h2 className="text-xl font-bold mb-4">لا توجد معاملات نقاط</h2>
+          <p className="text-gray-500 mb-8 max-w-md">
+            لم تقم بأي معاملات نقاط حتى الآن. ابدأ بالتسوق لكسب نقاط الولاء!
+          </p>
+          <Button asChild>
+            <Link href="/products">ابدأ التسوق</Link>
+          </Button>
         </div>
+      ) : (
+        <>
+          {/* Points Table */}
+          <div className="rounded-lg overflow-x-auto border border-gray-300 mb-6">
+            <div>
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-gray-50">
+                    <TableHead className="font-bold text-gray-700">
+                      النوع
+                    </TableHead>
+                    <TableHead className="font-bold text-gray-700">
+                      عدد النقاط
+                    </TableHead>
+                    <TableHead className="font-bold text-gray-700">
+                      التاريخ
+                    </TableHead>
+                    <TableHead className="font-bold text-gray-700">
+                      الحالة
+                    </TableHead>
+                    <TableHead className="font-bold text-gray-700">
+                      المرجع
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {transactions.map((transaction: LoyaltyTransaction) => (
+                    <TableRow key={transaction.id}>
+                      <TableCell className="font-medium">
+                        {transactionTypeMap[transaction.transactionType] ||
+                          transaction.transactionType}
+                      </TableCell>
+                      <TableCell
+                        className={getPointsColor(transaction.pointsChanged)}
+                      >
+                        {formatPoints(transaction.pointsChanged)}
+                      </TableCell>
+                      <TableCell className="text-gray-600">
+                        {formatDate(transaction.createdAt)}
+                      </TableCell>
+                      <TableCell>
+                        <Badge
+                          variant={
+                            getBadgeVariant(
+                              statusMap[transaction.status] ||
+                                transaction.status
+                            ).variant as any
+                          }
+                          className={
+                            getBadgeVariant(
+                              statusMap[transaction.status] ||
+                                transaction.status
+                            ).className
+                          }
+                        >
+                          {statusMap[transaction.status] || transaction.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-gray-600">
+                        {transaction.notes}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
 
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  onClick={() => {
-                    if (currentPage > 1) {
-                      setCurrentPage(currentPage - 1);
-                    }
-                  }}
-                  className={
-                    currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
-                  }
-                />
-              </PaginationItem>
-
-              {generatePageNumbers().map((page, index) => (
-                <PaginationItem key={index}>
-                  {page === "ellipsis" ? (
-                    <PaginationEllipsis />
-                  ) : (
-                    <PaginationLink
-                      isActive={page === currentPage}
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious
                       onClick={() => {
-                        setCurrentPage(page as number);
+                        if (currentPage > 1) {
+                          setCurrentPage(currentPage - 1);
+                        }
                       }}
-                    >
-                      {page}
-                    </PaginationLink>
-                  )}
-                </PaginationItem>
-              ))}
+                      className={
+                        currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
+                      }
+                    />
+                  </PaginationItem>
 
-              <PaginationItem>
-                <PaginationNext
-                  onClick={() => {
-                    if (currentPage < totalPages) {
-                      setCurrentPage(currentPage + 1);
-                    }
-                  }}
-                  className={
-                    currentPage === totalPages
-                      ? "opacity-50 cursor-not-allowed"
-                      : ""
-                  }
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        )}
-      </div>
+                  {generatePageNumbers().map((page, index) => (
+                    <PaginationItem key={index}>
+                      {page === "ellipsis" ? (
+                        <PaginationEllipsis />
+                      ) : (
+                        <PaginationLink
+                          isActive={page === currentPage}
+                          onClick={() => {
+                            setCurrentPage(page as number);
+                          }}
+                        >
+                          {page}
+                        </PaginationLink>
+                      )}
+                    </PaginationItem>
+                  ))}
+
+                  <PaginationItem>
+                    <PaginationNext
+                      onClick={() => {
+                        if (currentPage < totalPages) {
+                          setCurrentPage(currentPage + 1);
+                        }
+                      }}
+                      className={
+                        currentPage === totalPages
+                          ? "opacity-50 cursor-not-allowed"
+                          : ""
+                      }
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            )}
+          </div>
+        </>
+      )}
 
       {/* Redeem Points Modal */}
       <RedeemPointsModal

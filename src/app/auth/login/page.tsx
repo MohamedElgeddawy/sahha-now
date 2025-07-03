@@ -67,7 +67,6 @@ export default function LoginPage() {
     },
   });
 
-  const [rememberMe, setRememberMe] = useState(false);
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -75,11 +74,7 @@ export default function LoginPage() {
     try {
       await generateOtp({ mobile: data.mobile });
 
-      if (rememberMe) {
-        localStorage.setItem("mobile", data.mobile);
-      } else {
-        sessionStorage.setItem("mobile", data.mobile);
-      }
+      sessionStorage.setItem("mobile", data.mobile);
 
       toast.success("تم إرسال رمز التحقق بنجاح");
       router.push("/auth/otp-verification");
@@ -145,22 +140,6 @@ export default function LoginPage() {
             />
           </motion.div>
 
-          {/* Remember me */}
-          <motion.div
-            className="flex items-center gap-2 justify-start"
-            variants={itemVariants}
-          >
-            <Checkbox
-              id="remember"
-              checked={rememberMe}
-              onCheckedChange={(checked) => setRememberMe(checked === true)}
-              className="border-gray-400"
-            />
-            <label htmlFor="remember" className="text-sm text-gray-600">
-              تذكرني
-            </label>
-          </motion.div>
-          
           <Button
             type="submit"
             className="w-full h-12 bg-green-600 hover:bg-green-700 text-white rounded-lg text-base font-medium mt-6"
@@ -169,23 +148,6 @@ export default function LoginPage() {
             {isSubmitting ? "جاري الإرسال..." : "أرسل رمز التحقق"}
           </Button>
         </motion.form>
-
-        {/* Register link */}
-        <motion.div
-          className="text-center mt-4 text-sm register-link"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.5 }}
-        >
-          <span className="text-[#2C3E50]">ليس لديك حساب؟ </span>
-          <Link 
-            href="/auth/register" 
-            prefetch
-            className="text-blue-600 hover:underline font-medium"
-          >
-            أنشئ حساب الآن
-          </Link>
-        </motion.div>
       </motion.div>
     </AuthLayout>
   );

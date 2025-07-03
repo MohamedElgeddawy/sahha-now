@@ -27,6 +27,8 @@ import {
   CardLoading,
   ProfileLoadingMessages,
 } from "@/components/ui/LoadingComponent";
+import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 // Status mapping from English to Arabic
 const getStatusInArabic = (status: Order["status"]): string => {
@@ -258,32 +260,21 @@ export function OrdersTab() {
           )}
         </>
       ) : (
-        <div className="text-center py-16">
-          <div className="text-gray-400 mb-4">
-            <svg
-              className="mx-auto h-12 w-12"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1}
-                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-              />
-            </svg>
-          </div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">
-            لا توجد طلبات
-          </h3>
-          <p className="text-gray-500 mb-6">لم تقم بإجراء أي طلبات حتى الآن</p>
-          <button
-            onClick={() => router.push("/products")}
-            className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors"
-          >
-            تصفح المنتجات
-          </button>
+        <div className="py-12 flex flex-col items-center text-center">
+          <Image
+            src="/images/emptyCart.svg"
+            alt="لا توجد طلبات"
+            width={200}
+            height={200}
+            className="mb-6"
+          />
+          <h2 className="text-xl font-bold mb-4">لا توجد طلبات</h2>
+          <p className="text-gray-500 mb-8 max-w-md">
+            لم تقم بإجراء أي طلبات حتى الآن. ابدأ بالتسوق واطلب ما تحتاجه!
+          </p>
+          <Button asChild>
+            <Link href="/products">تصفح المنتجات</Link>
+          </Button>
         </div>
       )}
     </div>

@@ -1,10 +1,9 @@
 import { z } from "zod";
 
 export const registerSchema = z.object({
-  fullname: z.string(),
-  mobile: z.string(),
+  fullname: z.string().min(3, "الاسم يجب أن يكون أكثر من 3 أحرف"),
   email: z.string().email("البريد الإلكتروني غير صحيح"),
-  age: z.number().min(18, "يجب أن يكون العمر أكبر من 18 سنة"),
+  age: z.number().min(13, "يجب أن يكون العمر أكبر من 13 سنة"),
 });
 
 export const loginSchema = z.object({

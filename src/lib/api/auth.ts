@@ -1,13 +1,22 @@
 import { RegisterFormData } from "../schemas/auth";
 import sahhaInstance from "./sahhaInstance";
-export async function register(data: RegisterFormData) {
+export async function register(data: {
+  fullname: string;
+  email: string;
+  age: number;
+  mobile: string;
+}) {
   const response = await sahhaInstance.post(`auth/register`, data);
   return response.data;
 }
 
 export async function verifyOtp(data: { mobile: string; otp: string }) {
-  const response = await sahhaInstance.post(`auth/verify-otp`, data);
-  return response.data;
+  const response = await sahhaInstance.post(`auth/otp/verify`, data);
+  return response.data as {
+    exists: boolean;
+    message: string;
+    mobile: string;
+  };
 }
 
 export async function generateOtp(data: { mobile: string }) {

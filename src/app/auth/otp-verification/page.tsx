@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { AuthLayout } from "@/components/auth/AuthLayout";
-import { login } from "@/lib/api/auth";
+import { login, verifyOtp } from "@/lib/api/auth";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { OtpFormData, otpSchema } from "@/lib/schemas/auth";
@@ -162,14 +162,13 @@ export default function OTPVerificationPage() {
   // Check if phone number exists
   useEffect(() => {
     const storedPhoneNumber = sessionStorage.getItem("mobile");
-    const rememberedPhone = localStorage.getItem("mobile");
 
-    if (!storedPhoneNumber && !rememberedPhone) {
+    if (!storedPhoneNumber) {
       router.replace("/auth/login");
       return;
     }
 
-    const phone = storedPhoneNumber || rememberedPhone;
+    const phone = storedPhoneNumber;
     setPhoneNumber(phone);
     setValue("mobile", phone || "");
     setIsInitialized(true);
@@ -180,6 +179,12 @@ export default function OTPVerificationPage() {
 
   const onSubmit = async (data: OtpFormData) => {
     try {
+      const verifyRes = await verifyOtp({ ...data });
+      if (!verifyRes.exists) {
+        toast.info("جاري إنشاء حساب جديد");
+        router.replace("/auth/register");
+        return;
+      }
       const res = await login({ ...data });
       dispatch(
         setCredentials({

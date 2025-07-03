@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
@@ -15,6 +15,8 @@ import { RegisterFormData, registerSchema } from "@/lib/schemas/auth";
 import { FormField } from "@/components/auth/FormField";
 import { register as registerApi } from "@/lib/api/auth";
 import { motion } from "motion/react";
+import { setCredentials } from "@/lib/redux/slices/authSlice";
+import { useDispatch } from "react-redux";
 
 // Define animation variants
 const containerVariants = {
@@ -53,14 +55,18 @@ export default function RegisterPage() {
     control,
   } = useForm<RegisterFormData>({
     mode: "all",
-    resolver: zodResolver(registerSchema),
     defaultValues: {
-      mobile: "",
+      fullname: "",
+      email: "",
+      age: 13,
     },
+    resolver: zodResolver(registerSchema),
   });
 
   const [agreeTerms, setAgreeTerms] = useState(false);
   const router = useRouter();
+  const dispatch = useDispatch();
+  const [mobile, setMobile] = useState("");
 
   const onSubmit = async (data: RegisterFormData) => {
     if (!agreeTerms) {
@@ -69,14 +75,19 @@ export default function RegisterPage() {
     }
 
     try {
-      await registerApi(data);
+      const res = await registerApi({
+        ...data,
+        mobile,
+      });
 
-      // Store phone number for OTP verification
-      sessionStorage.setItem("mobile", data.mobile);
-      toast.success("تم إرسال رمز التحقق بنجاح");
-
-      // Navigate to OTP verification
-      router.push("/auth/otp-verification");
+      dispatch(
+        setCredentials({
+          accessToken: res.accessToken,
+          refreshToken: res.refreshToken,
+        })
+      );
+      toast.success("تم إنشاء الحساب بنجاح");
+      router.push("/");
     } catch (error: unknown) {
       console.error("Registration error:", error);
       toast.error(
@@ -89,6 +100,18 @@ export default function RegisterPage() {
     // Social login logic
     console.log(`Registering with ${provider}`);
   };
+
+  useEffect(() => {
+    const storedPhoneNumber = sessionStorage.getItem("mobile");
+
+    if (!storedPhoneNumber) {
+      router.replace("/auth/login");
+      return;
+    }
+
+    const phone = storedPhoneNumber;
+    setMobile(phone);
+  }, []);
 
   const socialLoginSection = (
     <div className="hidden md:block">
@@ -140,10 +163,7 @@ export default function RegisterPage() {
         </motion.div>
 
         {/* Name and Phone in a row */}
-        <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 gap-6"
-          variants={itemVariants}
-        >
+        <motion.div className="flex flex-col gap-6" variants={itemVariants}>
           <Controller
             control={control}
             name="fullname"
@@ -157,33 +177,6 @@ export default function RegisterPage() {
             )}
           />
 
-          <Controller
-            control={control}
-            name="mobile"
-            render={({ field, fieldState: { error } }) => (
-              <FormField
-                label="رقم الهاتف"
-                placeholder="برجاء إدخال رقم الهاتف"
-                type="tel"
-                dir="ltr"
-                inputMode="numeric"
-                error={error}
-                startElement={
-                  <span dir="ltr" className="text-gray-600">
-                    +966
-                  </span>
-                }
-                {...field}
-              />
-            )}
-          />
-        </motion.div>
-
-        {/* Email and Age in a row */}
-        <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 gap-6"
-          variants={itemVariants}
-        >
           <Controller
             control={control}
             name="email"
@@ -254,23 +247,6 @@ export default function RegisterPage() {
         >
           {isSubmitting ? "جاري التسجيل..." : "إنشاء حساب"}
         </Button>
-
-        <motion.div
-          className="text-center mt-4"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.5 }}
-        >
-          <span className="text-[#2C3E50]"> هل لديك حساب؟</span>
-
-          <Link
-            prefetch
-            href="/auth/login"
-            className="text-blue-600 hover:underline font-medium"
-          >
-            سجّل الدخول الآن
-          </Link>
-        </motion.div>
       </motion.form>
     </AuthLayout>
   );
