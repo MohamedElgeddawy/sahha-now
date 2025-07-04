@@ -57,7 +57,7 @@ export function useFilterParams() {
             brands.push(...brandValues);
           }
           break;
-        case "search":
+        case "searchQuery":
         case "sort":
           params[key] = value;
           break;

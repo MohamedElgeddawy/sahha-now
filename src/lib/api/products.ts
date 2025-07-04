@@ -76,7 +76,7 @@ export interface ProductFilters {
   limit?: number;
   categoryIds?: string[];
   brandIds?: string[];
-  search?: string;
+  searchQuery?: string;
   sort?: string;
   minPrice?: number;
   maxPrice?: number;

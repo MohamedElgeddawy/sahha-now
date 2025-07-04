@@ -19,7 +19,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <html lang="ar" dir="rtl">
       <body
         suppressHydrationWarning
-        className={`${cairo.className} min-h-screen flex flex-col`}
+        className={`${cairo.className} min-h-screen overflow-x-hidden flex flex-col`}
       >
         <Providers>
           <Toaster richColors position="top-center" />

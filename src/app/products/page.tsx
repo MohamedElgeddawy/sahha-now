@@ -9,21 +9,16 @@ import {
 import { useIntersectionObserver } from "usehooks-ts";
 import { motion } from "motion/react";
 import {
-  CategoryFilterSection,
-  BrandFilterSection,
-  ConnectedRatingFilterSection,
-} from "@/components/products/ConnectedFilterSection";
-import {
   FilterDrawer,
   MobileFilterTrigger,
 } from "@/components/products/FilterDrawer";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+// import {
+//   DropdownMenu,
+//   DropdownMenuContent,
+//   DropdownMenuItem,
+//   DropdownMenuTrigger,
+// } from "@/components/ui/dropdown-menu";
 import { ChevronDown, Grid, List } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ProductCardList from "@/components/products/ProductCardList";
@@ -44,16 +39,22 @@ export default function ProductsPage() {
 
   const [view, setView] = useState<"grid" | "list">("grid");
 
-  const sortOptions = [
-    { id: "default", label: "الترتيب الافتراضي" },
-    { id: "newest", label: "الأحدث أولاً" },
-    { id: "price_asc", label: "الأقل سعراً إلى الأعلى" },
-    { id: "price_desc", label: "الأعلى سعراً إلى الأقل" },
-    { id: "best_selling", label: "الأكثر مبيعاً" },
-    { id: "highest_rated", label: "الأعلى تقييماً" },
-  ];
+  // const sortOptions = [
+  //   { id: "default", label: "الترتيب الافتراضي" },
+  //   { id: "newest", label: "الأحدث أولاً" },
+  //   { id: "price_asc", label: "الأقل سعراً إلى الأعلى" },
+  //   { id: "price_desc", label: "الأعلى سعراً إلى الأقل" },
+  //   { id: "best_selling", label: "الأكثر مبيعاً" },
+  //   { id: "highest_rated", label: "الأعلى تقييماً" },
+  // ];
 
-  const { ref, isIntersecting } = useIntersectionObserver();
+  const { ref } = useIntersectionObserver({
+    onChange: (isIntersecting) => {
+      if (isIntersecting && hasNextPage && !isFetchingNextPage) {
+        fetchNextPage();
+      }
+    },
+  });
 
   // Load metadata on mount
   useEffect(() => {
@@ -71,36 +72,30 @@ export default function ProductsPage() {
     isError,
   } = useInfiniteProducts(activeFilters);
 
-  useEffect(() => {
-    if (isIntersecting && hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
-    }
-  }, [isIntersecting, fetchNextPage, hasNextPage, isFetchingNextPage]);
+  // const handleSortChange = (sortId: string) => {
+  //   let sortValue = "default";
+  //   switch (sortId) {
+  //     case "newest":
+  //       sortValue = "newest";
+  //       break;
+  //     case "price_asc":
+  //       sortValue = "price_asc";
+  //       break;
+  //     case "price_desc":
+  //       sortValue = "price_desc";
+  //       break;
+  //     case "best_selling":
+  //       sortValue = "bestselling";
+  //       break;
+  //     case "highest_rated":
+  //       sortValue = "rating_desc";
+  //       break;
+  //   }
 
-  const handleSortChange = (sortId: string) => {
-    let sortValue = "default";
-    switch (sortId) {
-      case "newest":
-        sortValue = "newest";
-        break;
-      case "price_asc":
-        sortValue = "price_asc";
-        break;
-      case "price_desc":
-        sortValue = "price_desc";
-        break;
-      case "best_selling":
-        sortValue = "bestselling";
-        break;
-      case "highest_rated":
-        sortValue = "rating_desc";
-        break;
-    }
-
-    const newFilters = { ...activeFilters, sort: sortValue };
-    dispatch(setFilter({ sort: sortValue }));
-    updateURL(newFilters);
-  };
+  //   const newFilters = { ...activeFilters, sort: sortValue };
+  //   dispatch(setFilter({ sort: sortValue }));
+  //   updateURL(newFilters);
+  // };
 
   const handleDiscountChange = (checked: boolean) => {
     if (checked) {
@@ -122,11 +117,6 @@ export default function ProductsPage() {
   // Flatten product data from multiple pages
   const products = useMemo(() => {
     return data?.pages.flatMap((page) => page.products) || [];
-  }, [data]);
-  const totalProducts = useMemo(() => {
-    return (
-      Number(data?.pages[0]?.totalPages) * (data?.pages[0]?.limit || 12) || 0
-    );
   }, [data]);
 
   useEffect(() => {
