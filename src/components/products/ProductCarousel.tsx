@@ -63,7 +63,7 @@ export default function ProductCarousel({
 
   return (
     <div className={cn("w-full", className)}>
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-0 sm:mb-1 md:mb-2 lg:mb-2">
         <h2 className="text-2xl font-medium text-[#475569]">{title}</h2>
 
         <div className="flex items-center gap-2">

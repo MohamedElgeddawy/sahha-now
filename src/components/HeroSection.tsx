@@ -14,6 +14,7 @@ import { motion } from "motion/react";
 import { Star } from "lucide-react";
 import Link from "next/link";
 import { useCategories } from "@/lib/hooks/use-products";
+import { useHeroAnnouncements } from "@/lib/hooks/use-announcements";
 import {
   Carousel,
   CarouselApi,
@@ -39,8 +40,11 @@ function useMediaQuery(query: string) {
 
 export default function HeroSection() {
   const { data: categories } = useCategories();
+  const { data: heroAnnouncements, isLoading: isLoadingHero } =
+    useHeroAnnouncements();
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
+  const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
 
   // Responsive: detect if mobile (max-width: 767px)
   const isMobile = useMediaQuery("(max-width: 767px)");
@@ -52,6 +56,32 @@ export default function HeroSection() {
       setCurrent(api.selectedScrollSnap());
     });
   }, [api]);
+
+  // Auto-rotate hero announcements every 5 seconds
+  useEffect(() => {
+    if (!heroAnnouncements || heroAnnouncements.length <= 1) return;
+
+    const interval = setInterval(() => {
+      setCurrentHeroIndex((prev) => (prev + 1) % heroAnnouncements.length);
+    }, 5000); // 5 seconds
+
+    return () => clearInterval(interval);
+  }, [heroAnnouncements]);
+
+  // Get the current active hero announcement
+  const heroAnnouncement = heroAnnouncements?.[currentHeroIndex];
+
+  // Fallback content when no hero announcement is available
+  const fallbackContent = {
+    title: "قوة وتأثير طبيعي",
+    description: "منتجاتنا تحتوي على مكونات طبيعية وخالية من المواد الضارة",
+    buttonText: "اشترى الآن",
+    redirectUrl: "/products",
+    imageUrl: "/images/hero-image.png",
+  };
+
+  // Use announcement data or fallback
+  const heroContent = heroAnnouncement || fallbackContent;
 
   const heroCategories = [
     {
@@ -152,6 +182,7 @@ export default function HeroSection() {
 
         {/* Text Content */}
         <motion.div
+          key={`hero-content-${currentHeroIndex}`}
           className="relative z-10 flex-1 flex flex-col items-start text-right gap-2 sm:gap-3 md:gap-4 lg:gap-6 md:pl-4 lg:pl-8 w-full md:w-1/2"
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
@@ -171,56 +202,96 @@ export default function HeroSection() {
             <span className="font-medium">أفضل ١٠ ماركات تجميلية</span>
           </motion.div>
 
-          {/* Headline */}
+          {/* Dynamic Headline */}
           <motion.h1
             className="text-lg sm:text-xl md:text-3xl lg:text-4xl xl:text-5xl font-extrabold text-gray-900 leading-tight tracking-tight"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            قوة وتأثير طبيعي
+            {isLoadingHero ? (
+              <div className="h-12 bg-gray-200 rounded animate-pulse" />
+            ) : (
+              heroContent.title
+            )}
           </motion.h1>
 
-          {/* Subheadline */}
+          {/* Dynamic Subheadline */}
           <motion.p
             className="text-sm sm:text-base md:text-xl lg:text-2xl text-gray-700 w-full font-medium"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.4 }}
           >
-            منتجاتنا تحتوي على مكونات طبيعية وخالية من المواد الضارة
+            {isLoadingHero ? (
+              <div className="h-6 bg-gray-200 rounded animate-pulse" />
+            ) : (
+              heroContent.description
+            )}
           </motion.p>
 
-          {/* CTA Button */}
+          {/* Dynamic CTA Button */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.5 }}
             className=""
           >
-            <Link href="/products">
-              <Button className="bg-green-500 hover:bg-green-600 text-white font-bold rounded-lg text-sm sm:text-base md:text-lg w-[99px] h-[40px] transition-colors duration-200 shadow-md flex items-center justify-center">
-                اشترى الآن
-              </Button>
-            </Link>
+            {isLoadingHero ? (
+              <div className="w-[99px] h-[40px] bg-gray-200 rounded-lg animate-pulse" />
+            ) : (
+              <Link href={heroContent.redirectUrl}>
+                <Button className="bg-green-500 hover:bg-green-600 text-white  rounded-lg text-sm sm:text-base md:text-lg w-[120px] h-[40px] transition-colors duration-200 shadow-md flex items-center justify-center">
+                  {heroContent.buttonText || "اشترى الآن"}
+                </Button>
+              </Link>
+            )}
           </motion.div>
+
+          {/* Hero Announcements Indicators (slide or carsousel*/}
+          {/* {heroAnnouncements && heroAnnouncements.length > 1 && (
+            <motion.div
+              className="flex items-center gap-2 mt-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.6 }}
+            >
+              {heroAnnouncements.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentHeroIndex(index)}
+                  className={cn(
+                   // "h-2 w-2 rounded-full transition-all duration-300",
+                    index === currentHeroIndex
+                      ? "bg-green-600 w-6"
+                      : "bg-gray-300 hover:bg-gray-400"
+                  )}
+                />
+              ))}
+            </motion.div>
+          )} */}
         </motion.div>
 
-        {/* Hero Image */}
+        {/* Dynamic Hero Image */}
         <motion.div
+          key={`hero-image-${currentHeroIndex}`}
           className="relative z-10 flex-1 flex items-center justify-center md:justify-end mb-6 md:mb-0 w-full md:w-1/2"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6 }}
         >
-          <Image
-            src="/images/hero-image.png"
-            alt="منتجات طبيعية"
-            width={380}
-            height={380}
-            className="drop-shadow-xl w-[180px] sm:w-[180px] md:w-[260px] lg:w-[340px] xl:w-[380px]"
-            priority
-          />
+          {isLoadingHero ? (
+            <div className="w-[180px] sm:w-[180px] md:w-[260px] lg:w-[340px] xl:w-[380px] h-[180px] sm:h-[180px] md:h-[260px] lg:h-[340px] xl:h-[380px] bg-gray-200 rounded-lg animate-pulse" />
+          ) : (
+            <Image
+              src={heroContent.imageUrl}
+              alt={heroContent.title}
+              width={380}
+              height={380}
+              className="drop-shadow-xl w-[180px] sm:w-[180px] md:w-[260px] lg:w-[340px] xl:w-[380px]"
+              priority
+            />
+          )}
         </motion.div>
       </div>
 

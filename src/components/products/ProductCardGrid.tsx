@@ -44,7 +44,7 @@ const ProductCardGrid = ({ product, isLoading = false }: Props) => {
     <>
       <motion.div
         ref={cardRef}
-        className="group relative bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden h-full lg:h-[488px] flex flex-col"
+        className="group relative bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden h-full lg:h-[380px] flex flex-col"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
@@ -54,7 +54,7 @@ const ProductCardGrid = ({ product, isLoading = false }: Props) => {
           y: -5,
         }}
       >
-        <div className="relative aspect-square lg:flex-1 lg:aspect-auto bg-gray-50 p-4 sm:p-6">
+        <div className="relative aspect-square lg:flex-1 lg:aspect-auto bg-gray-50 p-3 sm:p-4">
           {/* Discount Badge - Top Left */}
           {product.discount && parseInt(product.discount) > 0 && (
             <motion.div
@@ -98,27 +98,27 @@ const ProductCardGrid = ({ product, isLoading = false }: Props) => {
           </div>
 
           <div className="w-full h-full flex items-center justify-center p-2 sm:p-0">
-            <div className="relative w-full h-full max-w-[120px] max-h-[150px] sm:max-w-[160px] sm:max-h-[200px] lg:max-w-[200px] lg:max-h-[280px]">
+            <div className="relative w-full h-full max-w-[100px] max-h-[120px] sm:max-w-[130px] sm:max-h-[160px] lg:max-w-[150px] lg:max-h-[200px]">
               <Image
                 src={product?.media?.[0]?.thumbnailUrl || ""}
                 alt={product?.name || ""}
                 fill
-                sizes="(max-width: 640px) 120px, (max-width: 1024px) 160px, 200px"
+                sizes="(max-width: 640px) 100px, (max-width: 1024px) 130px, 150px"
                 className="object-contain"
               />
             </div>
           </div>
         </div>
 
-        <div className="p-2 sm:p-4 lg:p-6 flex flex-col gap-3 lg:gap-4 flex-shrink-0">
+        <div className="p-2 sm:p-3 lg:p-4 flex flex-col gap-2 lg:gap-3 flex-shrink-0">
           {/* Title */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="min-h-[3rem] lg:min-h-[4rem]"
+            className="min-h-[2.5rem] lg:min-h-[3rem]"
           >
-            <h3 className="text-gray-900 line-clamp-1 font-medium text-base sm:text-lg lg:text-xl leading-snug mb-1 overflow-hidden">
+            <h3 className="text-gray-900 line-clamp-1 font-medium text-sm sm:text-base lg:text-lg leading-snug mb-1 overflow-hidden">
               {product.arabicName}
             </h3>
             <span className="text-xs lg:text-sm text-gray-500 line-clamp-1 overflow-hidden">
@@ -139,7 +139,7 @@ const ProductCardGrid = ({ product, isLoading = false }: Props) => {
                 .map((_, i) => (
                   <Star
                     key={i}
-                    className={cn("size-4", {
+                    className={cn("size-3", {
                       "text-yellow-400 fill-yellow-400":
                         i < parseInt(product.averageRating!),
                       "text-gray-300 fill-gray-300":
@@ -168,7 +168,7 @@ const ProductCardGrid = ({ product, isLoading = false }: Props) => {
                   </span>
                 </div>
                 <div className="flex items-baseline gap-1">
-                  <span className="font-bold text-green-600 text-xl lg:text-2xl">
+                  <span className="font-bold text-green-600 text-lg lg:text-xl">
                     {(
                       Number(product?.price) -
                       Number(product?.price) * (Number(product?.discount) / 100)
@@ -181,7 +181,7 @@ const ProductCardGrid = ({ product, isLoading = false }: Props) => {
               </>
             ) : (
               <div className="flex items-baseline gap-1">
-                <span className="font-bold text-green-600 text-xl lg:text-2xl">
+                <span className="font-bold text-green-600 text-lg lg:text-xl">
                   {product?.price}
                 </span>
                 <span className="text-green-600 text-sm lg:text-base font-medium">
@@ -197,12 +197,12 @@ const ProductCardGrid = ({ product, isLoading = false }: Props) => {
             animate={{ opacity: 1, y: 0 }}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="mt-2 lg:mt-auto"
+            className="mt-1 lg:mt-auto"
           >
             <Link
               prefetch
               href={`/products/${product.id}`}
-              className="w-full py-2 lg:py-3 text-center block bg-[#FF9B07] text-white rounded-lg hover:bg-[#F08C00] active:bg-[#F08C00] focus:bg-[#FF9B07] transition-colors font-bold text-sm lg:text-base"
+              className="w-full py-2 lg:py-2.5 text-center block bg-[#FF9B07] text-white rounded-lg hover:bg-[#F08C00] active:bg-[#F08C00] focus:bg-[#FF9B07] transition-colors font-bold text-sm lg:text-base"
             >
               اشتري الآن
             </Link>
@@ -212,10 +212,10 @@ const ProductCardGrid = ({ product, isLoading = false }: Props) => {
 
       {/* Quick View Dialog */}
       <ProductQuickViewDialog
-        product={product as Product}
+          product={product as Product}
         open={showQuickView}
         onOpenChange={setShowQuickView}
-      />
+        />
     </>
   );
 };

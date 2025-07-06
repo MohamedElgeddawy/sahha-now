@@ -146,19 +146,19 @@ export function ProductTabs({ product }: ProductTabsProps) {
           <TabsList className="flex gap-2 bg-transparent">
             <TabsTrigger
               value="description"
-              className="w-40 h-10  px-4 py-2 text-sm font-medium rounded-md transition-colors duration-300 data-[state=active]:bg-[#2D9CDB] data-[state=active]:text-white data-[state=inactive]:text-[#2D9CDB] data-[state=inactive]:bg-[#EDF8FF]"
+              className="w-26 h-10 md:w-40 px-2 py-1 text-xs md:text-sm font-medium rounded-md transition-colors duration-300 data-[state=active]:bg-[#2D9CDB] data-[state=active]:text-white data-[state=inactive]:text-[#2D9CDB] data-[state=inactive]:bg-[#EDF8FF]"
             >
               تفاصيل المنتج
             </TabsTrigger>
             <TabsTrigger
               value="shipping"
-              className="w-40 h-10  px-4 py-2 text-sm font-medium rounded-md transition-colors duration-300 data-[state=active]:bg-[#2D9CDB] data-[state=active]:text-white data-[state=inactive]:text-[#2D9CDB] data-[state=inactive]:bg-[#EDF8FF]"
+              className="w-32 h-10 md:w-40 px-2 py-1 text-xs md:text-sm font-medium rounded-md transition-colors duration-300 data-[state=active]:bg-[#2D9CDB] data-[state=active]:text-white data-[state=inactive]:text-[#2D9CDB] data-[state=inactive]:bg-[#EDF8FF]"
             >
               سياسة الشحن والإرجاع
             </TabsTrigger>
             <TabsTrigger
               value="reviews"
-              className="w-40 h-10  px-4 py-2 text-sm font-medium rounded-md transition-colors duration-300 data-[state=active]:bg-[#2D9CDB] data-[state=active]:text-white data-[state=inactive]:text-[#2D9CDB] data-[state=inactive]:bg-[#EDF8FF]"
+              className="w-26 h-10 md:w-40 px-2 py-1 text-xs md:text-sm font-medium rounded-md transition-colors duration-300 data-[state=active]:bg-[#2D9CDB] data-[state=active]:text-white data-[state=inactive]:text-[#2D9CDB] data-[state=inactive]:bg-[#EDF8FF]"
             >
               تعليقات المنتج
             </TabsTrigger>
@@ -181,7 +181,8 @@ export function ProductTabs({ product }: ProductTabsProps) {
             className="prose prose-sm max-w-none text-right"
           >
             <p className="text-gray-600 leading-relaxed">
-              {product.arabicLongDescription || "سياسة الشحن والإرجاع ستظهر هنا"}
+              {product.arabicLongDescription ||
+                "سياسة الشحن والإرجاع ستظهر هنا"}
             </p>
           </TabsContent>
 
@@ -202,7 +203,7 @@ export function ProductTabs({ product }: ProductTabsProps) {
                 <p>حدث خطأ أثناء تحميل التقييمات</p>
               </div>
             ) : (
-              <div className="flex gap-8 items-start border-b border-gray-200 pb-3">
+              <div className="flex flex-col md:flex-row gap-4 md:gap-8 items-start border-b border-gray-200 pb-3">
                 {/* Overall Rating */}
                 <div className="text-center flex items-center gap-4">
                   <div className="text-4xl font-bold text-green-600">
@@ -235,9 +236,12 @@ export function ProductTabs({ product }: ProductTabsProps) {
                 </div>
 
                 {/* Rating Bars */}
-                <div className="flex-1 space-y-2">
-                  {[5, 4, 3, 2, 1].map((rating) => ( 
-                    <div key={rating} className="flex items-center gap-2 w-118">
+                <div className="w-full md:flex-1 space-y-2">
+                  {[5, 4, 3, 2, 1].map((rating) => (
+                    <div
+                      key={rating}
+                      className="flex items-center gap-2 w-full"
+                    >
                       <div className="flex items-center gap-1 w-12">
                         <span className="text-sm text-gray-600">{rating}</span>
                         <Star className="size-4 shrink-0 text-[#FFA726] fill-[#FFA726]" />
@@ -253,7 +257,7 @@ export function ProductTabs({ product }: ProductTabsProps) {
                               100
                             : 0
                         }
-                        
+                        className="flex-1"
                       />
                     </div>
                   ))}
@@ -390,7 +394,7 @@ export function ProductTabs({ product }: ProductTabsProps) {
                     <Button
                       type="submit"
                       disabled={isSubmitting}
-                      className="px-6 py-2"
+                      className="w-full md:w-auto px-6 py-2"
                     >
                       {isSubmitting ? "جاري الإرسال..." : "إرسال"}
                     </Button>
