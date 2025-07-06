@@ -1,30 +1,27 @@
 "use client";
 import { OrdersTab } from "@/components/account/OrdersTab";
 import { motion } from "motion/react";
-import { ShoppingBag } from "lucide-react";
+import Banner from "../components/Banner";
 
 const OrdersPage = () => {
   return (
-    <div>
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       {/* Page Header */}
+      <Banner
+        icon="shopping-bag"
+        title="طلباتي"
+        description="تتبع جميع طلباتك وحالة التوصيل"
+      />
+
+      {/* Orders Content */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white rounded-xl shadow-sm border p-6 mb-6"
+        transition={{ delay: 0.2 }}
+        className="bg-white rounded-2xl shadow-sm border border-gray-300 p-6"
       >
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-            <ShoppingBag className="w-6 h-6 text-green-600" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">طلباتي</h1>
-            <p className="text-gray-600">تتبع جميع طلباتك وحالة التوصيل</p>
-          </div>
-        </div>
+        <OrdersTab />
       </motion.div>
-
-      {/* Orders Content */}
-      <OrdersTab />
     </div>
   );
 };

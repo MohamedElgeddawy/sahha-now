@@ -14,9 +14,12 @@ import {
 } from "@/components/ui/drawer";
 import { CategoryResponse } from "@/lib/api/products";
 import { ChevronDown } from "lucide-react";
-import Link from "next/link";
 import React from "react";
 import { useIsClient, useMediaQuery } from "usehooks-ts";
+import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
+import { setFilter } from "@/lib/redux/slices/filtersSlice";
+import { useFilterParams } from "@/lib/hooks/use-filter-params";
+import { useRouter } from "next/navigation";
 
 const CategoriesFilter = ({
   categoriesResponse,
@@ -25,6 +28,21 @@ const CategoriesFilter = ({
 }) => {
   const isMobile = useMediaQuery("(max-width: 768px)");
   const isClient = useIsClient();
+  const dispatch = useAppDispatch();
+  const { updateURL } = useFilterParams();
+  const router = useRouter();
+  const { activeFilters } = useAppSelector((state) => state.filters);
+
+  const handleCategorySelect = (categoryId: string) => {
+    // Update Redux store with selected category
+    dispatch(setFilter({ categoryIds: [categoryId] }));
+
+    // Update URL with category filter
+    updateURL({ ...activeFilters, categoryIds: [categoryId] });
+
+    // Navigate to products page
+    router.push(`/products?categoryIds=${categoryId}`);
+  };
 
   const triggerButton = (
     <Button
@@ -37,14 +55,13 @@ const CategoriesFilter = ({
   );
 
   const categoryItems = categoriesResponse?.categories?.map((category) => (
-    <Link
+    <button
       key={category.id}
-      prefetch
-      href={`/products?categoryIds=${category.id}`}
+      onClick={() => handleCategorySelect(category.id)}
       className="w-full text-right py-3 px-4 hover:bg-gray-50 text-[#2C3E50] text-[16px] border-b border-gray-100 last:border-b-0 block"
     >
       {category.arabicName}
-    </Link>
+    </button>
   ));
 
   if (isMobile && isClient) {
@@ -70,14 +87,12 @@ const CategoriesFilter = ({
       <DropdownMenuTrigger asChild>{triggerButton}</DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-56">
         {categoriesResponse?.categories?.map((category) => (
-          <DropdownMenuItem key={category.id} asChild>
-            <Link
-              prefetch
-              href={`/products?categoryIds=${category.id}`}
-              className="w-full text-right py-2 px-4 hover:bg-gray-50 text-[#2C3E50] text-[16px]"
-            >
-              {category.arabicName}
-            </Link>
+          <DropdownMenuItem
+            key={category.id}
+            onClick={() => handleCategorySelect(category.id)}
+            className="w-full text-right py-2 px-4 hover:bg-gray-50 text-[#2C3E50] text-[16px] cursor-pointer"
+          >
+            {category.arabicName}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>

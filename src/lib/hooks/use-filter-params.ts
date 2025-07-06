@@ -1,11 +1,7 @@
 import { useEffect, useCallback } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
-import {
-  setFilters,
-  setSelectedCategories,
-  setSelectedBrands,
-} from "@/lib/redux/slices/filtersSlice";
+import { setFilters } from "@/lib/redux/slices/filtersSlice";
 import { ProductFilters } from "@/lib/api/products";
 
 export function useFilterParams() {
@@ -14,12 +10,6 @@ export function useFilterParams() {
   const pathname = usePathname();
   const dispatch = useAppDispatch();
   const filters = useAppSelector((state) => state.filters.activeFilters);
-  const selectedCategories = useAppSelector(
-    (state) => state.filters.selectedCategories
-  );
-  const selectedBrands = useAppSelector(
-    (state) => state.filters.selectedBrands
-  );
 
   // Initialize filters from URL on mount
   useEffect(() => {
@@ -27,8 +17,6 @@ export function useFilterParams() {
       page: 1,
       limit: 12,
     };
-    const categories: string[] = [];
-    const brands: string[] = [];
 
     searchParams.forEach((value, key) => {
       switch (key) {
@@ -47,14 +35,12 @@ export function useFilterParams() {
           const categoryValues = value.split(",").filter(Boolean);
           if (categoryValues.length > 0) {
             params.categoryIds = categoryValues;
-            categories.push(...categoryValues);
           }
           break;
         case "brandIds":
           const brandValues = value.split(",").filter(Boolean);
           if (brandValues.length > 0) {
             params.brandIds = brandValues;
-            brands.push(...brandValues);
           }
           break;
         case "searchQuery":
@@ -65,21 +51,11 @@ export function useFilterParams() {
     });
 
     dispatch(setFilters(params));
-    if (categories.length > 0) {
-      dispatch(setSelectedCategories(categories));
-    }
-    if (brands.length > 0) {
-      dispatch(setSelectedBrands(brands));
-    }
   }, []);
 
   // Update URL when filters change
   const updateURL = useCallback(
-    (
-      newFilters: ProductFilters,
-      newSelectedCategories?: string[],
-      newSelectedBrands?: string[]
-    ) => {
+    (newFilters: ProductFilters) => {
       const params = new URLSearchParams();
 
       // Add all active filters to URL
@@ -97,19 +73,15 @@ export function useFilterParams() {
         }
       });
 
-      // Add selected categories and brands if provided
-      const categoriesToUse =
-        newSelectedCategories !== undefined
-          ? newSelectedCategories
-          : selectedCategories;
-      const brandsToUse =
-        newSelectedBrands !== undefined ? newSelectedBrands : selectedBrands;
-
-      if (categoriesToUse.length > 0) {
-        params.set("categoryIds", categoriesToUse.join(","));
+      if (newFilters.categoryIds && newFilters.categoryIds.length > 0) {
+        params.set("categoryIds", newFilters.categoryIds.join(","));
+      } else {  
+        params.delete("categoryIds");
       }
-      if (brandsToUse.length > 0) {
-        params.set("brandIds", brandsToUse.join(","));
+      if (newFilters.brandIds && newFilters.brandIds.length > 0) {
+        params.set("brandIds", newFilters.brandIds.join(","));
+      } else {
+        params.delete("brandIds");
       }
 
       // Update the URL without causing a navigation
@@ -118,7 +90,7 @@ export function useFilterParams() {
         : pathname;
       router.replace(newURL, { scroll: false });
     },
-    [pathname, router, selectedCategories, selectedBrands]
+    [pathname]
   );
 
   return { updateURL };

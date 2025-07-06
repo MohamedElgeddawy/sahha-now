@@ -1,4 +1,5 @@
 import sahhaInstance from "./sahhaInstance";
+import { truthyParams } from "../utils";
 
 export interface Product {
   id: string;
@@ -138,14 +139,26 @@ export interface BrandsResponse {
 }
 
 export async function fetchProducts(
-  filters: ProductFilters = {}
+  filters: ProductFilters = {
+    page: 1,
+    limit: 12,
+    categoryIds: [],
+    brandIds: [],
+  }
 ): Promise<ProductsResponse> {
   try {
-    const response = await sahhaInstance.get("/products", { params: filters });
+    const response = await sahhaInstance.get("/products", {
+      params: truthyParams(filters),
+    });
     return response.data;
   } catch (error) {
     console.error("Error fetching products:", error);
-    throw error;
+    return {
+      products: [],
+      page: 1,
+      limit: 10,
+      totalPages: 1,
+    };
   }
 }
 
@@ -159,11 +172,16 @@ export async function fetchProduct(id: string) {
 }
 
 export async function fetchFavoriteProducts(
-  filters: ProductFilters = {}
+  filters: ProductFilters = {
+    page: 1,
+    limit: 12,
+    categoryIds: [],
+    brandIds: [],
+  }
 ): Promise<FavoriteProductsResponse> {
   try {
     const response = await sahhaInstance.get("/favourites", {
-      params: filters,
+      params: truthyParams(filters),
     });
     return response.data;
   } catch (error) {
@@ -187,11 +205,16 @@ export async function fetchFavoriteProductsCount(): Promise<number> {
 }
 
 export async function fetchOfferProducts(
-  filters: ProductFilters = {}
+  filters: ProductFilters = {
+    page: 1,
+    limit: 12,
+    categoryIds: [],
+    brandIds: [],
+  }
 ): Promise<ProductsResponse> {
   try {
     const response = await sahhaInstance.get("/products/offers", {
-      params: filters,
+      params: truthyParams(filters),
     });
     return response.data;
   } catch (error) {

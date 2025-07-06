@@ -54,12 +54,13 @@ export function useProduct(id: string) {
 }
 
 export function useInfiniteProducts(filters: ProductFilters = {}) {
-  return useInfiniteQuery<ProductsResponse>({
+  return useInfiniteQuery({
     queryKey: productKeys.infinite(filters),
     queryFn: async ({ pageParam = 1 }) => {
       // Pass the current page as pageParam
       return fetchProducts({ ...filters, page: pageParam as number });
     },
+    select: (data) => data.pages.flatMap((page) => page.products),
     getNextPageParam: (lastPage, allPages) => {
       // If there are products in the last page, there might be more
       if (lastPage.products.length === 0) {

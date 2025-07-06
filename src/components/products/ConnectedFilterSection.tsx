@@ -1,10 +1,6 @@
 import React, { useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
-import {
-  toggleCategory,
-  toggleBrand,
-  setFilter,
-} from "@/lib/redux/slices/filtersSlice";
+import { setFilter } from "@/lib/redux/slices/filtersSlice";
 import FilterSection from "./FilterSection";
 import RatingFilterSection from "./RatingFilterSection";
 import { Input } from "@/components/ui/input";
@@ -14,20 +10,17 @@ import { Checkbox } from "../ui/checkbox";
 export function CategoryFilterSection() {
   const dispatch = useAppDispatch();
   const { updateURL } = useFilterParams();
-  const { metadata, selectedCategories, activeFilters } = useAppSelector(
-    (state) => state.filters
-  );
+  const { metadata, activeFilters } = useAppSelector((state) => state.filters);
   const [isCollapsed, setIsCollapsed] = React.useState(false);
 
   const handleCategoryToggle = (categoryId: string) => {
-    dispatch(toggleCategory(categoryId));
-
     // Update URL with new category selection
-    const newCategories = selectedCategories.includes(categoryId)
-      ? selectedCategories.filter((id) => id !== categoryId)
-      : [...selectedCategories, categoryId];
+    const newCategories = activeFilters.categoryIds?.includes(categoryId)
+      ? activeFilters.categoryIds?.filter((id) => id !== categoryId)
+      : [...(activeFilters.categoryIds || []), categoryId];
 
-    updateURL(activeFilters, newCategories);
+    dispatch(setFilter({ categoryIds: newCategories }));
+    updateURL({ ...activeFilters, categoryIds: newCategories });
   };
 
   const items = useMemo(
@@ -62,7 +55,7 @@ export function CategoryFilterSection() {
           (i) => (i.arabicName || i.name) === item.name
         );
         const isSelected = fullItem
-          ? selectedCategories.includes(fullItem.id)
+          ? activeFilters.categoryIds?.includes(fullItem.id)
           : false;
 
         return (
@@ -94,21 +87,18 @@ export function CategoryFilterSection() {
 export function BrandFilterSection() {
   const dispatch = useAppDispatch();
   const { updateURL } = useFilterParams();
-  const { metadata, selectedBrands, activeFilters } = useAppSelector(
-    (state) => state.filters
-  );
+  const { metadata, activeFilters } = useAppSelector((state) => state.filters);
   const [isCollapsed, setIsCollapsed] = React.useState(false);
   const [searchTerm, setSearchTerm] = React.useState("");
 
   const handleBrandToggle = (brandId: string) => {
-    dispatch(toggleBrand(brandId));
-
     // Update URL with new brand selection
-    const newBrands = selectedBrands.includes(brandId)
-      ? selectedBrands.filter((id) => id !== brandId)
-      : [...selectedBrands, brandId];
+    const newBrands = activeFilters.brandIds?.includes(brandId)
+      ? activeFilters.brandIds?.filter((id) => id !== brandId)
+      : [...(activeFilters.brandIds || []), brandId];
 
-    updateURL(activeFilters, undefined, newBrands);
+    dispatch(setFilter({ brandIds: newBrands }));
+    updateURL({ ...activeFilters, brandIds: newBrands });
   };
 
   const items = useMemo(
@@ -154,7 +144,7 @@ export function BrandFilterSection() {
           (i) => (i.arabicName || i.name) === item.name
         );
         const isSelected = fullItem
-          ? selectedBrands.includes(fullItem.id)
+          ? activeFilters.brandIds?.includes(fullItem.id)
           : false;
 
         return (
@@ -204,10 +194,7 @@ export function ConnectedRatingFilterSection() {
   };
 
   // Get rating counts from metadata
-  const ratingCounts = useMemo(
-    () => metadata?.ratings || [],
-    [metadata]
-  );
+  const ratingCounts = useMemo(() => metadata?.ratings || [], [metadata]);
 
   return (
     <RatingFilterSection

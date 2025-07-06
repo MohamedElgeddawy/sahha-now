@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/carousel";
 import { useCopyToClipboard } from "usehooks-ts";
 import { toast } from "sonner";
-import { usePathname, useRouter } from "next/navigation";
+import { motion } from "motion/react";
 interface ProductGalleryProps {
   images: Product["media"] | [];
   discount: string;
@@ -109,22 +109,24 @@ export function ProductGallery({
             <CarouselNext />
           </Carousel>
           {/* Action Buttons */}
-          <div className="absolute top-4 left-4 flex flex-col gap-2 z-10">
+          <div className="absolute top-4 left-4 flex flex-col items-center gap-2 z-10">
             <FavoriteButton
               productId={product.id}
               isFavourite={product.isFavourite}
             />
-            <Button
-              variant="outline"
-              size="icon"
-              className="h-10 w-10 bg-white hover:bg-white/90"
-              onClick={(e) => {
+            <motion.button
+              className={cn(
+                "bg-white group rounded-full p-1.5 md:p-2 shadow-sm cursor-pointer transition-all duration-200"
+              )}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={() => {
                 copyToClipboard(window.location.href);
                 toast.success("لقد تم نسخ الرابط");
               }}
             >
-              <Share2 className="h-5 w-5 text-gray-600" />
-            </Button>
+              <Share2 className="h-5 w-5 text-gray-600 group-hover:text-green-600" />
+            </motion.button>
           </div>
           {/* Discount Badge */}
           {Number(discount) > 0 ? (

@@ -114,11 +114,7 @@ export function PointsTab() {
     isError: transactionsError,
   } = useLoyaltyTransactions({ page: currentPage, limit });
 
-  const {
-    data: balanceData,
-    isLoading: balanceLoading,
-    isError: balanceError,
-  } = useLoyaltyBalance();
+  const { data: balanceData, isLoading: balanceLoading } = useLoyaltyBalance();
 
   // Loading state
   if (transactionsLoading) {
@@ -221,7 +217,7 @@ export function PointsTab() {
   };
 
   return (
-    <div className="bg-gray-50 p-6 rounded-lg">
+    <>
       {/* Points Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
         <div className="bg-[#FFF9E9] p-4 rounded-lg flex flex-col gap-3">
@@ -290,7 +286,7 @@ export function PointsTab() {
             <div>
               <Table>
                 <TableHeader>
-                  <TableRow className="bg-gray-50">
+                  <TableRow className="">
                     <TableHead className="font-bold text-gray-700">
                       النوع
                     </TableHead>
@@ -421,6 +417,6 @@ export function PointsTab() {
         redeemedPoints={lastRedemption?.points}
         earnedAmount={lastRedemption?.amount}
       />
-    </div>
+    </>
   );
 }

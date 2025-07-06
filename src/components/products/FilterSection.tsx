@@ -54,7 +54,7 @@ const FilterSection = ({
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
-            {searchInput && <div className="my-3">{searchInput}</div>}
+            {searchInput && <div className="my-3 px-1">{searchInput}</div>}
 
             <div className="mt-3 space-y-2">
               {items.map((item) => (

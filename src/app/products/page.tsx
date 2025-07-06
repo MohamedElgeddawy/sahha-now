@@ -30,6 +30,93 @@ import {
 } from "@/lib/redux/slices/filtersSlice";
 import { useFilterParams } from "@/lib/hooks/use-filter-params";
 import { ActiveFilters } from "@/components/products/ActiveFilters";
+import { LoadingComponent } from "@/components/ui/LoadingComponent";
+import { Filter } from "lucide-react";
+import Image from "next/image";
+
+function EmptyProductsScreen() {
+  const { activeFilters } = useAppSelector((state) => state.filters);
+  const dispatch = useAppDispatch();
+  const { updateURL } = useFilterParams();
+
+  const hasFilters =
+    (activeFilters?.categoryIds && activeFilters?.categoryIds?.length > 0) ||
+    (activeFilters?.brandIds && activeFilters?.brandIds?.length > 0) ||
+    activeFilters?.searchQuery ||
+    activeFilters?.rating ||
+    activeFilters?.hasDiscount ||
+    activeFilters?.minPrice ||
+    activeFilters?.maxPrice;
+
+  const handleClearFilters = () => {
+    dispatch(resetFilters());
+    updateURL({ page: 1, limit: 12 });
+  };
+
+  return (
+    <motion.div
+      className="flex flex-col items-center justify-center py-16 px-4"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <div className="text-center space-y-6">
+        {/* Icon */}
+        <div className="relative">
+          <div className="w-32 h-32 flex items-center justify-center mx-auto mb-4">
+            <Image
+              src="/images/emptyCart.svg"
+              alt="Empty cart"
+              width={128}
+              height={128}
+              className="w-full h-full"
+            />
+          </div>
+          {hasFilters && (
+            <div className="absolute -top-2 -right-2 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+              <Filter className="w-4 h-4 text-blue-600" />
+            </div>
+          )}
+        </div>
+
+        {/* Title */}
+        <div className="space-y-2">
+          <h3 className="text-xl font-semibold text-gray-900">
+            {hasFilters
+              ? "لا توجد منتجات تطابق الفلاتر المحددة"
+              : "لا توجد منتجات متاحة"}
+          </h3>
+          <p className="text-gray-500 max-w-md">
+            {hasFilters
+              ? "جرب تعديل الفلاتر أو البحث عن منتجات أخرى"
+              : "في الوقت الحالي لا توجد منتجات متاحة للعرض"}
+          </p>
+        </div>
+
+        {/* Actions */}
+        {hasFilters && (
+          <div className="flex justify-center">
+            <Button
+              onClick={handleClearFilters}
+              variant="outline"
+              className="flex items-center gap-2"
+            >
+              <Filter className="w-4 h-4" />
+              مسح جميع الفلاتر
+            </Button>
+          </div>
+        )}
+
+        {/* Additional Info */}
+        <div className="text-sm text-gray-400 space-y-1">
+          <p>• تأكد من صحة كلمات البحث</p>
+          <p>• جرب فلاتر مختلفة</p>
+          <p>• تحقق من التصنيفات المتاحة</p>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
 
 export default function ProductsPage() {
   const dispatch = useAppDispatch();
@@ -64,7 +151,7 @@ export default function ProductsPage() {
   }, [filtersMetadata, metadata, dispatch]);
 
   const {
-    data,
+    data: products,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
@@ -113,11 +200,6 @@ export default function ProductsPage() {
       updateURL(newFilters);
     }
   };
-
-  // Flatten product data from multiple pages
-  const products = useMemo(() => {
-    return data?.pages.flatMap((page) => page.products) || [];
-  }, [data]);
 
   useEffect(() => {
     return () => {
@@ -238,7 +320,7 @@ export default function ProductsPage() {
           >
             <p className="text-red-500">حدث خطأ أثناء تحميل المنتجات</p>
           </motion.div>
-        ) : (
+        ) : products && products.length > 0 ? (
           <>
             <div
               className={
@@ -267,17 +349,16 @@ export default function ProductsPage() {
             {/* Load more trigger */}
             <div ref={ref} className="flex justify-center mt-8">
               {isFetchingNextPage && (
-                <motion.div
-                  className="py-4"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  جاري التحميل...
-                </motion.div>
+                <LoadingComponent
+                  animation="dots"
+                  variant="centered"
+                  showMessage
+                />
               )}
             </div>
           </>
+        ) : (
+          <EmptyProductsScreen />
         )}
       </FilterDrawer>
     </motion.div>

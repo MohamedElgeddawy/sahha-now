@@ -32,7 +32,7 @@ interface CategoryTabProps {
   categoryId: string;
 }
 
-const CategoryTab: React.FC<CategoryTabProps> = ({ categoryId }) => {
+const CategoryTab = ({ categoryId }: CategoryTabProps) => {
   const { data: productsData, isLoading } = useProducts({
     categoryIds: [categoryId],
     limit: 4,

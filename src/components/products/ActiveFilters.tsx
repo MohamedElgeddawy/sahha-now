@@ -1,54 +1,53 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { X } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
-import {
-  resetFilters,
-  toggleCategory,
-  toggleBrand,
-  setFilter,
-} from "@/lib/redux/slices/filtersSlice";
+import { resetFilters, setFilter } from "@/lib/redux/slices/filtersSlice";
 import { Button } from "@/components/ui/button";
 import { useFilterParams } from "@/lib/hooks/use-filter-params";
 
 export function ActiveFilters() {
   const dispatch = useAppDispatch();
   const { updateURL } = useFilterParams();
-  const { activeFilters, selectedCategories, selectedBrands, metadata } =
-    useAppSelector((state) => state.filters);
+  const { activeFilters, metadata } = useAppSelector((state) => state.filters);
 
-  const hasActiveFilters =
-    selectedCategories.length > 0 ||
-    selectedBrands.length > 0 ||
-    activeFilters.rating ||
-    activeFilters.hasDiscount ||
-    activeFilters.minPrice ||
-    activeFilters.maxPrice ||
-    (activeFilters.sort && activeFilters.sort !== "default");
+  const hasActiveFilters = useMemo(
+    () =>
+      (activeFilters?.categoryIds && activeFilters?.categoryIds?.length > 0) ||
+      (activeFilters?.brandIds && activeFilters?.brandIds?.length > 0) ||
+      activeFilters.rating ||
+      activeFilters.hasDiscount ||
+      activeFilters.minPrice ||
+      activeFilters.maxPrice ||
+      activeFilters.searchQuery,
+    [activeFilters]
+  );
 
   if (!hasActiveFilters) return null;
 
   const handleRemoveCategory = (categoryId: string) => {
-    dispatch(toggleCategory(categoryId));
-    const newCategories = selectedCategories.filter((id) => id !== categoryId);
-    updateURL(activeFilters, newCategories, selectedBrands);
+    const newCategories = activeFilters.categoryIds?.filter(
+      (id) => id !== categoryId
+    );
+    dispatch(setFilter({ categoryIds: newCategories }));
+    updateURL({ ...activeFilters, categoryIds: newCategories });
   };
 
   const handleRemoveBrand = (brandId: string) => {
-    dispatch(toggleBrand(brandId));
-    const newBrands = selectedBrands.filter((id) => id !== brandId);
-    updateURL(activeFilters, selectedCategories, newBrands);
+    const newBrands = activeFilters.brandIds?.filter((id) => id !== brandId);
+    dispatch(setFilter({ brandIds: newBrands }));
+    updateURL({ ...activeFilters, brandIds: newBrands });
   };
 
   const handleRemoveFilter = (filterKey: keyof typeof activeFilters) => {
     const newFilters = { ...activeFilters };
     delete newFilters[filterKey];
     dispatch(setFilter(newFilters));
-    updateURL(newFilters, selectedCategories, selectedBrands);
+    updateURL({ ...activeFilters, [filterKey]: undefined });
   };
 
   const handleClearAll = () => {
     dispatch(resetFilters());
-    updateURL({ page: 1, limit: 12 }, [], []);
+    updateURL({ page: 1, limit: 12 });
   };
 
   return (
@@ -67,7 +66,7 @@ export function ActiveFilters() {
 
       <div className="flex flex-wrap gap-2">
         {/* Categories */}
-        {selectedCategories.map((categoryId) => {
+        {activeFilters.categoryIds?.map((categoryId) => {
           const category = metadata?.categories.find(
             (c) => c.id === categoryId
           );
@@ -90,7 +89,7 @@ export function ActiveFilters() {
         })}
 
         {/* Brands */}
-        {selectedBrands.map((brandId) => {
+        {activeFilters.brandIds?.map((brandId) => {
           const brand = metadata?.brands.find((b) => b.id === brandId);
           if (!brand) return null;
 
@@ -119,7 +118,7 @@ export function ActiveFilters() {
                 const newFilters = { ...activeFilters };
                 delete newFilters.rating;
                 dispatch(setFilter({ rating: undefined }));
-                updateURL(newFilters, selectedCategories, selectedBrands);
+                updateURL(newFilters);
               }}
               className="text-gray-400 hover:text-gray-600"
             >
@@ -137,7 +136,7 @@ export function ActiveFilters() {
                 const newFilters = { ...activeFilters };
                 delete newFilters.hasDiscount;
                 dispatch(setFilter({ hasDiscount: false }));
-                updateURL(newFilters, selectedCategories, selectedBrands);
+                updateURL(newFilters);
               }}
               className="text-gray-400 hover:text-gray-600"
             >
@@ -164,7 +163,7 @@ export function ActiveFilters() {
                     maxPrice: undefined,
                   })
                 );
-                updateURL(newFilters, selectedCategories, selectedBrands);
+                updateURL(newFilters);
               }}
               className="text-gray-400 hover:text-gray-600"
             >

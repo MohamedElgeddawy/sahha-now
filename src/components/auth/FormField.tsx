@@ -22,24 +22,24 @@ export function FormField({
 }: FormFieldProps) {
   return (
     <motion.div
-      className="space-y-2"
+      className="space-y-3"
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
       <motion.label
         htmlFor={name}
-        className="block text-sm font-medium text-gray-700 text-right"
+        className="block text-sm font-semibold text-gray-800 text-right"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.2 }}
       >
-        {label} {props.required && <span className="text-red-500">*</span>}
+        {label} {props.required && <span className="text-red-500 ml-1">*</span>}
       </motion.label>
-      <div className="relative">
+      <div className="relative group">
         {startElement && (
           <motion.div
-            className="absolute w-fit rtl:left-3 ltr:right-3 top-1/2 transform -translate-y-1/2 text-sm text-gray-600"
+            className="absolute w-fit rtl:left-4 ltr:right-4 top-1/2 transform -translate-y-1/2 text-sm text-gray-500 z-10"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.1 }}
@@ -50,11 +50,12 @@ export function FormField({
         <Input
           id={name}
           className={cn(
-            "h-12 text-base text-start transition-all duration-200",
+            "h-14 text-base text-start transition-all duration-300 rounded-xl border-gray-200 focus:border-green-500 focus:ring-green-500/20 group-hover:border-gray-300",
             {
-              "ps-12": !!startElement,
-              "pe-12": !!endElement,
-              "border-red-500 focus:border-red-500 focus:ring-red-500": !!error,
+              "ps-14": !!startElement,
+              "pe-14": !!endElement,
+              "border-red-500 focus:border-red-500 focus:ring-red-500/20":
+                !!error,
             },
             className
           )}
@@ -63,7 +64,7 @@ export function FormField({
         />
         {endElement && (
           <motion.div
-            className="absolute w-fit ltr:left-3 rtl:right-3 top-1/2 transform -translate-y-1/2 text-sm text-gray-600"
+            className="absolute w-fit ltr:left-4 rtl:right-4 top-1/2 transform -translate-y-1/2 text-sm text-gray-500 z-10"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.1 }}
@@ -74,7 +75,7 @@ export function FormField({
       </div>
       {error && (
         <motion.p
-          className="text-sm text-red-500 text-right"
+          className="text-sm text-red-500 text-right flex items-center gap-1"
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{
@@ -83,6 +84,7 @@ export function FormField({
             damping: 15,
           }}
         >
+          <span className="w-1 h-1 bg-red-500 rounded-full"></span>
           {error.message}
         </motion.p>
       )}

@@ -148,7 +148,7 @@ export function OrdersTab() {
   };
 
   return (
-    <div className="bg-white rounded-lg border border-gray-300 overflow-hidden">
+    <>
       {orders.length > 0 ? (
         <>
           <div className="overflow-x-auto">
@@ -277,6 +277,6 @@ export function OrdersTab() {
           </Button>
         </div>
       )}
-    </div>
+    </>
   );
 }

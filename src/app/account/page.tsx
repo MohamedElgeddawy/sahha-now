@@ -1,34 +1,29 @@
 "use client";
 import { PersonalInfoTab } from "@/components/account/PersonalInfoTab";
 import { motion } from "motion/react";
-import { UserCircle } from "lucide-react";
+import { UserCircle, Shield, Settings, Bell } from "lucide-react";
+import Banner from "./components/Banner";
 
 const AccountPage = () => {
   return (
-    <div>
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       {/* Page Header */}
+
+      <Banner
+        icon="user"
+        title="المعلومات الشخصية"
+        description="إدارة بياناتك الشخصية ومعلومات الحساب"
+      />
+
+      {/* Personal Info Content */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white rounded-xl shadow-sm border p-6 mb-6"
+        transition={{ delay: 0.2 }}
+        className="bg-white rounded-2xl shadow-sm border border-gray-300 p-6"
       >
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-            <UserCircle className="w-6 h-6 text-green-600" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">
-              المعلومات الشخصية
-            </h1>
-            <p className="text-gray-600">
-              إدارة بياناتك الشخصية ومعلومات الحساب
-            </p>
-          </div>
-        </div>
+        <PersonalInfoTab />
       </motion.div>
-
-      {/* Personal Info Content */}
-      <PersonalInfoTab />
     </div>
   );
 };

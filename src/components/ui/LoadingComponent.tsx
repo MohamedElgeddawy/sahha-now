@@ -377,6 +377,7 @@ export function LoadingComponent({
   return (
     <motion.div
       className={cn(
+        "text-gray-600",
         variantStyles[variant],
         variant === "card" ? sizeConfig.padding : "",
         sizeConfig.gap,
@@ -391,7 +392,7 @@ export function LoadingComponent({
 
       {showMessage && (
         <motion.span
-          className={cn("text-gray-600 font-medium", sizeConfig.text)}
+          className={cn("font-medium", sizeConfig.text)}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.3 }}

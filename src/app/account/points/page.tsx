@@ -1,30 +1,27 @@
 "use client";
 import { PointsTab } from "@/components/account/PointsTab";
 import { motion } from "motion/react";
-import { Heart } from "lucide-react";
+import Banner from "../components/Banner";
 
 const PointsPage = () => {
   return (
-    <div>
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       {/* Page Header */}
+      <Banner
+        icon="heart"
+        title="نقاط الولاء"
+        description="استبدل نقاطك واربح مكافآت حصرية"
+      />
+
+      {/* Points Content */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white rounded-xl shadow-sm border p-6 mb-6"
+        transition={{ delay: 0.2 }}
+        className="bg-white rounded-2xl shadow-sm border border-gray-300 p-6"
       >
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-            <Heart className="w-6 h-6 text-green-600" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">نقاط الولاء</h1>
-            <p className="text-gray-600">استبدل نقاطك واربح مكافآت حصرية</p>
-          </div>
-        </div>
+        <PointsTab />
       </motion.div>
-
-      {/* Points Content */}
-      <PointsTab />
     </div>
   );
 };

@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
+import { motion } from "motion/react";
 import {
   useUserProfile,
   userProfileSchema,
@@ -87,13 +88,18 @@ export function PersonalInfoTab() {
   }
 
   return (
-    <div className="bg-gray-50 p-6 rounded-lg">
-      <h3 className="text-lg font-semibold text-[#2C3E50] mb-6 text-right">
-        المعلومات الشخصية
-      </h3>
+    <>
+      <div className="mb-8">
+        <h3 className="text-2xl font-bold text-gray-900 mb-2 text-right">
+          المعلومات الشخصية
+        </h3>
+        <p className="text-gray-600 text-right">
+          قم بتحديث معلوماتك الشخصية للحفاظ على دقة البيانات
+        </p>
+      </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* fullname Field */}
           <Controller
             control={control}
@@ -157,17 +163,26 @@ export function PersonalInfoTab() {
           />
         </div>
 
-        <div className="flex justify-end">
+        <div className="flex flex-col sm:flex-row gap-4 justify-end pt-6 border-t border-gray-100">
+          <Button
+            type="button"
+            variant="outline"
+            className="px-8 py-3 text-gray-600 hover:text-gray-800"
+            onClick={() => reset()}
+          >
+            إلغاء
+          </Button>
           <Button
             type="submit"
-            className="bg-green-600 hover:bg-green-700 text-white min-w-56 !py-5 text-base rounded-lg"
+            className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 disabled:opacity-80 disabled:from-green-100 disabled:to-emerald-100 text-white px-8 py-3 text-base rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
             disabled={isPending}
           >
             {isPending ? (
               <InlineLoading
                 message={ProfileLoadingMessages.saving}
                 animation="dots"
-                size="sm"
+                size="md"
+                className="text-slate-900"
               />
             ) : (
               "حفظ التعديلات"
@@ -175,6 +190,6 @@ export function PersonalInfoTab() {
           </Button>
         </div>
       </form>
-    </div>
+    </>
   );
 }
