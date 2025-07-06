@@ -12,8 +12,8 @@ services:
     restart: unless-stopped
     container_name: sahha-frontend
     networks:
-      - sahha-network
+      - sahha-shared-network
 
 networks:
-  sahha-network:
-    driver: bridge
+  sahha-shared-network:
+    external: true
