@@ -3,7 +3,6 @@
 import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import { Share2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Product } from "@/lib/api/products";
 import FavoriteButton from "./FavoriteButton";
