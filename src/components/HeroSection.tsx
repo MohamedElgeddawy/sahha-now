@@ -9,7 +9,7 @@ import SkinCareIcon from "../../public/icons/home/skin-care.svg";
 import VitaminIcon from "../../public/icons/home/vitamin.svg";
 import MedicineIcon from "../../public/icons/home/medicine.svg";
 import { cn } from "@/lib/utils";
-import { Button } from "./ui/button";
+import { Button } from "./ui/button"; 
 import { motion } from "motion/react";
 import { Star } from "lucide-react";
 import Link from "next/link";
@@ -281,7 +281,7 @@ export default function HeroSection() {
           transition={{ duration: 0.6 }}
         >
           {isLoadingHero ? (
-            <div className="w-[180px] sm:w-[180px] md:w-[260px] lg:w-[340px] xl:w-[380px] h-[180px] sm:h-[180px] md:h-[260px] lg:h-[340px] xl:h-[380px] bg-gray-200 rounded-lg animate-pulse" />
+            <div className="w-[240px] sm:w-[240px] md:w-[260px] lg:w-[340px] xl:w-[200px] h-[220px] sm:h-[200px] md:h-[260px] lg:h-[340px] xl:h-[380px] bg-gray-200 rounded-lg animate-pulse" />
           ) : (
             <Image
               src={heroContent.imageUrl}

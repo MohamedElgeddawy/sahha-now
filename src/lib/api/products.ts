@@ -14,6 +14,7 @@ export interface Product {
   discount: string;
   averageRating: string;
   isFavourite: boolean;
+  giftPoints: number | null;
   brandId: string;
   categoryId: string;
   media: {
@@ -59,10 +60,16 @@ export interface ProductVariant {
   arabicName: string;
   sku: string;
   price: string;
-  discount: string;
+  discount?: string;
   isAvailable: boolean;
   isDefault: boolean;
   productId: string;
+  colour?: string;
+  size?: string | null;
+}
+
+export interface SingleProductResponse {
+  product: Product;
 }
 
 export interface ProductsResponse {
@@ -162,9 +169,13 @@ export async function fetchProducts(
   }
 }
 
-export async function fetchProduct(id: string) {
+export async function fetchProduct(
+  id: string
+): Promise<SingleProductResponse | undefined> {
   try {
-    const response = await sahhaInstance.get(`/products/${id}`);
+    const response = await sahhaInstance.get<SingleProductResponse>(
+      `/products/${id}`
+    );
     return response.data;
   } catch (error) {
     console.error(`Error fetching product ${id}:`, error);
@@ -194,6 +205,7 @@ export async function fetchFavoriteProducts(
     };
   }
 }
+
 export async function fetchFavoriteProductsCount(): Promise<number> {
   try {
     const response = await sahhaInstance.get("/favourites/count");

@@ -21,52 +21,23 @@ export function VariantSelector({
     return null;
   }
 
-  // Determine if variants are colors or sizes based on variant names
-  const isColorVariant = variants.some(
-    (variant) =>
-      variant.arabicName.includes("أحمر") ||
-      variant.arabicName.includes("أزرق") ||
-      variant.arabicName.includes("أخضر") ||
-      variant.arabicName.includes("أسود") ||
-      variant.arabicName.includes("أبيض") ||
-      variant.arabicName.includes("لون") ||
-      variant.name.toLowerCase().includes("red") ||
-      variant.name.toLowerCase().includes("blue") ||
-      variant.name.toLowerCase().includes("green") ||
-      variant.name.toLowerCase().includes("black") ||
-      variant.name.toLowerCase().includes("white") ||
-      variant.name.toLowerCase().includes("color")
-  );
+  // Determine if variants are colors or sizes based on the presence of colour field and size field
+  const hasColorVariants = variants.some((variant) => variant.colour);
+  const hasSizeVariants = variants.some((variant) => variant.size);
 
-  const isSizeVariant = variants.some(
-    (variant) =>
-      variant.arabicName.includes("صغير") ||
-      variant.arabicName.includes("متوسط") ||
-      variant.arabicName.includes("كبير") ||
-      variant.arabicName.includes("مقاس") ||
-      variant.name.toLowerCase().includes("small") ||
-      variant.name.toLowerCase().includes("medium") ||
-      variant.name.toLowerCase().includes("large") ||
-      variant.name.toLowerCase().includes("size") ||
-      /^(XS|S|M|L|XL|XXL|\d+)$/i.test(variant.name)
-  );
-
-  const variantType = isColorVariant
-    ? "color"
-    : isSizeVariant
-    ? "size"
-    : "variant";
-  const labelText =
-    variantType === "color"
-      ? "اللون:"
-      : variantType === "size"
-      ? "المقاس:"
-      : "الخيارات:";
+  // Determine the label based on variant type
+  const getVariantLabel = () => {
+    if (hasColorVariants) return "لون المنتج:";
+    if (hasSizeVariants) return "حجم العبوة:";
+    return "";
+  };
 
   return (
     <div className={cn("space-y-3", className)}>
       <div className="flex items-center gap-2">
-        <span className="text-sm font-medium text-gray-700">{labelText}</span>
+        <span className="text-sm font-medium text-gray-700">
+          {getVariantLabel()}
+        </span>
         {selectedVariant && (
           <span className="text-sm text-gray-500">
             {selectedVariant.arabicName}
@@ -74,7 +45,8 @@ export function VariantSelector({
         )}
       </div>
 
-      <div className="flex flex-wrap gap-2">
+      {/* Variants Row - horizontally scrollable on mobile */}
+      <div className="flex flex-row gap-3 overflow-x-auto py-2">
         {variants.map((variant) => {
           const isSelected = selectedVariant?.id === variant.id;
           const isAvailable = variant.isAvailable;
@@ -85,52 +57,44 @@ export function VariantSelector({
               onClick={() => isAvailable && onVariantSelect(variant)}
               disabled={!isAvailable}
               className={cn(
-                "relative min-w-[60px] px-3 py-2 text-sm font-medium rounded-lg border transition-all duration-200",
-                "focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2",
-                {
-                  // Selected state
-                  "border-green-600 bg-green-50 text-green-700 ring-2 ring-green-600":
-                    isSelected && isAvailable,
-
-                  // Available but not selected
-                  "border-gray-200 bg-white text-gray-700 hover:border-gray-300 hover:bg-gray-50":
-                    !isSelected && isAvailable,
-
-                  // Unavailable
-                  "border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed":
-                    !isAvailable,
-
-                  // Color variant specific styling
-                  "w-12 h-12 rounded-full p-0": variantType === "color",
-
-                  // Size variant specific styling
-                  "min-w-[50px] h-10": variantType === "size",
-                }
+                "flex flex-col items-center min-w-[64px] focus:outline-none group",
+                !isAvailable && "opacity-40 cursor-not-allowed"
               )}
               aria-label={`Select ${variant.arabicName}`}
             >
-              {variantType === "color" ? (
-                <div className="w-full h-full rounded-full border-2 border-white shadow-inner" />
-              ) : (
-                <span className="block text-center">{variant.arabicName}</span>
-              )}
-
-              {/* Unavailable overlay */}
-              {!isAvailable && (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-full h-0.5 bg-gray-400 rotate-45" />
+              {/* Color Swatch for color variants */}
+              {hasColorVariants && variant.colour ? (
+                <div
+                  className={cn(
+                    "w-12 h-12 rounded-full border-4 flex items-center justify-center transition-all duration-200 relative",
+                    isSelected
+                      ? "border-white ring-4 ring-blue-500"
+                      : "border-gray-200",
+                    !isAvailable && "bg-gray-100"
+                  )}
+                  style={{ backgroundColor: variant.colour }}
+                >
+                  {/* Unavailable overlay */}
+                  {!isAvailable && (
+                    <span className="absolute w-8 h-0.5 bg-gray-400 rotate-45 block" />
+                  )}
                 </div>
-              )}
-
-              {/* Price difference indicator */}
-              {selectedVariant && variant.id !== selectedVariant.id && (
-                <div className="absolute -top-1 -right-1 text-xs bg-gray-600 text-white px-1 rounded">
-                  {Number(variant.price) > Number(selectedVariant.price)
-                    ? "+"
-                    : ""}
-                  {(
-                    Number(variant.price) - Number(selectedVariant.price)
-                  ).toFixed(2)}
+              ) : (
+                /* Size or other variant types */
+                <div
+                  className={cn(
+                    "px-2 py-2 min-w-[60px] border rounded-lg flex items-center justify-center text-sm font-medium transition-all duration-200",
+                    isSelected
+                      ? "bg-[#2D9CDB] text-white border-transparent"
+                      : "bg-[#F6F6F6] text-gray-700 border-transparent",
+                    !isAvailable && "bg-gray-100 text-gray-400"
+                  )}
+                >
+                  {variant.arabicName}
+                  {/* Unavailable overlay for size variants */}
+                  {!isAvailable && (
+                    <span className="absolute w-6 h-0.5 bg-gray-400 rotate-45 block" />
+                  )}
                 </div>
               )}
             </button>

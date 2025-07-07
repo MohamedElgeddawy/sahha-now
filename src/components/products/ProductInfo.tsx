@@ -44,15 +44,12 @@ export function ProductInfo({ product }: ProductInfoProps) {
   };
 
   // Calculate current price based on selected variant or product
-  const currentPrice = selectedVariant ? selectedVariant.price : product.price;
-  const currentDiscount = selectedVariant
-    ? selectedVariant.discount
-    : product.discount;
-  const finalPrice =
-    Number(currentDiscount) > 0
-      ? Number(currentPrice) -
-        Number(currentPrice) * (Number(currentDiscount) / 100)
-      : Number(currentPrice);
+  const price = Number(selectedVariant?.price ?? product.price);
+  const discountValue = selectedVariant?.discount ?? product.discount;
+  const discount = Number(discountValue) || 0;
+
+  const hasDiscount = discount > 0;
+  const finalPrice = hasDiscount ? price - price * (discount / 100) : price;
 
   return (
     <div className="space-y-6">
@@ -176,19 +173,23 @@ export function ProductInfo({ product }: ProductInfoProps) {
             </span>
             <span className="text-sm font-medium text-green-600">ر.س</span>
           </div>
-          {Number(currentDiscount) > 0 ? (
+          {hasDiscount ? (
             <div className="flex items-center gap-1">
               <span className="text-base text-gray-400 line-through">
-                {currentPrice}
+                {price.toFixed(2)}
               </span>
               <span className="text-sm text-gray-400">ر.س</span>
             </div>
           ) : null}
         </div>
-        <div className="flex items-center gap-2 bg-[#F2FBF6] rounded-lg px-3 py-1">
-          <Gift className="w-6 h-5 text-green-primary " />
-          <span className="text-green-primary text-sm">20 نقطة</span>
-        </div>
+        {product.giftPoints && product.giftPoints > 0 ? (
+          <div className="flex items-center gap-2 bg-[#F2FBF6] rounded-lg px-3 py-1">
+            <Gift className="w-6 h-5 text-green-primary " />
+            <span className="text-green-primary text-sm">
+              {product.giftPoints} نقطة
+            </span>
+          </div>
+        ) : null}
       </div>
 
       {/* arabicShortDescription */}

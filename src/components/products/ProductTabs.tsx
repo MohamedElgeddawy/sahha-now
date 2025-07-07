@@ -237,7 +237,7 @@ export function ProductTabs({ product }: ProductTabsProps) {
 
                 {/* Rating Bars */}
                 <div className="w-full md:flex-1 space-y-2">
-                  {[5, 4, 3, 2, 1].map((rating) => (
+                  {[5, 4, 3, 2, 1].map((rating) => ( 
                     <div
                       key={rating}
                       className="flex items-center gap-2 w-full"
