@@ -223,9 +223,9 @@ export default function ProductsPage() {
       >
         المنتجات
       </motion.h1>
-      <div className="py-0 py-0 mb-2 sm:mb-4">
+      {/* <div className="py-0 py-0 mb-2 sm:mb-4">
         <Announcements />
-      </div>
+      </div> */}
       <FilterDrawer>
         {/* Active filters */}
         <ActiveFilters />

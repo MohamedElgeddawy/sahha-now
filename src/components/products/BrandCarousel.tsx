@@ -61,7 +61,7 @@ export default function BrandCarousel() {
   }, [api]);
 
   return (
-    <div className="w-full py-8 flex flex-col items-center mt-16 relative">
+    <div className="w-full py-8 flex flex-col items-center mt-6 relative">
       <div className="absolute top-0 w-screen h-full bg-[#F4FBF6] z-[-1]" />
       <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-8 w-full px-2 sm:px-4 md:px-8 gap-4 md:gap-0">
         <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#2d3748] text-center md:text-right flex-1">

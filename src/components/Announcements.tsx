@@ -133,7 +133,7 @@ const AnnouncementCard = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className={`relative w-full h-[240px] md:h-[280px] rounded-xl overflow-hidden shadow-lg group ${
+      className={`relative w-full h-[200px] md:h-[240px] rounded-xl overflow-hidden shadow-lg group ${
         isRightSection
           ? "bg-[#FFF5E5]"
           : "bg-gradient-to-r from-blue-50 to-green-50"
@@ -145,7 +145,7 @@ const AnnouncementCard = ({
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: index * 0.1 + 0.2 }}
-          className="text-xl font-bold leading-tight line-clamp-2 text-gray-800 text-right"
+          className="text-lg font-bold leading-tight line-clamp-2 text-gray-800 text-right"
         >
           {announcement.title}
         </motion.h2>
@@ -153,8 +153,8 @@ const AnnouncementCard = ({
 
       {/* Image - Adjusted for mobile */}
       <div
-        className="absolute md:left-6 md:top-4 md:w-[240px] md:h-[240px] rounded-lg overflow-hidden shadow-md
-                     left-4 top-12 w-[168px] h-[180px]"
+        className="absolute md:left-6 md:top-4 md:w-[240px] md:h-[200px] rounded-lg overflow-hidden shadow-md
+                     left-4 top-12 w-[168px] h-[140px]"
       >
         <Image
           src={announcement.imageUrl}
@@ -168,14 +168,14 @@ const AnnouncementCard = ({
       {/* Content Area - Adjusted for mobile */}
       <div
         className="absolute md:right-6 md:top-10 md:max-w-[300px] md:text-right
-                     right-4 top-24 left-[200px] text-right"
+                     right-4 top-18 left-[200px] text-right"
       >
         {/* Desktop Title */}
         <motion.h2
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: index * 0.1 + 0.2 }}
-          className="hidden md:block text-lg md:text-xl lg:text-2xl font-bold mb-3 lg:mb-6 leading-tight line-clamp-2 text-gray-800"
+          className="hidden md:block text-lg md:text-xl lg:text-xl font-bold mb-4 lg:mb-6 leading-tight line-clamp-2 text-gray-800"
         >
           {announcement.title}
         </motion.h2>
@@ -199,7 +199,7 @@ const AnnouncementCard = ({
         >
           <Button
             asChild
-            className={`font-semibold md:w-auto px-8 py-0 md:py-3 text-sm md:text-base rounded-lg shadow-md transition-all duration-300 hover:shadow-lg hover:scale-105 ${
+            className={`font-semibold h-10 md:h-12 md:w-auto px-6 py-0 md:py-3 text-sm md:text-base rounded-lg shadow-md transition-all duration-300 hover:shadow-lg hover:scale-105 ${
               isRightSection
                 ? "bg-[#F4A261] text-white hover:bg-gray-100"
                 : "bg-green-600 text-white hover:bg-green-700"

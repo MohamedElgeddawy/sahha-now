@@ -26,6 +26,7 @@ export interface CartItem {
     createdAt: string;
     updatedAt: string;
     name: string;
+    arabicName?: string;
     sku: string | null;
     price: string;
     discount: string;
@@ -37,6 +38,7 @@ export interface CartItem {
       createdAt: string;
       updatedAt: string;
       name: string;
+      arabicName?: string;
       sku: string | null;
       description: string;
       price: string;

@@ -3,16 +3,43 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Star, Truck, Zap, Gift, MessageSquare, Loader2 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Product, ProductVariant } from "@/lib/api/products";
 import Image from "next/image";
 import QuantityCounter from "../ui/QuantityCounter";
 import { VariantSelector } from "../ui/VariantSelector";
 import { useCart } from "@/lib/hooks/use-cart";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+import { sendContactMessage } from "@/lib/api/contactUs";
 
 interface ProductInfoProps {
   product: Product;
 }
+
+const questionFormSchema = z.object({
+  name: z.string().min(1, { message: "هذا الحقل مطلوب" }),
+  email: z
+    .string()
+    .min(1, { message: "هذا الحقل مطلوب" })
+    .email({ message: "بريد إلكتروني غير صالح" }),
+  phone: z
+    .string()
+    .optional()
+    .or(z.literal(""))
+    .refine((val) => !val || /^\d{8,15}$/.test(val), {
+      message: "رقم هاتف غير صالح",
+    }),
+  message: z
+    .string()
+    .min(1, { message: "هذا الحقل مطلوب" })
+    .min(10, { message: "يجب أن تكون الرسالة على الأقل 10 أحرف" }),
+});
+
+type QuestionFormData = z.infer<typeof questionFormSchema>;
 
 export function ProductInfo({ product }: ProductInfoProps) {
   const [quantity, setQuantity] = useState(1);
@@ -21,11 +48,15 @@ export function ProductInfo({ product }: ProductInfoProps) {
   );
   const { addToCart } = useCart();
   const [showQuestionForm, setShowQuestionForm] = useState(false);
-  const [questionForm, setQuestionForm] = useState({
-    name: "",
-    phone: "",
-    email: "",
-    message: "",
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<QuestionFormData>({
+    resolver: zodResolver(questionFormSchema),
+    defaultValues: { name: "", phone: "", email: "", message: "" },
   });
 
   // Set default variant on component mount
@@ -37,10 +68,15 @@ export function ProductInfo({ product }: ProductInfoProps) {
     }
   }, [product.variants]);
 
-  const handleQuestionSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Question submitted:", questionForm);
-    setShowQuestionForm(false);
+  const handleQuestionSubmit = async (data: QuestionFormData) => {
+    try {
+      await sendContactMessage(data);
+      setShowQuestionForm(false);
+      reset();
+      toast.success("تم إرسال رسالتك بنجاح");
+    } catch (error: any) {
+      toast.error(error?.message || "حدث خطأ أثناء إرسال الرسالة");
+    }
   };
 
   // Calculate current price based on selected variant or product
@@ -237,10 +273,13 @@ export function ProductInfo({ product }: ProductInfoProps) {
       </div>
 
       {/* Free Shipping and Ask Question Section (Mobile Layout) */}
-      <div className="md:hidden flex items-center justify-between gap-2 p-1">
+      <div className="flex items-center justify-between gap-2 p-1">
         <div className="flex items-center gap-1 text-sm text-gray-600">
           <Truck className="size-4 -scale-x-100" />
-          <span>توصيل مجاني للطلبات فوق 375 ر س</span>
+          <span>
+            توصيل مجاني
+            <span className="text-gray-400"> للطلبات فوق 375 ر.س</span>
+          </span>
         </div>
 
         <button
@@ -283,114 +322,148 @@ export function ProductInfo({ product }: ProductInfoProps) {
       </div>
 
       {/* Modal Popup for Question Form */}
-      {showQuestionForm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
-          <div className="relative bg-white w-full max-w-2xl mx-4 rounded-2xl shadow-lg p-8 flex flex-col items-center">
-            {/* Close Button */}
-            <button
-              onClick={() => setShowQuestionForm(false)}
-              className="absolute left-6 top-6 text-gray-500 hover:text-gray-700 text-3xl focus:outline-none"
-              aria-label="إغلاق"
+      <AnimatePresence>
+        {showQuestionForm && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-end bg-black/40 backdrop-blur-sm md:items-center md:justify-center"
+            onClick={() => setShowQuestionForm(false)}
+          >
+            <motion.div
+              initial={{ y: "100%", opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: "100%", opacity: 0 }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative w-full max-h-[90vh] overflow-y-auto rounded-t-2xl bg-white p-6 pb-8 shadow-lg md:max-w-2xl md:rounded-2xl md:p-8"
             >
-              &times;
-            </button>
-            {/* Title */}
-            <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">
-              ترغب فى طرح سؤال؟
-            </h2>
-            <form
-              onSubmit={handleQuestionSubmit}
-              className="w-full max-w-md space-y-6"
-            >
-              <div>
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  الاسم
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  value={questionForm.name}
-                  onChange={(e) =>
-                    setQuestionForm({ ...questionForm, name: e.target.value })
-                  }
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  placeholder="ادخل اسمك"
-                  required
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="phone"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  رقم الهاتف
-                </label>
-                <input
-                  type="tel"
-                  id="phone"
-                  value={questionForm.phone}
-                  onChange={(e) =>
-                    setQuestionForm({ ...questionForm, phone: e.target.value })
-                  }
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  placeholder="ادخل رقم هاتفك"
-                  required
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  البريد الإلكتروني
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  value={questionForm.email}
-                  onChange={(e) =>
-                    setQuestionForm({ ...questionForm, email: e.target.value })
-                  }
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  placeholder="ادخل بريدك الإلكتروني"
-                  required
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="message"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  السؤال
-                </label>
-                <textarea
-                  id="message"
-                  rows={4}
-                  value={questionForm.message}
-                  onChange={(e) =>
-                    setQuestionForm({
-                      ...questionForm,
-                      message: e.target.value,
-                    })
-                  }
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
-                  placeholder="اكتب سؤالك هنا..."
-                  required
-                />
-              </div>
-              <Button
-                type="submit"
-                className="w-full bg-green-600 text-white hover:bg-green-700 py-3"
+              {/* Mobile Handle */}
+              <div className="mx-auto mb-4 h-1.5 w-12 rounded-full bg-gray-300 md:hidden" />
+
+              {/* Close Button (Desktop) */}
+              <button
+                onClick={() => setShowQuestionForm(false)}
+                className="absolute right-6 top-6 hidden text-3xl text-gray-500 hover:text-gray-700 focus:outline-none md:block"
+                aria-label="إغلاق"
               >
-                إرسال السؤال
-              </Button>
-            </form>
-          </div>
-        </div>
-      )}
+                &times;
+              </button>
+
+              {/* Title */}
+              <h2 className="mb-6 text-center text-2xl font-bold text-gray-800 md:text-3xl">
+                ترغب فى طرح سؤال؟
+              </h2>
+
+              <form
+                onSubmit={handleSubmit(handleQuestionSubmit)}
+                className="mx-auto w-full max-w-lg space-y-4 text-right"
+              >
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
+                  <div>
+                    <label
+                      htmlFor="name"
+                      className="mb-2 block text-sm font-medium text-gray-700"
+                    >
+                      الاسم<span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="name"
+                      {...register("name")}
+                      className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-green-500"
+                      placeholder="برجاء إدخال الاسم"
+                      required
+                    />
+                    {errors.name && (
+                      <p className="text-sm text-red-500 mt-1">
+                        {errors.name.message}
+                      </p>
+                    )}
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="email"
+                      className="mb-2 block text-sm font-medium text-gray-700"
+                    >
+                      البريد الإلكتروني<span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      {...register("email")}
+                      className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-green-500"
+                      placeholder="برجاء إدخال البريد الإلكتروني"
+                      required
+                    />
+                    {errors.email && (
+                      <p className="text-sm text-red-500 mt-1">
+                        {errors.email.message}
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <div>
+                  <label
+                    htmlFor="phone"
+                    className="mb-2 block text-sm font-medium text-gray-700"
+                  >
+                    رقم هاتف
+                  </label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    {...register("phone")}
+                    className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-green-500"
+                    placeholder="برجاء إدخال رقم هاتفك"
+                  />
+                  {errors.phone && (
+                    <p className="text-sm text-red-500 mt-1">
+                      {errors.phone.message}
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <label
+                    htmlFor="message"
+                    className="mb-2 block text-sm font-medium text-gray-700"
+                  >
+                    الرسالة
+                  </label>
+                  <textarea
+                    id="message"
+                    rows={4}
+                    {...register("message")}
+                    className="w-full resize-none rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-green-500"
+                    placeholder="برجاء إدخال رسالتك"
+                    required
+                  />
+                  {errors.message && (
+                    <p className="text-sm text-red-500 mt-1">
+                      {errors.message.message}
+                    </p>
+                  )}
+                </div>
+                <Button
+                  type="submit"
+                  className="w-full rounded-lg bg-green-500 py-3 text-lg text-white hover:bg-green-600"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <span className="flex items-center gap-2">
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      جاري الإرسال...
+                    </span>
+                  ) : (
+                    "إرسال"
+                  )}
+                </Button>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
