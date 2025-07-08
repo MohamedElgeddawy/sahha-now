@@ -51,7 +51,7 @@ const itemVariants = {
 
 // Memoized OTP input component to prevent re-renders
 const OTPInput = memo(({ control }: { control: any }) => {
-  const AnimatedOTPSlot = motion(InputOTPSlot);
+  const AnimatedOTPSlot = motion.create(InputOTPSlot);
 
   return (
     <Controller

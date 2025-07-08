@@ -15,7 +15,7 @@ import { motion } from "motion/react";
 
 interface ProductCarouselProps {
   title?: string;
-  products: Product[];
+  products: Product[] | undefined;
   className?: string;
   isLoading?: boolean;
 }

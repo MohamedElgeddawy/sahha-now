@@ -224,7 +224,7 @@ export default function HeroSection() {
             transition={{ duration: 0.5, delay: 0.4 }}
           >
             {isLoadingHero ? (
-              <div className="h-6 bg-gray-200 rounded animate-pulse" />
+              <span className="h-6 block w-full bg-gray-200 rounded animate-pulse" />
             ) : (
               heroContent.description
             )}

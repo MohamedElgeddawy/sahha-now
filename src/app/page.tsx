@@ -16,7 +16,7 @@ export default function HomePage() {
 
       <ProductCarousel
         title="لا تفوت عروض هذا الأسبوع"
-        products={products || []}
+        products={products }
         isLoading={isLoading}
       />
       <div className="py-2 sm:py-4">

@@ -21,9 +21,9 @@ interface BreadcrumbProps {
 }
 
 // Animated version of the breadcrumb components
-const AnimatedBreadcrumbItem = motion(BreadcrumbItem);
-const AnimatedBreadcrumbPage = motion(BreadcrumbPage);
-const AnimatedBreadcrumbSeparator = motion(BreadcrumbSeparator);
+const AnimatedBreadcrumbItem = motion.create(BreadcrumbItem);
+const AnimatedBreadcrumbPage = motion.create(BreadcrumbPage);
+const AnimatedBreadcrumbSeparator = motion.create(BreadcrumbSeparator);
 
 export function Breadcrumb({ items }: BreadcrumbProps) {
   return (
