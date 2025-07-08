@@ -28,7 +28,6 @@ const questionFormSchema = z.object({
     .email({ message: "بريد إلكتروني غير صالح" }),
   phone: z
     .string()
-    .optional()
     .or(z.literal(""))
     .refine((val) => !val || /^\d{8,15}$/.test(val), {
       message: "رقم هاتف غير صالح",
