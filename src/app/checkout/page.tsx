@@ -16,6 +16,7 @@ import { CreditCardForm } from "@/components/checkout/CreditCardForm";
 import { ThreeDSecureModal } from "@/components/checkout/ThreeDSecureModal";
 import axios, { AxiosResponse } from "axios";
 import sahhaInstance from "@/lib/api/sahhaInstance";
+import { useLocalStorage } from "usehooks-ts";
 
 type MoyasarTokenResponse = {
   id: string;
@@ -35,11 +36,41 @@ type MoyasarTokenResponse = {
   expires_at: string;
 };
 
+type OrderData = {
+  fullname: string;
+  phoneNumber: string;
+  city: string;
+  district: string;
+  street: string;
+  building: string;
+  paymentMethod: "CARD" | "CASH_ON_DELIVERY";
+  payWithWallet: boolean;
+  saveToken: boolean;
+  tokenData: {
+    token: string;
+    funding: string;
+    brand: string;
+    lastFour: string;
+    expiryMonth: string;
+    expiryYear: string;
+  };
+
+  cvc: string;
+};
+
 const CheckoutPage = () => {
   const router = useRouter();
   const { cart } = useCart();
 
   const [couponCode, setCouponCode] = useState("");
+  const [_, setLocalStorage] = useLocalStorage<OrderData | null>(
+    "order-data",
+    null,
+    {
+      serializer: (value) => JSON.stringify(value),
+      deserializer: (value) => JSON.parse(value),
+    }
+  );
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [show3DSModal, setShow3DSModal] = useState(false);
   const [transactionUrl, setTransactionUrl] = useState("");
@@ -79,13 +110,13 @@ const CheckoutPage = () => {
       });
       const responseData = (await axiosInstance.post("/tokens", {
         number: data.number.replace(/\s/g, ""),
-        callback_url: window.location.href,
+        callback_url: `${window.location.href}/success`,
         cvc: data.cvc,
         month: data.month,
         year: data.year,
         name: data.name,
       })) as AxiosResponse<MoyasarTokenResponse>;
-      const res = await sahhaInstance.post("/orders", {
+      setLocalStorage({
         fullname: data.fullname,
         phoneNumber: data.phoneNumber,
         city: data.city,
@@ -105,6 +136,27 @@ const CheckoutPage = () => {
         },
         cvc: data.cvc,
       });
+      router.push(responseData.data.verification_url);
+      // const res = await sahhaInstance.post("/orders", {
+      //   fullname: data.fullname,
+      //   phoneNumber: data.phoneNumber,
+      //   city: data.city,
+      //   district: data.district,
+      //   street: data.street,
+      //   building: data.building,
+      //   paymentMethod: "CARD",
+      //   payWithWallet: true,
+      //   saveToken: true,
+      //   tokenData: {
+      //     token: responseData.data.id,
+      //     funding: responseData.data.funding,
+      //     brand: responseData.data.brand,
+      //     lastFour: responseData.data.last_four,
+      //     expiryMonth: responseData.data.month,
+      //     expiryYear: responseData.data.year,
+      //   },
+      //   cvc: data.cvc,
+      // });
     } catch (error) {
       console.log(error);
     }
