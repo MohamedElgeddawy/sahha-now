@@ -25,6 +25,8 @@ export default function ProductPage({
     return <Loader />;
   }
 
+  const typedProduct = product as unknown as Product;
+
   return (
     <>
       <Breadcrumb
@@ -32,24 +34,24 @@ export default function ProductPage({
           { label: "الرئيسية", href: "/" },
           { label: "المنتجات", href: "/products" },
           {
-            label: product?.category?.arabicName || "",
-            href: `/products?categoryIds=${product?.category?.id}`,
+            label: typedProduct?.category?.arabicName || "",
+            href: `/products?categoryIds=${typedProduct?.category?.id}`,
           },
-          { label: product?.arabicName || "" },
+          { label: typedProduct?.arabicName || "" },
         ]}
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
         <ProductGallery
-          images={product?.media || []}
-          discount={product?.discount || "0"}
-          product={product || ({} as Product)}
+          images={typedProduct?.media || []}
+          discount={typedProduct?.discount || "0"}
+          product={typedProduct || ({} as Product)}
         />
-        <ProductInfo product={product || ({} as Product)} />
+        <ProductInfo product={typedProduct || ({} as Product)} />
       </div>
 
       <div className="mt-12">
-        <ProductTabs product={product || ({} as Product)} />
+        <ProductTabs product={typedProduct || ({} as Product)} />
       </div>
 
       <div className="mt-16">
