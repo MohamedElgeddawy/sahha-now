@@ -1,6 +1,6 @@
 import { useEffect, useCallback } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
+import { useAppDispatch } from "@/lib/redux/hooks";
 import { setFilters } from "@/lib/redux/slices/filtersSlice";
 import { ProductFilters } from "@/lib/api/products";
 
@@ -9,7 +9,6 @@ export function useFilterParams() {
   const router = useRouter();
   const pathname = usePathname();
   const dispatch = useAppDispatch();
-  const filters = useAppSelector((state) => state.filters.activeFilters);
 
   // Initialize filters from URL on mount
   useEffect(() => {

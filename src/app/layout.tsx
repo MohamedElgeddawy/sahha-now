@@ -6,6 +6,8 @@ import Footer from "@/components/layout/footer/footer";
 import { Container } from "@/components/layout/container";
 import { Toaster } from "sonner";
 import { Providers } from "@/components/layout/providers";
+import { Suspense } from "react";
+import Loader from "./loading";
 
 const cairo = Cairo({ subsets: ["latin"] });
 
@@ -23,9 +25,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       >
         <Providers>
           <Toaster richColors position="top-center" />
-          <Header />
-          <Container>{children}</Container>
-          <Footer />
+          <Suspense fallback={<Loader />}>
+            <Header />
+            <Container>{children}</Container>
+            <Footer />
+          </Suspense>
         </Providers>
       </body>
     </html>

@@ -6,93 +6,93 @@ import { Button } from "@/components/ui/button";
 import { Search, Home, ArrowRight } from "lucide-react";
 import { motion, Variants } from "motion/react";
 
+// Animation variants
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      when: "beforeChildren",
+      staggerChildren: 0.2,
+      delayChildren: 0.3,
+    },
+  },
+};
+
+const itemVariants: Variants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      duration: 0.5,
+      ease: "easeOut",
+    },
+  },
+};
+
+const fourLeftVariants: Variants = {
+  hidden: { y: -100, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      duration: 0.6,
+      ease: "easeOut",
+      delay: 0.2,
+    },
+  },
+};
+
+const fourRightVariants: Variants = {
+  hidden: { y: 100, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      duration: 0.6,
+      ease: "easeOut",
+      delay: 0.4,
+    },
+  },
+};
+
+const searchIconVariants: Variants = {
+  hidden: { scale: 0, opacity: 0 },
+  visible: {
+    scale: 1,
+    opacity: 1,
+    transition: {
+      duration: 0.5,
+      ease: "easeOut",
+      delay: 0.3,
+    },
+  },
+  wiggle: {
+    rotate: [0, 10, -10, 10, 0],
+    transition: {
+      repeat: Infinity,
+      repeatType: "loop",
+      duration: 2,
+      ease: "easeInOut",
+    },
+  },
+};
+
+const dotVariants: Variants = {
+  jump: {
+    y: -30,
+    transition: {
+      duration: 0.8,
+      repeat: Infinity,
+      repeatType: "mirror",
+      ease: "easeInOut",
+    },
+  },
+};
+
 export default function NotFound() {
   // Animation for the numbers
-
-  // Animation variants
-  const containerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        when: "beforeChildren",
-        staggerChildren: 0.2,
-        delayChildren: 0.3,
-      },
-    },
-  };
-
-  const itemVariants: Variants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.5,
-        ease: "easeOut",
-      },
-    },
-  };
-
-  const fourLeftVariants: Variants = {
-    hidden: { y: -100, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.6,
-        ease: "easeOut",
-        delay: 0.2,
-      },
-    },
-  };
-
-  const fourRightVariants: Variants = {
-    hidden: { y: 100, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.6,
-        ease: "easeOut",
-        delay: 0.4,
-      },
-    },
-  };
-
-  const searchIconVariants: Variants = {
-    hidden: { scale: 0, opacity: 0 },
-    visible: {
-      scale: 1,
-      opacity: 1,
-      transition: {
-        duration: 0.5,
-        ease: "easeOut",
-        delay: 0.3,
-      },
-    },
-    wiggle: {
-      rotate: [0, 10, -10, 10, 0],
-      transition: {
-        repeat: Infinity,
-        repeatType: "loop",
-        duration: 2,
-        ease: "easeInOut",
-      },
-    },
-  };
-
-  const dotVariants: Variants = {
-    jump: {
-      y: -30,
-      transition: {
-        duration: 0.8,
-        repeat: Infinity,
-        repeatType: "mirror",
-        ease: "easeInOut",
-      },
-    },
-  };
 
   return (
     <motion.div

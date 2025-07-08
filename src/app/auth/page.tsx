@@ -16,5 +16,5 @@ export default function AuthPage() {
     }
   }, [isAuthenticated]);
 
-  return null;
+  return <></>;
 }
