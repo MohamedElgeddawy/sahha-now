@@ -176,14 +176,32 @@ export function ProductTabs({ product }: ProductTabsProps) {
             </p>
           </TabsContent>
 
-          <TabsContent
-            value="shipping"
-            className="prose prose-sm max-w-none text-right"
-          >
-            <p className="text-gray-600 leading-relaxed">
-              {product.arabicLongDescription ||
-                "سياسة الشحن والإرجاع ستظهر هنا"}
-            </p>
+          <TabsContent value="shipping" className="prose max-w-none text-right">
+            <div className="space-y-3 text-gray-700 leading-relaxed text-sm sm:text-base md:text-lg px-2 sm:px-4 md:px-8">
+              <div className="font-bold text-base sm:text-lg md:text-xl mb-2">
+                الشحن والاسترجاع
+              </div>
+              <div>
+                <span className="font-semibold">الشحن:</span>
+                <br />
+                يتم توصيل الطلبات خلال 2 إلى 5 أيام عمل داخل المملكة العربية
+                السعودية.
+                <br />
+                الشحن مجاني للطلبات التي تتجاوز 375 ريال سعودي.
+              </div>
+              <div>
+                <span className="font-semibold">الاسترجاع:</span>
+                <br />
+                يمكنك إرجاع المنتج خلال 30 يومًا من تاريخ الاستلام، بشرط أن يكون
+                غير مستخدم وفي حالته الأصلية مع التغليف الأصلي.
+              </div>
+              <div>
+                <span className="font-semibold">طريقة الاسترجاع:</span>
+                <br />
+                يرجى التواصل مع خدمة العملاء لبدء عملية الاسترجاع، وسنقوم
+                بمساعدتك في أقرب وقت.
+              </div>
+            </div>
           </TabsContent>
 
           <TabsContent value="reviews" className="space-y-2 text-right">
@@ -236,7 +254,7 @@ export function ProductTabs({ product }: ProductTabsProps) {
                 </div>
 
                 {/* Rating Bars */}
-                <div className="w-full md:flex-1 space-y-2">
+                <div className="w-full md:w-[490px] space-y-2">
                   {[5, 4, 3, 2, 1].map((rating) => (
                     <div
                       key={rating}
@@ -303,12 +321,7 @@ export function ProductTabs({ product }: ProductTabsProps) {
                   <p className="text-gray-600 mb-4">
                     يجب تسجيل الدخول لإضافة تقييم
                   </p>
-                  <Button
-                    onClick={handleLoginClick}
-                    className="bg-[#2D9CDB] hover:bg-[#2589BD] text-white"
-                  >
-                    تسجيل الدخول
-                  </Button>
+                  <Button onClick={handleLoginClick}>تسجيل الدخول</Button>
                 </div>
               ) : (
                 <>

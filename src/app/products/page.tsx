@@ -31,6 +31,7 @@ import {
 import { useFilterParams } from "@/lib/hooks/use-filter-params";
 import { ActiveFilters } from "@/components/products/ActiveFilters";
 import { LoadingComponent } from "@/components/ui/LoadingComponent";
+import Announcements from "@/components/Announcements";
 import { Filter } from "lucide-react";
 import Image from "next/image";
 
@@ -215,14 +216,16 @@ export default function ProductsPage() {
       transition={{ duration: 0.5 }}
     >
       <motion.h1
-        className="text-3xl font-bold mb-8"
+        className="text-3xl font-bold mb-2 sm:mb-4"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
       >
         المنتجات
       </motion.h1>
-
+      {/* <div className="py-0 py-0 mb-2 sm:mb-4">
+        <Announcements />
+      </div> */}
       <FilterDrawer>
         {/* Active filters */}
         <ActiveFilters />

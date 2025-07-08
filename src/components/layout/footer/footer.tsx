@@ -3,22 +3,30 @@ import { SahhaNowArabicLogo } from "@/components/layout/icons/brand-logos/SahhaN
 import Image from "next/image";
 
 export default function Footer() {
+  const socialIcons = [
+    "youtube",
+    "facebook",
+    "twitter",
+    "instagram",
+    "linkedin",
+  ];
+
   return (
-    <footer className="bg-[#F8F9FA] text-[#2C3E50] pt-24 pb-4">
+    <footer className="bg-[#F8F9FA] text-[#2C3E50] pt-12 pb-4">
       <div className="container mx-auto px-4">
-        {/* Footer columns - 3 columns */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
+        {/* Footer columns - always 3 columns */}
+        <div className="grid grid-cols-3 gap-4 sm:gap-8 mb-8">
           {/* من نحن */}
-          <div>
-            <h3 className="font-bold text-xl mb-5 pb-2 relative after:content-[''] after:absolute after:bottom-0 after:right-0 after:w-10 after:h-0.5 after:bg-green-600">
+          <div className="space-y-3">
+            <h3 className="font-bold text-base sm:text-lg md:text-xl mb-3 sm:mb-4 pb-2 relative after:content-[''] after:absolute after:bottom-0 after:right-0 after:w-8 sm:after:w-10 after:h-0.5 after:bg-green-600">
               من نحن
             </h3>
-            <ul className="space-y-3 text-gray-600">
+            <ul className="space-y-2 text-gray-600">
               <li>
                 <Link
                   prefetch
                   href="/about"
-                  className="hover:text-green-600 transition-colors block"
+                  className="hover:text-green-600 transition-colors block text-xs sm:text-sm md:text-base"
                 >
                   من نحن
                 </Link>
@@ -27,7 +35,7 @@ export default function Footer() {
                 <Link
                   prefetch
                   href="/terms"
-                  className="hover:text-green-600 transition-colors block"
+                  className="hover:text-green-600 transition-colors block text-xs sm:text-sm md:text-base"
                 >
                   الشروط والأحكام
                 </Link>
@@ -36,7 +44,7 @@ export default function Footer() {
                 <Link
                   prefetch
                   href="/terms"
-                  className="hover:text-green-600 transition-colors block"
+                  className="hover:text-green-600 transition-colors block text-xs sm:text-sm md:text-base"
                 >
                   سياسة الخصوصية
                 </Link>
@@ -45,7 +53,7 @@ export default function Footer() {
                 <Link
                   prefetch
                   href="/contact"
-                  className="hover:text-green-600 transition-colors block"
+                  className="hover:text-green-600 transition-colors block text-xs sm:text-sm md:text-base"
                 >
                   تواصل معنا
                 </Link>
@@ -54,16 +62,16 @@ export default function Footer() {
           </div>
 
           {/* التسوق */}
-          <div>
-            <h3 className="font-bold text-xl mb-5 pb-2 relative after:content-[''] after:absolute after:bottom-0 after:right-0 after:w-10 after:h-0.5 after:bg-green-600">
+          <div className="space-y-3">
+            <h3 className="font-bold text-base sm:text-lg md:text-xl mb-3 sm:mb-4 pb-2 relative after:content-[''] after:absolute after:bottom-0 after:right-0 after:w-8 sm:after:w-10 after:h-0.5 after:bg-green-600">
               التسوق
             </h3>
-            <ul className="space-y-3 text-gray-600">
+            <ul className="space-y-2 text-gray-600">
               <li>
                 <Link
                   prefetch
-                  href="#"
-                  className="hover:text-green-600 transition-colors block"
+                  href="/offers"
+                  className="hover:text-green-600 transition-colors block text-xs sm:text-sm md:text-base"
                 >
                   العروض
                 </Link>
@@ -72,7 +80,7 @@ export default function Footer() {
                 <Link
                   prefetch
                   href="#"
-                  className="hover:text-green-600 transition-colors block"
+                  className="hover:text-green-600 transition-colors block text-xs sm:text-sm md:text-base"
                 >
                   الماركات
                 </Link>
@@ -80,8 +88,8 @@ export default function Footer() {
               <li>
                 <Link
                   prefetch
-                  href="#"
-                  className="hover:text-green-600 transition-colors block"
+                  href="/products"
+                  className="hover:text-green-600 transition-colors block text-xs sm:text-sm md:text-base"
                 >
                   جميع المنتجات
                 </Link>
@@ -89,8 +97,8 @@ export default function Footer() {
               <li>
                 <Link
                   prefetch
-                  href="#"
-                  className="hover:text-green-600 transition-colors block"
+                  href="/products"
+                  className="hover:text-green-600 transition-colors block text-xs sm:text-sm md:text-base"
                 >
                   المنتجات الجديدة
                 </Link>
@@ -99,16 +107,16 @@ export default function Footer() {
           </div>
 
           {/* فروعنا */}
-          <div>
-            <h3 className="font-bold text-xl mb-5 pb-2 relative after:content-[''] after:absolute after:bottom-0 after:right-0 after:w-10 after:h-0.5 after:bg-green-600">
+          <div className="space-y-3">
+            <h3 className="font-bold text-base sm:text-lg md:text-xl mb-3 sm:mb-4 pb-2 relative after:content-[''] after:absolute after:bottom-0 after:right-0 after:w-8 sm:after:w-10 after:h-0.5 after:bg-green-600">
               فروعنا
             </h3>
-            <ul className="space-y-3 text-gray-600">
+            <ul className="space-y-2 text-gray-600">
               <li>
                 <Link
                   prefetch
-                  href="#"
-                  className="hover:text-green-600 transition-colors block"
+                  href="/branches"
+                  className="hover:text-green-600 transition-colors block text-xs sm:text-sm md:text-base"
                 >
                   الرياض
                 </Link>
@@ -116,8 +124,8 @@ export default function Footer() {
               <li>
                 <Link
                   prefetch
-                  href="#"
-                  className="hover:text-green-600 transition-colors block"
+                  href="/branches"
+                  className="hover:text-green-600 transition-colors block text-xs sm:text-sm md:text-base"
                 >
                   جدة
                 </Link>
@@ -125,8 +133,8 @@ export default function Footer() {
               <li>
                 <Link
                   prefetch
-                  href="#"
-                  className="hover:text-green-600 transition-colors block"
+                  href="/branches"
+                  className="hover:text-green-600 transition-colors block text-xs sm:text-sm md:text-base"
                 >
                   الدمام
                 </Link>
@@ -134,8 +142,8 @@ export default function Footer() {
               <li>
                 <Link
                   prefetch
-                  href="#"
-                  className="hover:text-green-600 transition-colors block"
+                  href="/branches"
+                  className="hover:text-green-600 transition-colors block text-xs sm:text-sm md:text-base"
                 >
                   خريطة الفروع
                 </Link>
@@ -144,123 +152,131 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Copyright and footer bottom */}
-        <div className="border-t pt-2.5 border-gray-300">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex flex-wrap gap-x-12 gap-y-2 items-center">
-              <div className="flex gap-3 order-1">
-                {/* Google Play Button */}
-                <Link prefetch href="#" className="block">
-                  <div className="bg-black text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-800 transition-colors min-w-[140px]">
-                    <Image
-                      src={"/icons/social/google-play.svg"}
-                      alt="google play"
-                      width={20}
-                      height={20}
-                    />
-                    <div className="text-right">
-                      <div className="text-xs text-gray-300">Get it on</div>
-                      <div className="text-sm font-medium">Google Play</div>
-                    </div>
-                  </div>
-                </Link>
-
-                {/* App Store Button */}
-                <Link prefetch href="#" className="block">
-                  <div className="bg-black text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-800 transition-colors min-w-[140px]">
-                    <Image
-                      src={"/icons/social/apple.svg"}
-                      alt="apple"
-                      width={20}
-                      height={20}
-                    />
-                    <div className="text-right">
-                      <div className="text-xs text-gray-300">
-                        Download on the
-                      </div>
-                      <div className="text-sm font-medium">App Store</div>
-                    </div>
-                  </div>
-                </Link>
-              </div>
-
-              <div className="flex items-center gap-4 order-2">
-                <Link
-                  prefetch
-                  href="#"
-                  className="text-gray-500 hover:text-green-600 transition-colors"
-                >
-                  <Image
-                    src={"/icons/social/linkedin.svg"}
-                    alt="linkedin"
-                    width={24}
-                    height={24}
-                  />
-                </Link>
-                <Link
-                  prefetch
-                  href="#"
-                  className="text-gray-500 hover:text-green-600 transition-colors"
-                >
-                  <Image
-                    src={"/icons/social/instagram.svg"}
-                    alt="instagram"
-                    width={24}
-                    height={24}
-                  />
-                </Link>
-                <Link
-                  prefetch
-                  href="#"
-                  className="text-gray-500 hover:text-green-600 transition-colors"
-                >
-                  <Image
-                    src={"/icons/social/twitter.svg"}
-                    alt="twitter"
-                    width={24}
-                    height={24}
-                  />
-                </Link>
-                <Link
-                  prefetch
-                  href="#"
-                  className="text-gray-500 hover:text-green-600 transition-colors"
-                >
-                  <Image
-                    src={"/icons/social/facebook.svg"}
-                    alt="facebook"
-                    width={24}
-                    height={24}
-                  />
-                </Link>
-                <Link
-                  prefetch
-                  href="#"
-                  className="text-gray-500 hover:text-green-600 transition-colors"
-                >
-                  <Image
-                    src={"/icons/social/youtube.svg"}
-                    alt="youtube"
-                    width={24}
-                    height={24}
-                  />
-                </Link>
-              </div>
-            </div>
-
-            {/* Left: Copyright and Logo */}
-            <div className="flex items-center gap-4">
-              <div className="text-gray-600">
-                <p>© 2025 جميع الحقوق محفوظة لـ صحة ناو</p>
-              </div>
-              <div className="flex-shrink-0">
-                <Link prefetch href="/" className="flex items-center">
-                  <SahhaNowArabicLogo />
-                </Link>
-              </div>
+  {/* Copyright and footer bottom */}
+<div className="border-t pt-4 border-gray-300">
+  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    {/* First line on mobile: App buttons and social icons */}
+    <div className="flex flex-wrap items-center gap-3 md:gap-6">
+      {/* App buttons */}
+      <div className="flex gap-3 md:gap-4">
+        {/* Google Play Button */}
+        <Link prefetch href="#" className="block">
+          <div className="bg-black text-white px-3 py-1.5 rounded-lg flex items-center gap-2 hover:bg-gray-800 transition-colors min-w-[130px]">
+            <Image
+              src={"/icons/social/google-play.svg"}
+              alt="google play"
+              width={16}
+              height={16}
+              className="w-3 h-3"
+            />
+            <div className="text-right">
+              <div className="text-xs text-gray-300">Get it on</div>
+              <div className="text-sm font-medium">Google Play</div>
             </div>
           </div>
-        </div>
+        </Link>
+
+        {/* App Store Button */}
+        <Link prefetch href="#" className="block">
+          <div className="bg-black text-white px-3 py-1.5 rounded-lg flex items-center gap-2 hover:bg-gray-800 transition-colors min-w-[130px]">
+            <Image
+              src={"/icons/social/apple.svg"}
+              alt="apple"
+              width={16}
+              height={16}
+              className="w-3 h-3"
+            />
+            <div className="text-right">
+              <div className="text-xs text-gray-300">Download on the</div>
+              <div className="text-sm font-medium">App Store</div>
+            </div>
+          </div>
+        </Link>
+      </div>
+
+      {/* Social icons */}
+      <div className="flex gap-3">
+        <Link
+          prefetch
+          href="#"
+          className="text-gray-500 hover:text-green-600 transition-colors"
+        >
+          <Image
+            src={"/icons/social/linkedin.svg"}
+            alt="linkedin"
+            width={20}
+            height={20}
+            className="w-5 h-5"
+          />
+        </Link>
+        <Link
+          prefetch
+          href="#"
+          className="text-gray-500 hover:text-green-600 transition-colors"
+        >
+          <Image
+            src={"/icons/social/instagram.svg"}
+            alt="instagram"
+            width={20}
+            height={20}
+            className="w-5 h-5"
+          />
+        </Link>
+        <Link
+          prefetch
+          href="#"
+          className="text-gray-500 hover:text-green-600 transition-colors"
+        >
+          <Image
+            src={"/icons/social/twitter.svg"}
+            alt="twitter"
+            width={20}
+            height={20}
+            className="w-5 h-5"
+          />
+        </Link>
+        <Link
+          prefetch
+          href="#"
+          className="text-gray-500 hover:text-green-600 transition-colors"
+        >
+          <Image
+            src={"/icons/social/facebook.svg"}
+            alt="facebook"
+            width={20}
+            height={20}
+            className="w-5 h-5"
+          />
+        </Link>
+        <Link
+          prefetch
+          href="#"
+          className="text-gray-500 hover:text-green-600 transition-colors"
+        >
+          <Image
+            src={"/icons/social/youtube.svg"}
+            alt="youtube"
+            width={20}
+            height={20}
+            className="w-5 h-5"
+          />
+        </Link>
+      </div>
+    </div>
+
+    {/* Second line on mobile: Copyright and logo */}
+    <div className="flex items-center gap-4 md:gap-6">
+      <div className="text-gray-600 text-sm">
+        <p>© 2025 جميع الحقوق محفوظة لـ صحة ناو</p>
+      </div>
+      <div className="flex-shrink-0">
+        <Link prefetch href="/" className="flex items-center">
+          <SahhaNowArabicLogo className="w-24" />
+        </Link>
+      </div>
+    </div>
+  </div>
+</div>
       </div>
     </footer>
   );

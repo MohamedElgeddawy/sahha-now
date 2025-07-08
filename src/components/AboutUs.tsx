@@ -60,13 +60,13 @@ export function AboutUs() {
 
           {/* Features Section */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-            <div className="bg-[#F6F6F6] p-4 md:p-6 rounded-lg border border-[#DADADA] text-right">
-              <div className="flex mb-2">
-                <div className="w-10 h-10 flex items-center justify-center">
+            <div className="bg-[#F6F6F6] p-2 md:p-6 rounded-lg border border-[#DADADA] text-right">
+              <div className="flex mb-0 md:mb-2">
+                <div className="size-8 md:size-10 flex items-center justify-center">
                   <Bandaids />
                 </div>
               </div>
-              <h3 className="text-lg text-[#2C3E50] mb-4">
+              <h3 className="text-lg text-[#2C3E50] mb-1 md:mb-4">
                 منتجات عالية الجودة
               </h3>
               <p className="text-[#2C3E50] text-sm">
@@ -77,11 +77,11 @@ export function AboutUs() {
             </div>
             <div className="bg-[#F6F6F6] p-4 md:p-6 rounded-lg border border-[#DADADA] text-right">
               <div className="flex  mb-2">
-                <div className="w-10 h-10 flex items-center justify-center">
+                <div className="size-8 md:size-10 flex items-center justify-center">
                   <Pill />
                 </div>
               </div>
-              <h3 className="text-lg  text-[#2C3E50] mb-4">
+              <h3 className="text-lg  text-[#2C3E50] mb-1 md:mb-4">
                 تغطية شاملة في جميع أنحاء المملكة
               </h3>
               <p className="text-[#2C3E50] text-sm">
@@ -92,11 +92,11 @@ export function AboutUs() {
             </div>
             <div className="bg-[#F6F6F6] p-4 md:p-6 rounded-lg border border-[#DADADA] text-right">
               <div className="flex mb-2">
-                <div className="w-10 h-10  flex items-center justify-center">
+                <div className="size-8 md:size-10  flex items-center justify-center">
                   <FirstAid />
                 </div>
               </div>
-              <h3 className="text-lg text-[#2C3E50] mb-4">
+              <h3 className="text-lg text-[#2C3E50] mb-1 md:mb-4">
                 دعم مريح وطرق دفع سهلة
               </h3>
               <p className="text-[#2C3E50] text-sm">
@@ -107,14 +107,14 @@ export function AboutUs() {
           </div>
 
           {/* People First Section */}
-          <div className="flex flex-col lg:flex-row gap-8 md:gap-12 items-center">
-            <div className=" bg-[#E9F9F5]  rounded-lg  p-6 md:p-10  w-full lg:w-1/2 order-1 lg:order-1 text-right">
-              <h2 className="text-right text-[#2C3E50] text-xl sm:text-xl md:text-2xl font-bold mb-4 md:mb-6">
+          <div className="flex flex-col lg:flex-row gap-4 md:gap-12 items-center">
+            <div className=" bg-[#E9F9F5]  rounded-lg  p-4 md:p-10  w-full lg:w-1/2 order-1 lg:order-1 text-right">
+              <h2 className="text-right text-[#2C3E50] text-xl sm:text-xl md:text-2xl font-bold mb-2 md:mb-6">
                 الناس أولاً
                 <br />
                 نوفّر لك أعلى جودة من العناية والاهتمام.
               </h2>
-              <p className="text-right text-[#7F8C8D] text-base sm:text-lg font-normal leading-relaxed mb-8">
+              <p className="text-right text-[#7F8C8D] text-base sm:text-lg font-normal leading-relaxed mb-2 md:mb-6">
                 في صحة، نؤمن تماماً أن عملائنا هم أولويتنا الأولى. صحتك وراحتك
                 هي الأهم بالنسبة لنا. نحن ملتزمون بتوفير أفضل جودة من العناية
                 إلى جانب تجربة تسوق سهلة وآمنة. سواء كنت بحاجة إلى أدوية أساسية،
@@ -122,8 +122,8 @@ export function AboutUs() {
                 بصحة أفضل.
               </p>
               <button
-                onClick={() => router.push("/")}
-                className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-md text-lg font-medium"
+                onClick={() => router.push("/products")}
+                className="w-64 h-12 bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-md text-lg font-medium"
               >
                 تسوق الآن
               </button>
@@ -154,8 +154,8 @@ export function AboutUs() {
               </div>
             </div>
 
-            <div className=" bg-[#FFF5E5]  rounded-lg  p-6 md:p-10  w-full lg:w-1/2 order-1 lg:order-2 text-right">
-              <h2 className="text-right text-[#2C3E50] text-2xl sm:text-3xl md:text-4xl font-bold mb-4">
+            <div className=" bg-[#FFF5E5]  rounded-lg  p-4 md:p-10  w-full lg:w-1/2 order-1 lg:order-2 text-right">
+              <h2 className="text-right text-[#2C3E50] text-2xl sm:text-3xl md:text-4xl font-bold mb-2 md:mb-4">
                 أفضل الخيارات، أفضل المنتجات
               </h2>
               <p className="text-right text-[#2C3E50] text-sm sm:text-base mb-4">
@@ -164,21 +164,21 @@ export function AboutUs() {
               </p>
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
-                  <Truck className="w-6 h-6 -scale-x-100" />
+                  <Truck className="size-4 md:size-6 -scale-x-100" />
 
                   <span className="text-[#2C3E50] text-sm">
                     توصيل سريع في خلال 24 ساعة
                   </span>
                 </div>
                 <div className="flex items-center  gap-2">
-                  <CreditCard className="w-6 h-6" />
+                  <CreditCard className="size-4 md:size-6" />
 
                   <span className="text-[#2C3E50] text-sm">
                     أسعار منافسة مع خيارات دفع متعددة
                   </span>
                 </div>
                 <div className="flex items-center  gap-2">
-                  <Clock className="w-6 h-6" />
+                  <Clock className="size-4 md:size-6" />
 
                   <span className="text-[#2C3E50] text-sm">
                     طلب سهل وتتبع شحنات في أي وقت
@@ -187,10 +187,10 @@ export function AboutUs() {
               </div>
               <div className="mt-6">
                 <button
-                  onClick={() => router.push("/")}
-                  className="bg-[#F4A261] hover:bg-orange-500  text-white px-8 py-3 rounded-md text-lg font-medium"
+                  onClick={() => router.push("/products")}
+                  className="w-64 h-12 bg-[#F4A261] hover:bg-orange-500  text-white px-4 py-3 rounded-md text-lg font-medium"
                 >
-                  تسوق الآن
+                  اشترى الآن
                 </button>
               </div>
             </div>

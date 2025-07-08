@@ -4,14 +4,14 @@ import { Metadata } from "next";
 import { AboutUs } from "@/components/AboutUs";
 import { ContactUs } from "@/components/ContactUs";
 
-export const metadata: Metadata = {
-  title: "من نحن - صحة الآن",
-  description: "تعرف على صحة الآن - منصة الصيدلية الإلكترونية الرائدة في المملكة العربية السعودية",
-};
+// export const metadata: Metadata = {
+//   title: "من نحن - صحة الآن",
+//   description: "تعرف على صحة الآن - منصة الصيدلية الإلكترونية الرائدة في المملكة العربية السعودية",
+// };
 
 export default function AboutPage() {
   return (
-    <main className="py-12 bg-gray-50 min-h-[calc(100vh-64px)]">
+    <main className="py-2 md:py-4 bg-gray-50 min-h-[calc(100vh-64px)]">
       {/* Breadcrumb */}
       <div className="container mb-2">
         <nav className="text-[#2C3E50]">

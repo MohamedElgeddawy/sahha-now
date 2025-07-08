@@ -217,8 +217,10 @@ export function ContactUs() {
                     جاري الإرسال...
                   </span>
                 ) : (
-                  <span className="flex items-center justify-center gap-2">
-                    إرسال <Send className="size-4" />
+                  <span className="flex items-center justify-center ">
+                    إرسال       await sendContactMessage(data);
+                    await sendContactMessage(data);
+
                   </span>
                 )}
               </Button>

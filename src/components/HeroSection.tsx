@@ -1,5 +1,4 @@
 "use client";
-
 import Image from "next/image";
 import MotherChildCareIcon from "../../public/icons/home/mother&child-care.svg";
 import HairCareIcon from "../../public/icons/home/hair-care.svg";
@@ -163,7 +162,7 @@ export default function HeroSection() {
   return (
     <section className="relative mb-20 md:mb-32 lg:mb-40 flex flex-col w-full">
       {/* Hero Content */}
-      <div className="flex flex-col md:flex-row justify-between items-center bg-[#f8fafc] rounded-3xl p-3 sm:p-4 md:p-8 lg:p-12 w-full min-h-[350px] md:min-h-[450px] lg:min-h-[500px] relative overflow-hidden border border-gray-100">
+      <div className="flex flex-col md:flex-row justify-between items-center bg-[#f8fafc] rounded-3xl p-3 sm:p-4 md:p-8 lg:p-12 w-full min-h-[300px] md:min-h-[450px] lg:min-h-[500px] relative overflow-hidden border border-gray-100">
         {/* Background Image/Pattern */}
         <motion.div
           className="absolute inset-0 z-0"
@@ -241,35 +240,12 @@ export default function HeroSection() {
               <div className="w-[99px] h-[40px] bg-gray-200 rounded-lg animate-pulse" />
             ) : (
               <Link href={heroContent.redirectUrl}>
-                <Button className="bg-green-500 hover:bg-green-600 text-white  rounded-lg text-sm sm:text-base md:text-lg w-[120px] h-[40px] transition-colors duration-200 shadow-md flex items-center justify-center">
+                <Button className="bg-green-500 hover:bg-green-600 text-white  rounded-lg text-sm sm:text-base md:text-lg mb-2 w-[120px] h-[40px] transition-colors duration-200 shadow-md flex items-center justify-center">
                   {heroContent.buttonText || "اشترى الآن"}
                 </Button>
               </Link>
             )}
           </motion.div>
-
-          {/* Hero Announcements Indicators (slide or carsousel*/}
-          {/* {heroAnnouncements && heroAnnouncements.length > 1 && (
-            <motion.div
-              className="flex items-center gap-2 mt-4"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.6 }}
-            >
-              {heroAnnouncements.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentHeroIndex(index)}
-                  className={cn(
-                   // "h-2 w-2 rounded-full transition-all duration-300",
-                    index === currentHeroIndex
-                      ? "bg-green-600 w-6"
-                      : "bg-gray-300 hover:bg-gray-400"
-                  )}
-                />
-              ))}
-            </motion.div>
-          )} */}
         </motion.div>
 
         {/* Dynamic Hero Image */}
@@ -281,7 +257,7 @@ export default function HeroSection() {
           transition={{ duration: 0.6 }}
         >
           {isLoadingHero ? (
-            <div className="w-[180px] sm:w-[180px] md:w-[260px] lg:w-[340px] xl:w-[380px] h-[180px] sm:h-[180px] md:h-[260px] lg:h-[340px] xl:h-[380px] bg-gray-200 rounded-lg animate-pulse" />
+            <div className="w-[240px] sm:w-[240px] md:w-[260px] lg:w-[340px] xl:w-[200px] h-[220px] sm:h-[200px] md:h-[260px] lg:h-[340px] xl:h-[380px] bg-gray-200 rounded-lg animate-pulse" />
           ) : (
             <Image
               src={heroContent.imageUrl}
@@ -311,7 +287,7 @@ export default function HeroSection() {
           }}
           className="w-full"
         >
-          <CarouselContent className="-ml-2 md:-ml-3">
+          <CarouselContent className="-ml-6 -mr-2">
             {slides.map((slide, slideIndex) => (
               <CarouselItem key={slideIndex} className="pl-2 md:pl-3">
                 <div className="grid grid-cols-4 md:grid-cols-5 gap-2 md:gap-3 lg:gap-4">

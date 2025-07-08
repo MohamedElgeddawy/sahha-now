@@ -212,10 +212,10 @@ const ProductCardGrid = ({ product, isLoading = false }: Props) => {
 
       {/* Quick View Dialog */}
       <ProductQuickViewDialog
-          product={product as Product}
+        product={product as Product}
         open={showQuickView}
         onOpenChange={setShowQuickView}
-        />
+      />
     </>
   );
 };

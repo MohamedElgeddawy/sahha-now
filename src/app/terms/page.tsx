@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
-    <main className="py-12 bg-gray-50">
+    <main className="py-2 md:py-4 bg-gray-50">
       {/* Breadcrumb */}
       <Breadcrumb
         items={[

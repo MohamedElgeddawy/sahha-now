@@ -66,19 +66,19 @@ export default function CartPage() {
 
   if (cartItems.length === 0) {
     return (
-      <div className="py-12 flex flex-col items-center text-center">
+      <div className="py-12 px-4 flex flex-col items-center text-center">
         <Image
           src="/images/emptyCart.svg"
           alt="سلة فارغة"
           width={250}
           height={250}
-          className="mb-6"
+          className="mb-6 max-w-full h-auto"
         />
-        <h2 className="text-2xl font-bold mb-4">سلة التسوق فارغة</h2>
-        <p className="text-gray-500 mb-8 max-w-md">
+        <h2 className="text-xl md:text-2xl font-bold mb-4">سلة التسوق فارغة</h2>
+        <p className="text-gray-500 mb-8 max-w-md text-sm md:text-base">
           لم تقم بإضافة أي منتجات إلى سلة التسوق الخاصة بك حتى الآن
         </p>
-        <Button asChild>
+        <Button asChild className="w-full max-w-xs">
           <Link href="/products">تصفح المنتجات</Link>
         </Button>
       </div>
@@ -86,7 +86,7 @@ export default function CartPage() {
   }
 
   return (
-    <>
+    <div className="px-4 md:px-6 lg:px-8">
       <Breadcrumb
         items={[
           { label: "الرئيسية", href: "/" },
@@ -95,11 +95,12 @@ export default function CartPage() {
         ]}
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
         {/* Cart Items - Takes 2/3 of the space on larger screens */}
         <div className="lg:col-span-2 space-y-4">
-          <div className="bg-white rounded-lg p-4">
-            <div className="grid grid-cols-5 gap-4 font-semibold pb-2 mb-4">
+          <div className="bg-white rounded-lg p-4 md:p-6">
+            {/* Desktop Table Header - Hidden on mobile */}
+            <div className="hidden md:grid grid-cols-5 gap-4 font-semibold pb-2 mb-4 border-b">
               <div className="col-span-2 text-start">المنتج</div>
               <div className="text-center">السعر</div>
               <div className="text-center">الكمية</div>
@@ -119,76 +120,162 @@ export default function CartPage() {
                     animate={{ opacity: 1, height: "auto" }}
                     exit={{ opacity: 0, height: 0 }}
                     transition={{ duration: 0.3 }}
-                    className="grid grid-cols-5 gap-4 items-center py-4 border-b border-gray-300 last:border-0"
+                    className="border-b border-gray-200 last:border-0 py-4"
                   >
-                    {/* Product image and info */}
-                    <div className="flex items-center gap-3 col-span-2">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        disabled={removeFromCart.isPending}
-                        className="rounded-full text-gray-400 hover:text-red-500"
-                        onClick={() =>
-                          removeFromCart.mutate({
-                            variantId: item.variant.id,
-                            quantity: item.quantity,
-                          })
-                        }
-                      >
-                        <X className="size-7" />
-                      </Button>
-
-                      <div className="relative h-20 w-20 rounded-md overflow-hidden">
-                        <Image
-                          src={
-                            item.variant.product.media[0]?.url ||
-                            "/images/product.jpg"
+                    {/* Desktop Layout */}
+                    <div className="hidden md:grid grid-cols-5 gap-4 items-center">
+                      {/* Product image and info */}
+                      <div className="flex items-center gap-3 col-span-2">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          disabled={removeFromCart.isPending}
+                          className="rounded-full text-gray-400 hover:text-red-500 flex-shrink-0"
+                          onClick={() =>
+                            removeFromCart.mutate({
+                              variantId: item.variant.id,
+                              quantity: item.quantity,
+                            })
                           }
-                          alt={item.variant.product.name}
-                          fill
-                          className="object-cover"
-                        />
+                        >
+                          <X className="size-5" />
+                        </Button>
+
+                        <div className="relative h-20 w-20 rounded-md overflow-hidden flex-shrink-0">
+                          <Image
+                            src={
+                              item.variant.product.media[0]?.url ||
+                              "/images/product.jpg"
+                            }
+                            alt={
+                              item.variant.product.arabicName ||
+                              item.variant.product.name
+                            }
+                            fill
+                            className="object-cover"
+                          />
+                        </div>
+
+                        <div className="text-right min-w-0">
+                          <h3 className="font-semibold text-sm line-clamp-2">
+                            {item.variant.product.arabicName ||
+                              item.variant.product.name}
+                          </h3>
+                          {item.variant && (
+                            <span className="text-xs text-gray-500">
+                              {item.variant.arabicName || item.variant.name}
+                            </span>
+                          )}
+                        </div>
                       </div>
 
-                      <div className="text-right">
-                        <h3 className="font-semibold text-sm line-clamp-2">
-                          {item.variant.product.name}
-                        </h3>
-                        {item.variant && (
-                          <span className="text-xs text-gray-500">
-                            {item.variant.name}
+                      {/* Price */}
+                      <div className="text-center">
+                        <div className="font-semibold text-sm">
+                          {formatCurrency(finalPrice)}
+                        </div>
+                        {parseFloat(item.variant.discount || "0") > 0 && (
+                          <span className="text-xs text-gray-500 relative before:content-[''] before:absolute before:top-1/2 before:left-0 before:w-full before:h-[1px] before:bg-gray-500">
+                            {formatCurrency(parseFloat(item.variant.price))}
                           </span>
                         )}
                       </div>
-                    </div>
 
-                    {/* Price */}
-                    <div className="text-center">
-                      <div className="font-semibold">
-                        {formatCurrency(finalPrice)}
+                      {/* Quantity */}
+                      <div className="flex justify-center">
+                        <QuantityCounter
+                          initialValue={item.quantity}
+                          onChange={(value) => {
+                            handleQuantityChange(item.variant.id, value);
+                          }}
+                          size="md"
+                        />
                       </div>
-                      {parseFloat(item.variant.discount || "0") > 0 && (
-                        <span className="text-xs text-gray-500 relative before:content-[''] before:absolute before:top-1/2 before:left-0 before:w-full before:h-[1px] before:bg-gray-500">
-                          {formatCurrency(parseFloat(item.variant.price))}
-                        </span>
-                      )}
+
+                      {/* Total */}
+                      <div className="text-center">
+                        <div className="font-semibold text-sm">
+                          {formatCurrency(finalPrice * item.quantity)}
+                        </div>
+                      </div>
                     </div>
 
-                    {/* Quantity */}
-                    <div className="flex justify-center">
-                      <QuantityCounter
-                        initialValue={item.quantity}
-                        onChange={(value) => {
-                          handleQuantityChange(item.variant.id, value);
-                        }}
-                        size="md"
-                      />
-                    </div>
+                    {/* Mobile Layout */}
+                    <div className="md:hidden">
+                      <div className="flex gap-4">
+                        <div className="relative h-24 w-24 rounded-md overflow-hidden flex-shrink-0">
+                          <Image
+                            src={
+                              item.variant.product.media[0]?.url ||
+                              "/images/product.jpg"
+                            }
+                            alt={
+                              item.variant.product.arabicName ||
+                              item.variant.product.name
+                            }
+                            fill
+                            className="object-cover"
+                          />
+                        </div>
 
-                    {/* Total */}
-                    <div className="text-center">
-                      <div className="font-semibold">
-                        {formatCurrency(finalPrice * item.quantity)}
+                        <div className="flex-1 flex flex-col min-w-0">
+                          {/* Top: Title and Remove button */}
+                          <div className="flex justify-between items-start gap-2">
+                            <div className="flex-1 text-right">
+                              <h3 className="font-semibold text-sm line-clamp-2">
+                                {item.variant.product.arabicName ||
+                                  item.variant.product.name}
+                              </h3>
+                              {item.variant && (
+                                <span className="text-xs text-gray-500">
+                                  {item.variant.arabicName || item.variant.name}
+                                </span>
+                              )}
+                            </div>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              disabled={removeFromCart.isPending}
+                              className="rounded-full text-gray-400 hover:text-red-500 flex-shrink-0 w-8 h-8 -mr-2"
+                              onClick={() =>
+                                removeFromCart.mutate({
+                                  variantId: item.variant.id,
+                                  quantity: item.quantity,
+                                })
+                              }
+                            >
+                              <X className="size-4" />
+                            </Button>
+                          </div>
+
+                          {/* Spacer to push bottom content down */}
+                          <div className="flex-grow"></div>
+
+                          {/* Bottom: Price and Quantity */}
+                          <div className="flex justify-between items-center mt-2">
+                            {/* Price */}
+                            <div>
+                              <div className="font-semibold text-sm">
+                                {formatCurrency(finalPrice)}
+                              </div>
+                              {parseFloat(item.variant.discount || "0") > 0 && (
+                                <span className="text-xs text-gray-500 relative before:content-[''] before:absolute before:top-1/2 before:left-0 before:w-full before:h-[1px] before:bg-gray-500">
+                                  {formatCurrency(
+                                    parseFloat(item.variant.price)
+                                  )}
+                                </span>
+                              )}
+                            </div>
+                            {/* Quantity */}
+                            <QuantityCounter
+                              initialValue={item.quantity}
+                              onChange={(value) => {
+                                handleQuantityChange(item.variant.id, value);
+                              }}
+                              size="sm"
+                            />
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </motion.div>
@@ -197,8 +284,12 @@ export default function CartPage() {
             </AnimatePresence>
           </div>
 
-          <div className="flex justify-between items-center">
-            <Button asChild variant="outline" className="gap-2">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+            <Button
+              asChild
+              variant="outline"
+              className="gap-2 w-full sm:w-auto"
+            >
               <Link href="/products" prefetch>
                 متابعة التسوق
                 <ChevronRight className="size-4 rtl:rotate-180" />
@@ -209,29 +300,31 @@ export default function CartPage() {
 
         {/* Cart Summary - Takes 1/3 of the space on larger screens */}
         <div className="space-y-4">
-          <div className="bg-[#F6F6F6] rounded-lg p-6 shadow-sm">
+          <div className="bg-[#F6F6F6] rounded-lg p-4 md:p-6 shadow-sm sticky top-4">
             <h2 className="text-lg font-bold mb-4 text-right">
               إجمالي عربة التسوق
             </h2>
 
             <div className="space-y-3 mb-6">
               <div className="flex justify-between items-center">
-                <span className="text-gray-600">المجموع الفرعي</span>
-                <span className="font-semibold">
+                <span className="text-gray-600 text-sm md:text-base">
+                  المجموع الفرعي
+                </span>
+                <span className="font-semibold text-sm md:text-base">
                   {formatCurrency(parseFloat(totalPrice))}
                 </span>
               </div>
 
               <div className="flex justify-between items-center">
-                <span className="text-gray-600">خدمة</span>
-                <span className="font-semibold">
+                <span className="text-gray-600 text-sm md:text-base">خدمة</span>
+                <span className="font-semibold text-sm md:text-base">
                   {formatCurrency(serviceFeeFormatted)}
                 </span>
               </div>
 
               <Separator className="my-2" />
 
-              <div className="flex justify-between items-center text-lg font-bold">
+              <div className="flex justify-between items-center text-base md:text-lg font-bold">
                 <span>الإجمالي</span>
                 <span>
                   {formatCurrency(parseFloat(totalPrice) + serviceFeeFormatted)}
@@ -241,20 +334,22 @@ export default function CartPage() {
 
             {/* Discount Code */}
             <div className="mb-6">
-              <div className="flex gap-2">
+              <div className="flex flex-col sm:flex-row gap-2">
                 <Input
                   placeholder="الرجاء إدخال كود الخصم"
-                  className="h-12"
+                  className="h-10 md:h-12 text-sm"
                   value={couponCode}
                   onChange={(e) => setCouponCode(e.target.value)}
                 />
-                <Button>تطبيق الخصم</Button>
+                <Button className="w-full sm:w-auto text-sm">
+                  تطبيق الخصم
+                </Button>
               </div>
             </div>
 
             {/* Use Points Toggle */}
-            <label className="flex items-center justify-between gap-2 mb-6">
-              <span>استخدم حساب محفظتك</span>
+            <label className="flex items-center justify-between gap-2 mb-6 cursor-pointer">
+              <span className="text-sm md:text-base">استخدم حساب محفظتك</span>
               <Switch
                 className="bg-amber-400"
                 checked={usePoints}
@@ -262,32 +357,35 @@ export default function CartPage() {
               />
             </label>
 
-            <Button asChild className="w-full text-white">
+            <Button asChild className="w-full text-white h-10 md:h-12">
               <Link href="/checkout" prefetch>
                 الدفع الآن
               </Link>
             </Button>
 
             <div className="mt-6 flex flex-col gap-2 items-center">
-              <h3 className="text-sm font-semibold">طرق دفع آمنة</h3>
+              <h3 className="text-xs md:text-sm font-semibold">طرق دفع آمنة</h3>
               <div className="flex gap-2 justify-center *:shadow">
                 <Image
                   src="/icons/payment/MADA.svg"
                   alt="MADA"
-                  width={40}
-                  height={24}
+                  width={32}
+                  height={20}
+                  className="md:w-10 md:h-6"
                 />
                 <Image
                   src="/icons/payment/VISA.svg"
                   alt="VISA"
-                  width={40}
-                  height={24}
+                  width={32}
+                  height={20}
+                  className="md:w-10 md:h-6"
                 />
                 <Image
                   src="/icons/payment/MASTERCARD.svg"
                   alt="MASTERCARD"
-                  width={40}
-                  height={24}
+                  width={32}
+                  height={20}
+                  className="md:w-10 md:h-6"
                 />
               </div>
             </div>
@@ -295,13 +393,13 @@ export default function CartPage() {
         </div>
       </div>
 
-      <div className="mt-16">
+      <div className="mt-12 md:mt-16">
         <ProductCarousel
           title="اكتشف منتجات أخرى قد تهمك"
           products={otherProducts?.products || []}
           isLoading={otherProductsLoading}
         />
       </div>
-    </>
+    </div>
   );
 }
