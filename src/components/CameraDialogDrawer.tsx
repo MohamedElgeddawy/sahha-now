@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Camera, X, CloudCheck } from "lucide-react";
+import { X, CloudCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,

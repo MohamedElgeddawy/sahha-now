@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Star, User } from "lucide-react";
+import { Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ReviewItem } from "./ReviewItem";
 import { Product } from "@/lib/api/products";

@@ -12,7 +12,6 @@ import { useMutation } from "@tanstack/react-query";
 import {
   Loader2,
   XCircle,
-  Gift,
   CreditCard,
   MapPin,
   User,

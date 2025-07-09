@@ -16,7 +16,7 @@ import { motion } from "motion/react";
 
 function BrandCardSkeleton() {
   return (
-    <div className="flex flex-col items-center bg-white rounded-2xl shadow-sm border border-gray-100 p-6 h-full min-h-[340px] justify-between animate-pulse">
+    <div className="flex flex-col items-center bg-white rounded-2xl shadow-sm border border-gray-100 p-6 h-full min-h-[280px] justify-between animate-pulse">
       <div className="w-[120px] h-[120px] bg-gray-200 rounded-full my-auto" />
       <div className="h-6 w-24 bg-gray-200 rounded" />
     </div>
@@ -61,9 +61,9 @@ export default function BrandCarousel() {
   }, [api]);
 
   return (
-    <div className="w-full py-8 flex flex-col items-center mt-6 relative">
+    <div className="w-full py-4 flex flex-col items-center mt-2 relative">
       <div className="absolute top-0 w-screen h-full bg-[#F4FBF6] z-[-1]" />
-      <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-8 w-full px-2 sm:px-4 md:px-8 gap-4 md:gap-0">
+      <div className="flex flex-row md:justify-between md:items-center mb-2 w-full px-2 sm:px-4 md:px-8 gap-4 md:gap-0">
         <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#2d3748] text-center md:text-right flex-1">
           أفضل الماركات... في مكان واحد
         </h2>
@@ -100,12 +100,12 @@ export default function BrandCarousel() {
           opts={{ align: "start", direction: "rtl" }}
           className="w-full"
         >
-          <CarouselContent className="-ml-4">
+          <CarouselContent className="-ml-6">
             {isLoading ? (
               Array.from({ length: 5 }).map((_, i) => (
                 <CarouselItem
                   key={i}
-                  className="pl-4 basis-1/2 sm:basis-1/2 md:basis-1/3 lg:basis-1/5"
+                  className="pl-6 basis-1/2 sm:basis-1/2 md:basis-1/3 lg:basis-1/5"
                 >
                   <BrandCardSkeleton />
                 </CarouselItem>
@@ -142,7 +142,7 @@ export default function BrandCarousel() {
                   >
                     <Link
                       href={`/products?brandIds=${brand.id}`}
-                      className="flex flex-col items-center bg-white rounded-2xl shadow-sm border border-gray-100 p-6 h-full min-h-[340px] justify-between relative"
+                      className="flex flex-col items-center bg-white rounded-2xl shadow-sm border border-gray-100 p-6 h-full min-h-[280px] justify-between relative"
                     >
                       <motion.div
                         initial={{ y: -40, scale: 0.8, opacity: 0 }}
@@ -152,7 +152,7 @@ export default function BrandCarousel() {
                           stiffness: 120,
                           damping: 14,
                         }}
-                        className="size-[120px] rounded-full flex items-center justify-center my-auto  z-10 shadow-lg"
+                        className="size-[100px] rounded-full flex items-center justify-center my-auto  z-10 shadow-lg"
                       >
                         {brand.logoUrl && !imgError[brand.id] ? (
                           <Image
@@ -202,7 +202,7 @@ export default function BrandCarousel() {
         </Carousel>
       </div>
       <Link href="/products">
-        <Button className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-8 rounded-lg text-lg mt-8">
+        <Button className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-8 rounded-lg text-lg mt-4">
           تسوق الآن
         </Button>
       </Link>

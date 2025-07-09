@@ -1,8 +1,7 @@
 "use client";
 
-import { ContactUs } from "./ContactUs";
 import Image from "next/image";
-import { Truck, CreditCard, Clock, ShoppingCart } from "lucide-react";
+import { Truck, CreditCard, Clock } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Bandaids } from "./icons/about/Bandaids";
 import { FirstAid } from "./icons/about/FirstAid";

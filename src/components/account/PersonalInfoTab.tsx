@@ -2,11 +2,8 @@
 
 import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
-import { motion } from "motion/react";
 import {
   useUserProfile,
   userProfileSchema,

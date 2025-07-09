@@ -1,4 +1,3 @@
-import { RegisterFormData } from "../schemas/auth";
 import sahhaInstance from "./sahhaInstance";
 export async function register(data: {
   fullname: string;

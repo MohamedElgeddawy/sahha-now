@@ -12,10 +12,10 @@ import {
   CategoryResponse,
   fetchFiltersMetadata,
   FiltersMetadata,
-  FavoriteProductsResponse,
   fetchBrands,
   Brand,
   BrandsResponse,
+  fetchPopularCategories,
 } from "../api/products";
 import { useAppSelector } from "../redux/hooks";
 import { selectIsAuthenticated } from "../redux/slices/authSlice";
@@ -32,8 +32,16 @@ export const productKeys = {
   offers: () => [...productKeys.all, "offers"] as const,
   favoritesCount: () => [...productKeys.all, "favoritesCount"] as const,
   categories: ["categories"] as const,
+  popularCategories: () => [...productKeys.all, "popular-categories"] as const,
   filtersMetadata: ["filtersMetadata"] as const,
 };
+
+export function usePopularCategories() {
+  return useQuery({
+    queryKey: productKeys.popularCategories(),
+    queryFn: fetchPopularCategories,
+  });
+}
 
 export function useProducts(filters: ProductFilters = {}) {
   return useQuery<ProductsResponse>({
@@ -49,7 +57,21 @@ export function useFeaturedProducts() {
 export function useProduct(id: string) {
   return useQuery<Product>({
     queryKey: productKeys.detail(id),
-    queryFn: () => fetchProduct(id),
+    queryFn: async () => {
+      console.log(`useProduct hook starting for ID: ${id}`);
+      try {
+        const product = await fetchProduct(id);
+        if (!product) {
+          console.error(`No product received for ID: ${id}`);
+          throw new Error(`Product with id ${id} not found.`);
+        }
+        console.log(`useProduct hook success for ID: ${id}`, product);
+        return product;
+      } catch (error) {
+        console.error(`useProduct hook error for ID: ${id}:`, error);
+        throw error;
+      }
+    },
   });
 }
 
@@ -151,4 +173,8 @@ export function useInfiniteBrands(limit: number = 10) {
     },
     initialPageParam: 1,
   });
+}
+
+export interface SingleProductResponse {
+  product: Product;
 }

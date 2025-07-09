@@ -1,6 +1,5 @@
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
-import { Metadata } from "next";
 import { AboutUs } from "@/components/AboutUs";
 import { ContactUs } from "@/components/ContactUs";
 

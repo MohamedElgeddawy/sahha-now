@@ -8,7 +8,9 @@ export interface Product {
   name: string;
   arabicName: string;
   sku: string | null;
+  shortDescription: string;
   arabicShortDescription: string;
+  longDescription: string;
   arabicLongDescription: string;
   price: string;
   discount: string;
@@ -18,9 +20,18 @@ export interface Product {
   brandId: string;
   categoryId: string;
   media: {
-    url: string;
-    thumbnailUrl: string;
+    id: string;
+    productId: string;
+    createdAt: string;
+    updatedAt: string;
+    filename: string;
     isMain: boolean;
+    key: string;
+    url: string;
+    isFileConfirmed: boolean;
+    thumbnailKey: string;
+    thumbnailUrl: string;
+    isThumbnailConfirmed: boolean;
   }[];
   brand: {
     id: string;
@@ -144,7 +155,28 @@ export interface BrandsResponse {
   total: number;
   totalPages: number;
 }
+export interface PopularCategory {
+  id: string;
+  name: string;
+  arabicName: string;
+  topProducts: Product[];
+}
 
+export interface PopularCategoriesResponse {
+  categories: PopularCategory[];
+}
+
+export async function fetchPopularCategories(): Promise<PopularCategoriesResponse> {
+  try {
+    const response = await sahhaInstance.get("/categories/popular");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching popular categories:", error);
+    return {
+      categories: [],
+    };
+  }
+}
 export async function fetchProducts(
   filters: ProductFilters = {
     page: 1,
@@ -169,16 +201,24 @@ export async function fetchProducts(
   }
 }
 
-export async function fetchProduct(
-  id: string
-): Promise<SingleProductResponse | undefined> {
+export async function fetchProduct(id: string): Promise<Product> {
   try {
-    const response = await sahhaInstance.get<SingleProductResponse>(
-      `/products/${id}`
-    );
+    console.log(`Fetching product with ID: ${id}`);
+    console.log(` Making request to: /products/${id}`);
+
+    const response = await sahhaInstance.get<Product>(`/products/${id}`);
+
+    console.log(`Product fetch successful:`, response.data);
     return response.data;
-  } catch (error) {
+  } catch (error: any) {
     console.error(`Error fetching product ${id}:`, error);
+    console.error(`Error details:`, {
+      status: error?.response?.status,
+      statusText: error?.response?.statusText,
+      data: error?.response?.data,
+      message: error?.message,
+    });
+    throw new Error(`Failed to fetch product with id ${id}`);
   }
 }
 
@@ -249,42 +289,6 @@ export async function fetchCategories(): Promise<CategoryResponse> {
     return {
       categories: [],
       total: 0,
-    };
-  }
-}
-
-export const fetchFiltersMetadata = async (): Promise<FiltersMetadata> => {
-  try {
-    const res = await sahhaInstance.get<FiltersMetadata>(
-      "/products/filters-metadata"
-    );
-    return res.data;
-  } catch (error) {
-    console.error(error);
-    return {
-      categories: [],
-      brands: [],
-      ratings: [],
-    };
-  }
-};
-
-export async function fetchBrands(
-  params: { page?: number; limit?: number } = {}
-): Promise<BrandsResponse> {
-  try {
-    const response = await sahhaInstance.get<BrandsResponse>("/brands", {
-      params,
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching brands:", error);
-    return {
-      brands: [],
-      page: 1,
-      limit: params.limit || 10,
-      total: 0,
-      totalPages: 1,
     };
   }
 }

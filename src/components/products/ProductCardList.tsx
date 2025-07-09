@@ -1,10 +1,10 @@
 import { Product } from "@/lib/api/products";
 import React, { useState } from "react";
-import { Eye, ShoppingCart, Star } from "lucide-react";
+import { Eye, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 import FavoriteButton from "./FavoriteButton";
 import AddToCart from "./AddToCart";
 import QuantityCounter from "../ui/QuantityCounter";

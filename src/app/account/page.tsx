@@ -1,7 +1,6 @@
 "use client";
 import { PersonalInfoTab } from "@/components/account/PersonalInfoTab";
 import { motion } from "motion/react";
-import { UserCircle, Shield, Settings, Bell } from "lucide-react";
 import Banner from "./components/Banner";
 
 const AccountPage = () => {
