@@ -160,7 +160,7 @@ export default function HeroSection() {
   }
 
   return (
-    <section className="relative mb-20 md:mb-32 lg:mb-40 flex flex-col w-full">
+    <section className="relative mb-6 md:mb-10 lg:mb-26 flex flex-col w-full">
       {/* Hero Content */}
       <div className="flex flex-col md:flex-row justify-between items-center bg-[#f8fafc] rounded-3xl p-3 sm:p-4 md:p-8 lg:p-12 w-full min-h-[300px] md:min-h-[450px] lg:min-h-[500px] relative overflow-hidden border border-gray-100">
         {/* Background Image/Pattern */}
@@ -273,7 +273,7 @@ export default function HeroSection() {
 
       {/* Categories Carousel */}
       <motion.div
-        className="md:absolute md:bottom-0 md:left-1/2 md:-translate-x-1/2 md:translate-y-1/2 w-full px-2 sm:px-4 md:px-0 md:w-[calc(100%-64px)] lg:w-[calc(100%-128px)] max-w-4xl z-20 mt-8 md:mt-0"
+        className="md:absolute md:bottom-0 md:left-1/2 md:-translate-x-1/2 md:translate-y-1/2 w-full px-2 sm:px-4 md:px-0 md:w-[calc(100%-64px)] lg:w-[calc(100%-128px)] max-w-4xl z-20 mt-0 "
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.7 }}
@@ -317,7 +317,7 @@ export default function HeroSection() {
 
         {/* Two Circular Indicators */}
         {slides.length > 1 && (
-          <div className="flex justify-center gap-3 mt-6 md:mt-8">
+          <div className="flex justify-center gap-3 mt-2">
             {[0, 1].map((index) => (
               <button
                 key={index}

@@ -23,7 +23,9 @@ export default function HomePage() {
         <Announcements />
       </div>
       <BrandCarousel />
-      <CategorizedProductTabs />
+      <div className="px-2 sm:px-4">
+        <CategorizedProductTabs />
+      </div>
     </main>
   );
 }
