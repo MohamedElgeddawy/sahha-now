@@ -56,7 +56,7 @@ const ProductCardGrid = ({ product, isLoading = false }: Props) => {
       >
         <div className="relative aspect-square lg:flex-1 lg:aspect-auto bg-gray-50 p-3 sm:p-4">
           {/* Discount Badge - Top Left */}
-          {product.discount && parseInt(product.discount) > 0 && (
+          {Number(product.discount) > 0 && (
             <motion.div
               className="absolute top-2 left-2 sm:top-3 sm:left-3 bg-[#FDEDEC] text-red-500 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-semibold z-10"
               initial={{ opacity: 0, scale: 0.8 }}
@@ -98,7 +98,7 @@ const ProductCardGrid = ({ product, isLoading = false }: Props) => {
           </div>
 
           <div className="w-full h-full flex items-center justify-center p-2 sm:p-0">
-            <div className="relative w-full h-full max-w-[100px] max-h-[120px] sm:max-w-[130px] sm:max-h-[160px] lg:max-w-[150px] lg:max-h-[200px]">
+            <div className="relative w-full h-full max-w-[100px] max-h-[100px] sm:max-w-[130px] sm:max-h-[160px] lg:max-w-[150px] lg:max-h-[200px]">
               <Image
                 src={product?.media?.[0]?.thumbnailUrl || ""}
                 alt={product?.name || ""}
@@ -110,7 +110,7 @@ const ProductCardGrid = ({ product, isLoading = false }: Props) => {
           </div>
         </div>
 
-        <div className="p-2 sm:p-3 lg:p-4 flex flex-col gap-2 lg:gap-3 flex-shrink-0">
+        <div className="p-2  sm:p-3 lg:p-4 flex flex-col gap-2 lg:gap-3 flex-shrink-0">
           {/* Title */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -160,7 +160,7 @@ const ProductCardGrid = ({ product, isLoading = false }: Props) => {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
           >
-            {Number(product?.discount) ? (
+            {Number(product?.discount) > 0 ? (
               <>
                 <div className="flex items-baseline gap-1">
                   <span className="text-xs lg:text-sm text-gray-400 line-through">
