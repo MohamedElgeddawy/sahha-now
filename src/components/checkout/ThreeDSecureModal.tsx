@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useCallback, useEffect, useRef } from "react";
-import { motion } from "motion/react";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {

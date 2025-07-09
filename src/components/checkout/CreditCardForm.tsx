@@ -1,15 +1,11 @@
 "use client";
 
 import React from "react";
-import { useForm, Controller, useFormContext } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller, useFormContext } from "react-hook-form";
 import { motion } from "motion/react";
-import { CreditCard, Calendar, Shield, Wifi } from "lucide-react";
+import { CreditCard, Shield } from "lucide-react";
 import { FormField } from "@/components/auth/FormField";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { type CheckoutFormData } from "@/lib/schemas/checkout";
-import { cn } from "@/lib/utils";
 
 export function CreditCardForm() {
   const { control } = useFormContext<CheckoutFormData>();

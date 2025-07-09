@@ -1,4 +1,3 @@
-import { Metadata } from "next";
 import { Branches } from "@/components/Branches";
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
 

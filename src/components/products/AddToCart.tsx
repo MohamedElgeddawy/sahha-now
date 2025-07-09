@@ -3,7 +3,6 @@ import { motion } from "motion/react";
 import React from "react";
 import { cartKeys, useCart } from "@/lib/hooks/use-cart";
 import { Product, ProductVariant } from "@/lib/api/products";
-import { productKeys } from "@/lib/hooks/use-products";
 import { useQueryClient } from "@tanstack/react-query";
 import { cn } from "@/lib/utils";
 

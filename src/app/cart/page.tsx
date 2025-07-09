@@ -14,7 +14,6 @@ import { Switch } from "@/components/ui/switch";
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
 import ProductCarousel from "@/components/products/ProductCarousel";
 import { useFeaturedProducts } from "@/lib/hooks/use-products";
-import { toast } from "sonner";
 import Loader from "../loading";
 
 export default function CartPage() {

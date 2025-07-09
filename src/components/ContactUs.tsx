@@ -3,7 +3,7 @@
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 import Image from "next/image";
-import { Mail, Phone, Clock, MapPin, Send, Loader2 } from "lucide-react";
+import { Mail, Phone, Clock, MapPin, Loader2 } from "lucide-react";
 import { FormField } from "./auth/FormField";
 import { motion } from "motion/react";
 import { z } from "zod";

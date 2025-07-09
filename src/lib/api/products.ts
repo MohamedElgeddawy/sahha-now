@@ -68,10 +68,6 @@ export interface ProductVariant {
   size?: string | null;
 }
 
-export interface SingleProductResponse {
-  product: Product;
-}
-
 export interface ProductsResponse {
   products: Product[];
   page: number;
@@ -169,16 +165,13 @@ export async function fetchProducts(
   }
 }
 
-export async function fetchProduct(
-  id: string
-): Promise<SingleProductResponse | undefined> {
+export async function fetchProduct(id: string): Promise<Product> {
   try {
-    const response = await sahhaInstance.get<SingleProductResponse>(
-      `/products/${id}`
-    );
+    const response = await sahhaInstance.get<Product>(`/products/${id}`);
     return response.data;
   } catch (error) {
     console.error(`Error fetching product ${id}:`, error);
+    return {} as Product;
   }
 }
 

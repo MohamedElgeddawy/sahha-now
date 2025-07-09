@@ -1,9 +1,6 @@
 "use client";
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AuthLayout } from "@/components/auth/AuthLayout";
 import { SocialLoginButtons } from "@/components/auth/SocialLoginButtons";
@@ -11,7 +8,7 @@ import { AuthSeparator } from "@/components/auth/AuthSeparator";
 import { FormField } from "@/components/auth/FormField";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { generateOtp, login as loginApi } from "@/lib/api/auth";
+import { generateOtp } from "@/lib/api/auth";
 import { toast } from "sonner";
 import { Controller, useForm } from "react-hook-form";
 import { motion } from "motion/react";

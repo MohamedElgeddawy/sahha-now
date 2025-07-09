@@ -12,10 +12,7 @@ import {
   CategoryResponse,
   fetchFiltersMetadata,
   FiltersMetadata,
-  FavoriteProductsResponse,
   fetchBrands,
-  Brand,
-  BrandsResponse,
 } from "../api/products";
 import { useAppSelector } from "../redux/hooks";
 import { selectIsAuthenticated } from "../redux/slices/authSlice";

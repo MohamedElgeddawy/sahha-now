@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import ProductCardGrid from "@/components/products/ProductCardGrid";
 import {
   useInfiniteProducts,
@@ -19,7 +19,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 //   DropdownMenuItem,
 //   DropdownMenuTrigger,
 // } from "@/components/ui/dropdown-menu";
-import { ChevronDown, Grid, List } from "lucide-react";
+import { Grid, List } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ProductCardList from "@/components/products/ProductCardList";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
@@ -31,7 +31,6 @@ import {
 import { useFilterParams } from "@/lib/hooks/use-filter-params";
 import { ActiveFilters } from "@/components/products/ActiveFilters";
 import { LoadingComponent } from "@/components/ui/LoadingComponent";
-import Announcements from "@/components/Announcements";
 import { Filter } from "lucide-react";
 import Image from "next/image";
 

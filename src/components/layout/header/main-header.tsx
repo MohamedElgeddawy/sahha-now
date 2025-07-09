@@ -1,16 +1,11 @@
 "use client";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+
+
 import { SahhaNowArabicLogo } from "@/components/layout/icons/brand-logos/SahhaNowArabicLogo";
 import { SahhaNowEnglishLogo } from "@/components/layout/icons/brand-logos/SahhaNowEnglishLogo";
 import {
-  ChevronDown,
   Heart,
   ShoppingCart,
   Gift,
@@ -23,7 +18,6 @@ import { motion } from "motion/react";
 import { MobileNav } from "@/components/layout/mobile-nav";
 import { useCartItemsCount } from "@/lib/hooks/use-cart";
 import {
-  useCategories,
   useFavoriteProductsCount,
 } from "@/lib/hooks/use-products";
 import { useIsClient } from "usehooks-ts";
