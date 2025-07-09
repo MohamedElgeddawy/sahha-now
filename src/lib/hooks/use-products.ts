@@ -13,8 +13,6 @@ import {
   fetchFiltersMetadata,
   FiltersMetadata,
   fetchBrands,
-  Brand,
-  BrandsResponse,
   fetchPopularCategories,
 } from "../api/products";
 import { useAppSelector } from "../redux/hooks";
@@ -58,17 +56,13 @@ export function useProduct(id: string) {
   return useQuery<Product>({
     queryKey: productKeys.detail(id),
     queryFn: async () => {
-      console.log(`useProduct hook starting for ID: ${id}`);
       try {
         const product = await fetchProduct(id);
         if (!product) {
-          console.error(`No product received for ID: ${id}`);
           throw new Error(`Product with id ${id} not found.`);
         }
-        console.log(`useProduct hook success for ID: ${id}`, product);
         return product;
       } catch (error) {
-        console.error(`useProduct hook error for ID: ${id}:`, error);
         throw error;
       }
     },

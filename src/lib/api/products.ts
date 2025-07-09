@@ -203,21 +203,10 @@ export async function fetchProducts(
 
 export async function fetchProduct(id: string): Promise<Product> {
   try {
-    console.log(`Fetching product with ID: ${id}`);
-    console.log(` Making request to: /products/${id}`);
-
     const response = await sahhaInstance.get<Product>(`/products/${id}`);
-
-    console.log(`Product fetch successful:`, response.data);
     return response.data;
   } catch (error: any) {
     console.error(`Error fetching product ${id}:`, error);
-    console.error(`Error details:`, {
-      status: error?.response?.status,
-      statusText: error?.response?.statusText,
-      data: error?.response?.data,
-      message: error?.message,
-    });
     throw new Error(`Failed to fetch product with id ${id}`);
   }
 }
@@ -289,6 +278,42 @@ export async function fetchCategories(): Promise<CategoryResponse> {
     return {
       categories: [],
       total: 0,
+    };
+  }
+}
+
+export const fetchFiltersMetadata = async (): Promise<FiltersMetadata> => {
+  try {
+    const res = await sahhaInstance.get<FiltersMetadata>(
+      "/products/filters-metadata"
+    );
+    return res.data;
+  } catch (error) {
+    console.error(error);
+    return {
+      categories: [],
+      brands: [],
+      ratings: [],
+    };
+  }
+};
+
+export async function fetchBrands(
+  params: { page?: number; limit?: number } = {}
+): Promise<BrandsResponse> {
+  try {
+    const response = await sahhaInstance.get<BrandsResponse>("/brands", {
+      params,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching brands:", error);
+    return {
+      brands: [],
+      page: 1,
+      limit: 10,
+      total: 0,
+      totalPages: 1,
     };
   }
 }
