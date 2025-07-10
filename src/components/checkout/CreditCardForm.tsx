@@ -160,6 +160,9 @@ export function CreditCardForm() {
               error={error}
               startElement={<Shield className="w-4 h-4" />}
               isCardNumber={true}
+              type="number"
+              autoComplete="off"
+              aria-autocomplete="none"
               {...field}
               maxLength={4}
               onChange={(e) => {

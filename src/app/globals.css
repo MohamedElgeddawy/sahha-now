@@ -1,8 +1,4 @@
 @import "tailwindcss";
-@tailwind utilities;
-
-@layer base {
-}
 
 @theme inline {
   --color-green-primary: var(--primary);

@@ -21,20 +21,14 @@ export function PersonalInfoTab() {
     useUserProfile();
 
   // React Hook Form setup
-  const {
-    control,
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm<UserProfileData>({
-    resolver: zodResolver(userProfileSchema),
+  const { control, handleSubmit, reset } = useForm<UserProfileData>({
     defaultValues: {
       fullname: "",
       mobile: "",
       email: "",
       age: 0,
     },
+    resolver: zodResolver(userProfileSchema),
   });
 
   // Update form with user data when available

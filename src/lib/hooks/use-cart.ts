@@ -20,7 +20,6 @@ export const useCartItemsCount = () => {
         const { data } = await cartApi.getCartItemsCount();
         return data.count;
       } catch (error) {
-        const errorMessage = "حدث خطأ أثناء جلب عدد العناصر في السلة";
         throw error;
       }
     },
@@ -55,7 +54,6 @@ export const useCart = () => {
         setLocalCart(data);
         return data;
       } catch (error) {
-        const errorMessage = "حدث خطأ أثناء جلب السلة";
         throw error;
       }
     },

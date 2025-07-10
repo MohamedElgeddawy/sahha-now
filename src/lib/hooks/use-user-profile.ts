@@ -7,22 +7,11 @@ import { z } from "zod";
 export const userProfileSchema = z.object({
   fullname: z.string().min(2, { message: "الاسم يجب أن يكون أكثر من حرفين" }),
   mobile: z.string().min(10, { message: "رقم الهاتف غير صحيح" }),
-  email: z.string().email({ message: "البريد الإلكتروني غير صحيح" }),
-  age: z.coerce
-    .number()
-    .min(18, { message: "يجب أن يكون العمر 18 سنة على الأقل" })
-    .max(100, { message: "العمر غير صحيح" }),
+  email: z.email({ message: "البريد الإلكتروني غير صحيح" }),
+  age: z.number().min(13, { message: "يجب أن يكون العمر 13 سنة على الأقل" }),
 });
 
 export type UserProfileData = z.infer<typeof userProfileSchema>;
-
-// Mock data for development
-const mockUserData = {
-  fullname: "أحمد عبدالله",
-  email: "Ahmed@example.com",
-  mobile: "0512345678",
-  age: 32,
-};
 
 // API functions
 const fetchUserProfile = async (): Promise<UserProfileData> => {
@@ -31,8 +20,12 @@ const fetchUserProfile = async (): Promise<UserProfileData> => {
     return response.data;
   } catch (error) {
     console.error("Error fetching user profile:", error);
-    // Return mock data for development
-    return mockUserData;
+    return {
+      fullname: "",
+      mobile: "",
+      email: "",
+      age: 0,
+    };
   }
 };
 
@@ -67,7 +60,12 @@ export function useUserProfile() {
   });
 
   return {
-    userProfile: query.data || mockUserData,
+    userProfile: query.data || {
+      fullname: "",
+      mobile: "",
+      email: "",
+      age: 0,
+    },
     isLoading: query.isLoading,
     isError: query.isError,
     error: query.error,

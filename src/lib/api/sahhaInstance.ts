@@ -2,7 +2,7 @@ import axios from "axios";
 import { store } from "../redux/store";
 import { clearCredentials, setCredentials } from "../redux/slices/authSlice";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://104.248.45.73/api";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://sahha-now.live/api";
 
 // Create an Axios instance
 const sahhaInstance = axios.create({
