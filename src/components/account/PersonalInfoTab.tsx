@@ -1,20 +1,20 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@components/ui/button";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   useUserProfile,
   userProfileSchema,
   type UserProfileData,
-} from "@/lib/hooks/use-user-profile";
-import { FormField } from "../auth/FormField";
+} from "@hooks/use-user-profile";
+import { FormField } from "@components/auth/FormField";
 import {
   LoadingComponent,
   InlineLoading,
   ProfileLoadingMessages,
-} from "@/components/ui/LoadingComponent";
+} from "@components/ui/LoadingComponent";
 
 export function PersonalInfoTab() {
   const { userProfile, isLoading, isError, updateProfile, isPending } =

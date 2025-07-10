@@ -1,36 +1,33 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import ProductCardGrid from "@/components/products/ProductCardGrid";
-import {
-  useInfiniteProducts,
-  useFiltersMetadata,
-} from "@/lib/hooks/use-products";
+import ProductCardGrid from "@components/products/ProductCardGrid";
+import { useInfiniteProducts, useFiltersMetadata } from "@hooks/use-products";
 import { useIntersectionObserver } from "usehooks-ts";
 import { motion } from "motion/react";
 import {
   FilterDrawer,
   MobileFilterTrigger,
-} from "@/components/products/FilterDrawer";
-import { Checkbox } from "@/components/ui/checkbox";
+} from "@components/products/FilterDrawer";
+import { Checkbox } from "@components/ui/checkbox";
 // import {
 //   DropdownMenu,
 //   DropdownMenuContent,
 //   DropdownMenuItem,
 //   DropdownMenuTrigger,
-// } from "@/components/ui/dropdown-menu";
+// } from "@components/ui/dropdown-menu";
 import { Grid, List } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import ProductCardList from "@/components/products/ProductCardList";
-import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
+import { Button } from "@components/ui/button";
+import ProductCardList from "@components/products/ProductCardList";
+import { useAppDispatch, useAppSelector } from "@redux/hooks";
 import {
   resetFilters,
   setFilter,
   setMetadata,
-} from "@/lib/redux/slices/filtersSlice";
-import { useFilterParams } from "@/lib/hooks/use-filter-params";
-import { ActiveFilters } from "@/components/products/ActiveFilters";
-import { LoadingComponent } from "@/components/ui/LoadingComponent";
+} from "@redux/slices/filtersSlice";
+import { useFilterParams } from "@hooks/use-filter-params";
+import { ActiveFilters } from "@components/products/ActiveFilters";
+import { LoadingComponent } from "@components/ui/LoadingComponent";
 import { Filter } from "lucide-react";
 import Image from "next/image";
 
@@ -205,6 +202,7 @@ export default function ProductsPage() {
     return () => {
       dispatch(resetFilters());
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

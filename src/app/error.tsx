@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { Button } from "@components/ui/button";
 import { AlertTriangle, Home, RefreshCw } from "lucide-react";
 import { motion, Variants } from "motion/react";
 
@@ -57,43 +57,6 @@ export default function Error({
         ease: "easeInOut",
       },
     },
-  };
-
-  const exclamationVariants: Variants = {
-    hidden: { scale: 0, opacity: 0 },
-    visible: {
-      scale: 1,
-      opacity: 1,
-      transition: { delay: 0.3, duration: 0.3 },
-    },
-    pulse: {
-      scale: [1, 1.2, 1],
-      transition: {
-        repeat: Infinity,
-        duration: 1.5,
-      },
-    },
-  };
-
-  const buttonVariants: Variants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5,
-        ease: "easeOut",
-        delay: 0.9,
-      },
-    },
-    hover: {
-      scale: 1.05,
-      transition: {
-        duration: 0.2,
-        ease: "easeOut",
-      },
-    },
-    tap: { scale: 0.95 },
   };
 
   const dotVariants: Variants = {

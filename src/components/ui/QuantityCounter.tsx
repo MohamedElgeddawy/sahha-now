@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, Variants } from "motion/react";
 import { Minus, Plus } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@utils";
 
 interface QuantityCounterProps {
   initialValue?: number;
@@ -73,7 +73,7 @@ const QuantityCounter = ({
       setCount(newValue);
       onChange?.(newValue);
     }
-  }, [min, max, count]);
+  }, [min, max, count, onChange]);
 
   // Animation variants
   const containerVariants: Variants = {

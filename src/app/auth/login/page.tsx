@@ -1,18 +1,19 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@components/ui/button";
 import { useRouter } from "next/navigation";
-import { AuthLayout } from "@/components/auth/AuthLayout";
-import { SocialLoginButtons } from "@/components/auth/SocialLoginButtons";
-import { AuthSeparator } from "@/components/auth/AuthSeparator";
-import { FormField } from "@/components/auth/FormField";
+import { AuthLayout } from "@components/auth/AuthLayout";
+import { SocialLoginButtons } from "@components/auth/SocialLoginButtons";
+import { AuthSeparator } from "@components/auth/AuthSeparator";
+import { FormField } from "@components/auth/FormField";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { generateOtp } from "@/lib/api/auth";
+import { generateOtp } from "@api/auth";
 import { toast } from "sonner";
 import { Controller, useForm } from "react-hook-form";
 import { motion } from "motion/react";
 import { useRef } from "react";
+import { useLocalStorage } from "usehooks-ts";
 
 const loginSchema = z.object({
   mobile: z.string().regex(/^[0-9]+$/, "رقم الهاتف يجب أن يحتوي على أرقام فقط"),
@@ -52,7 +53,6 @@ const itemVariants = {
 
 export default function LoginPage() {
   const {
-    register,
     handleSubmit,
     formState: { isSubmitting },
     control,
@@ -63,15 +63,27 @@ export default function LoginPage() {
       mobile: "",
     },
   });
+  const [mobile, setMobile] = useLocalStorage("mobile", "", {
+    deserializer(value) {
+      return value?.toString() || "";
+    },
+    serializer(value) {
+      return value?.toString() || "";
+    },
+  });
 
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
 
   const onSubmit = async (data: LoginFormData) => {
     try {
-      await generateOtp({ mobile: data.mobile });
+      await generateOtp({
+        mobile: data.mobile.startsWith("+966")
+          ? data.mobile
+          : `+966${data.mobile}`,
+      });
 
-      sessionStorage.setItem("mobile", data.mobile);
+      setMobile(data.mobile);
 
       toast.success("تم إرسال رمز التحقق بنجاح");
       router.push("/auth/otp-verification");
@@ -153,7 +165,6 @@ export default function LoginPage() {
 const SocialLoginSection = () => {
   const handleSocialLogin = (provider: "google" | "apple") => {
     // Social login logic
-    console.log(`Logging in with ${provider}`);
   };
   return (
     <div className="hidden md:block">

@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { loyaltyApi, LoyaltyTransactionsParams } from "@/lib/api/loyalty";
+import { loyaltyApi, LoyaltyTransactionsParams } from "@api/loyalty";
 import { toast } from "sonner";
 
 // Query Keys
@@ -34,13 +34,13 @@ export function useRedeemPoints() {
 
   return useMutation({
     mutationFn: loyaltyApi.redeemPoints,
-    onSuccess: (data) => {
+    onSuccess: () => {
       // Invalidate and refetch loyalty queries
       queryClient.invalidateQueries({ queryKey: loyaltyKeys.all });
 
       toast.success("تم استبدال النقاط بنجاح!");
     },
-    onError: (error: any) => {
+    onError: () => {
       const errorMessage = "حدث خطأ أثناء استبدال النقاط";
       toast.error(errorMessage);
     },

@@ -1,5 +1,5 @@
 "use client";
-import { PersonalInfoTab } from "@/components/account/PersonalInfoTab";
+import { PersonalInfoTab } from "@components/account/PersonalInfoTab";
 import { motion } from "motion/react";
 import Banner from "./components/Banner";
 

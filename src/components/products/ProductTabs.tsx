@@ -2,22 +2,22 @@
 
 import { useState } from "react";
 import { Star } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@utils";
 import { ReviewItem } from "./ReviewItem";
-import { Product } from "@/lib/api/products";
-import { reviewKeys, useProductReviews } from "@/lib/hooks/use-reviews";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Progress } from "../ui/progress";
-import { Checkbox } from "../ui/checkbox";
+import { Product } from "@api/products";
+import { reviewKeys, useProductReviews } from "@hooks/use-reviews";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@components/ui/tabs";
+import { Progress } from "@components/ui/progress";
+import { Checkbox } from "@components/ui/checkbox";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { Button } from "../ui/button";
+import { Button } from "@components/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { useAppSelector } from "@/lib/redux/hooks";
-import { selectIsAuthenticated } from "@/lib/redux/slices/authSlice";
-import { useProductStats } from "@/lib/hooks/use-reviews";
-import { addProductReview } from "@/lib/api/reviews";
+import { useAppSelector } from "@redux/hooks";
+import { selectIsAuthenticated } from "@redux/slices/authSlice";
+import { useProductStats } from "@hooks/use-reviews";
+import { addProductReview } from "@api/reviews";
 
 interface ProductTabsProps {
   product: Product;

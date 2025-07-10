@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { Cairo } from "next/font/google";
 import "./globals.css";
-import { Header } from "@/components/layout/header";
-import Footer from "@/components/layout/footer/footer";
-import { Container } from "@/components/layout/container";
+import { Header } from "@components/layout/header";
+import Footer from "@components/layout/footer/footer";
+import { Container } from "@components/layout/container";
 import { Toaster } from "sonner";
-import { Providers } from "@/components/layout/providers";
+import { Providers } from "@components/layout/providers";
 import { Suspense } from "react";
 import Loader from "./loading";
 

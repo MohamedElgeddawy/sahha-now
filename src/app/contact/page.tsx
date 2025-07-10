@@ -1,5 +1,5 @@
-import { ContactUs } from "@/components/ContactUs";
-import { Breadcrumb } from "@/components/layout/Breadcrumb";
+import { ContactUs } from "@components/ContactUs";
+import { Breadcrumb } from "@components/layout/Breadcrumb";
 
 export default function ContactPage() {
   return (

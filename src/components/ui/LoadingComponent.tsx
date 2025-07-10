@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { Loader2 } from "lucide-react";
 import { motion } from "motion/react";
-import { cn } from "@/lib/utils";
+import { cn } from "@utils";
 
 interface LoadingComponentProps {
   /**
@@ -339,7 +339,7 @@ function SkeletonAnimation({ size }: { size: "sm" | "md" | "lg" | "xl" }) {
 function getAnimationComponent(
   animation: string,
   size: "sm" | "md" | "lg" | "xl",
-  sizeConfig: any
+  sizeConfig: typeof sizeVariants[keyof typeof sizeVariants]
 ) {
   switch (animation) {
     case "particles":
@@ -370,7 +370,6 @@ export function LoadingComponent({
   animation = "morphing",
   className,
   showMessage = true,
-  spinnerSize,
 }: LoadingComponentProps) {
   const sizeConfig = sizeVariants[size];
 

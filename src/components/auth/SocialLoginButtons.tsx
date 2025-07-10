@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@components/ui/button";
 import React from "react";
 
 interface SocialLoginButtonsProps {
@@ -85,4 +85,3 @@ export function SocialLoginButtons({
     </div>
   );
 }
- 

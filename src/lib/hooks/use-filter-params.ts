@@ -1,8 +1,8 @@
 import { useEffect, useCallback } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { useAppDispatch } from "@/lib/redux/hooks";
-import { setFilters } from "@/lib/redux/slices/filtersSlice";
-import { ProductFilters } from "@/lib/api/products";
+import { useAppDispatch } from "@redux/hooks";
+import { setFilters } from "@redux/slices/filtersSlice";
+import { ProductFilters } from "@api/products";
 
 export function useFilterParams() {
   const searchParams = useSearchParams();
@@ -50,6 +50,7 @@ export function useFilterParams() {
     });
 
     dispatch(setFilters(params));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Update URL when filters change
@@ -74,7 +75,7 @@ export function useFilterParams() {
 
       if (newFilters.categoryIds && newFilters.categoryIds.length > 0) {
         params.set("categoryIds", newFilters.categoryIds.join(","));
-      } else {  
+      } else {
         params.delete("categoryIds");
       }
       if (newFilters.brandIds && newFilters.brandIds.length > 0) {
@@ -89,6 +90,7 @@ export function useFilterParams() {
         : pathname;
       router.replace(newURL, { scroll: false });
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [pathname]
   );
 

@@ -9,8 +9,8 @@ import { motion } from "motion/react";
 import { z } from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSendContactMessage } from "../lib/hooks/use-contactUs"; // <--- Import the new hook
-import { toast } from "sonner"; // Assuming you have a toast notification library
+import { useSendContactMessage } from "@hooks/use-contactUs";
+import { toast } from "sonner";
 
 // Define Zod schema for form validation
 const contactFormSchema = z.object({
@@ -52,13 +52,7 @@ const contactInfo = [
 ];
 
 export function ContactUs() {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    control,
-    formState: { isSubmitting },
-  } = useForm<ContactFormData>({
+  const { handleSubmit, reset, control } = useForm<ContactFormData>({
     resolver: zodResolver(contactFormSchema),
     defaultValues: {
       name: "",
@@ -68,12 +62,11 @@ export function ContactUs() {
     },
   });
 
-  const { mutateAsync, isPending, isSuccess, isError, error } =
-    useSendContactMessage(); // <--- Use the new mutation hook
+  const { mutate, isPending } = useSendContactMessage(); // <--- Use the new mutation hook
 
   const onSubmit = async (data: ContactFormData) => {
     try {
-      await mutateAsync(data); // <--- Call the mutation function
+      await mutate(data); // <--- Call the mutation function
       toast.success("تم إرسال رسالتك بنجاح");
       reset();
     } catch (err: any) {
@@ -218,9 +211,7 @@ export function ContactUs() {
                   </span>
                 ) : (
                   <span className="flex items-center justify-center ">
-                    إرسال       await sendContactMessage(data);
-                    await sendContactMessage(data);
-
+                    إرسال
                   </span>
                 )}
               </Button>

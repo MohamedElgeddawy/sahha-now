@@ -1,6 +1,6 @@
-import { ProductReview } from "@/lib/api/reviews";
+import { ProductReview } from "@api/reviews";
 import { Star, User } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@utils";
 import { format } from "date-fns";
 import { ar } from "date-fns/locale";
 

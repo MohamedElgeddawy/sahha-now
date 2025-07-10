@@ -1,6 +1,6 @@
 import { Metadata } from "next";
-import { TermsAndConditions } from "@/components/TermsAndConditions";
-import { Breadcrumb } from "@/components/layout/Breadcrumb";
+import { TermsAndConditions } from "@components/TermsAndConditions";
+import { Breadcrumb } from "@components/layout/Breadcrumb";
 
 export const metadata: Metadata = {
   title: "الشروط والأحكام - صحتي الآن",

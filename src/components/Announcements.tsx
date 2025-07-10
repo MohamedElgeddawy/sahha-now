@@ -3,15 +3,15 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
-import { useSectionAnnouncements } from "@/lib/hooks/use-announcements";
+import { Button } from "@components/ui/button";
+import { motion } from "motion/react";
+import { useSectionAnnouncements } from "@hooks/use-announcements";
 import {
   Carousel,
   CarouselApi,
   CarouselContent,
   CarouselItem,
-} from "@/components/ui/carousel";
+} from "@components/ui/carousel";
 
 interface AnnouncementsProps {
   className?: string;

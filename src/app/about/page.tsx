@@ -1,7 +1,7 @@
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
-import { AboutUs } from "@/components/AboutUs";
-import { ContactUs } from "@/components/ContactUs";
+import { AboutUs } from "@components/AboutUs";
+import { ContactUs } from "@components/ContactUs";
 
 // export const metadata: Metadata = {
 //   title: "من نحن - صحة الآن",
@@ -34,4 +34,4 @@ export default function AboutPage() {
       </div>
     </main>
   );
-} 
+}

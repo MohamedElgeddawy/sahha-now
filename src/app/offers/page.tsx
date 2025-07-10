@@ -1,16 +1,16 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { useOfferProducts } from "@/lib/hooks/use-products";
+import { Button } from "@components/ui/button";
+import { useOfferProducts } from "@hooks/use-products";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo } from "react";
-import { Breadcrumb } from "@/components/layout/Breadcrumb";
+import { Breadcrumb } from "@components/layout/Breadcrumb";
 import { useIntersectionObserver } from "usehooks-ts";
 import ProductCardGrid, {
   ProductCardGridSkeleton,
-} from "@/components/products/ProductCardGrid";
-import { InlineLoading } from "@/components/ui/LoadingComponent";
+} from "@components/products/ProductCardGrid";
+import { InlineLoading } from "@components/ui/LoadingComponent";
 
 export default function OffersPage() {
   const {

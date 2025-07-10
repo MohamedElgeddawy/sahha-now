@@ -7,10 +7,7 @@ export const registerSchema = z.object({
 });
 
 export const loginSchema = z.object({
-  mobile: z
-    .string()
-    .length(11, "رقم الهاتف يجب أن يكون 11 رقم")
-    .regex(/^01[0125][0-9]{8}$/, "رقم الهاتف غير صحيح"),
+  mobile: z.string(),
 });
 
 export const otpSchema = z.object({

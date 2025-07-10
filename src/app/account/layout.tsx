@@ -4,13 +4,13 @@ import React from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { UserCircle, ShoppingBag, Heart, LogOut } from "lucide-react";
-import { Breadcrumb } from "@/components/layout/Breadcrumb";
-import { Button } from "@/components/ui/button";
+import { Breadcrumb } from "@components/layout/Breadcrumb";
+import { Button } from "@components/ui/button";
 import { useDispatch } from "react-redux";
-import { clearCredentials } from "@/lib/redux/slices/authSlice";
+import { clearCredentials } from "@redux/slices/authSlice";
 import { useMediaQuery } from "usehooks-ts";
-import { useAppSelector } from "@/lib/redux/hooks";
-import { cn } from "@/lib/utils";
+import { useAppSelector } from "@redux/hooks";
+import { cn } from "@utils";
 import { motion } from "motion/react";
 import {
   Select,
@@ -18,7 +18,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@components/ui/select";
 
 interface AccountLayoutProps {
   children: React.ReactNode;
@@ -35,6 +35,7 @@ const AccountLayout = ({ children }: AccountLayoutProps) => {
     if (!isAuthenticated) {
       router.push("/auth/login");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated]);
 
   const menuItems = [

@@ -1,16 +1,16 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { useFavoriteProducts, useProducts } from "@/lib/hooks/use-products";
-import { useAppSelector } from "@/lib/redux/hooks";
-import { selectIsAuthenticated } from "@/lib/redux/slices/authSlice";
+import { Button } from "@components/ui/button";
+import { useFavoriteProducts, useProducts } from "@hooks/use-products";
+import { useAppSelector } from "@redux/hooks";
+import { selectIsAuthenticated } from "@redux/slices/authSlice";
 import { useRouter } from "next/navigation";
-import ProductCardList from "@/components/products/ProductCardList";
-import ProductCarousel from "@/components/products/ProductCarousel";
+import ProductCardList from "@components/products/ProductCardList";
+import ProductCarousel from "@components/products/ProductCarousel";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo } from "react";
-import { Breadcrumb } from "@/components/layout/Breadcrumb";
+import { Breadcrumb } from "@components/layout/Breadcrumb";
 import { AlertTriangle, RefreshCw, Wifi } from "lucide-react";
 import { toast } from "sonner";
 
@@ -45,7 +45,8 @@ export default function FavoritesPage() {
     try {
       await refetchFavorites();
       toast.success("تم تحديث قائمة المفضلات بنجاح");
-    } catch (error) {
+    } catch (err) {
+      console.log(err);
       toast.error("فشل في تحديث قائمة المفضلات");
     }
   };

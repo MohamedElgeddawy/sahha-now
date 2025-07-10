@@ -1,15 +1,15 @@
-import { useInfiniteBrands } from "@/lib/hooks/use-products";
+import { useInfiniteBrands } from "@hooks/use-products";
 import {
   Carousel,
   CarouselApi,
   CarouselContent,
   CarouselItem,
-} from "@/components/ui/carousel";
+} from "@components/ui/carousel";
 import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { Button } from "@components/ui/button";
+import { cn } from "@utils";
 import Link from "next/link";
 import { useIntersectionObserver } from "usehooks-ts";
 import { motion } from "motion/react";

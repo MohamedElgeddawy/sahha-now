@@ -3,16 +3,16 @@
 import React, { useMemo, useState } from "react";
 import { useForm, Controller, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Breadcrumb } from "@/components/layout/Breadcrumb";
-import { FormField } from "@/components/auth/FormField";
-import { Button } from "@/components/ui/button";
-import { checkoutSchema, type CheckoutFormData } from "@/lib/schemas/checkout";
-import { useCart } from "@/lib/hooks/use-cart";
+import { Breadcrumb } from "@components/layout/Breadcrumb";
+import { FormField } from "@components/auth/FormField";
+import { Button } from "@components/ui/button";
+import { checkoutSchema, type CheckoutFormData } from "@schemas/checkout";
+import { useCart } from "@hooks/use-cart";
 import Image from "next/image";
-import { cn } from "@/lib/utils";
-import { Input } from "@/components/ui/input";
+import { cn } from "@utils";
+import { Input } from "@components/ui/input";
 import { useRouter } from "next/navigation";
-import { CreditCardForm } from "@/components/checkout/CreditCardForm";
+import { CreditCardForm } from "@components/checkout/CreditCardForm";
 import axios, { AxiosResponse } from "axios";
 import { useLocalStorage } from "usehooks-ts";
 
@@ -69,9 +69,6 @@ const CheckoutPage = () => {
       deserializer: (value) => JSON.parse(value),
     }
   );
-  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
-  const [show3DSModal, setShow3DSModal] = useState(false);
-  const [transactionUrl, setTransactionUrl] = useState("");
 
   const methods = useForm<CheckoutFormData>({
     mode: "all",
@@ -108,7 +105,7 @@ const CheckoutPage = () => {
       });
       const responseData = (await axiosInstance.post("/tokens", {
         number: data.number.replace(/\s/g, ""),
-        callback_url: `${window.location.href}/success`,
+        callback_url: `${window.location.href}/confirming`,
         cvc: data.cvc,
         month: data.month,
         year: data.year,
@@ -135,35 +132,9 @@ const CheckoutPage = () => {
         cvc: data.cvc,
       });
       router.push(responseData.data.verification_url);
-      // const res = await sahhaInstance.post("/orders", {
-      //   fullname: data.fullname,
-      //   phoneNumber: data.phoneNumber,
-      //   city: data.city,
-      //   district: data.district,
-      //   street: data.street,
-      //   building: data.building,
-      //   paymentMethod: "CARD",
-      //   payWithWallet: true,
-      //   saveToken: true,
-      //   tokenData: {
-      //     token: responseData.data.id,
-      //     funding: responseData.data.funding,
-      //     brand: responseData.data.brand,
-      //     lastFour: responseData.data.last_four,
-      //     expiryMonth: responseData.data.month,
-      //     expiryYear: responseData.data.year,
-      //   },
-      //   cvc: data.cvc,
-      // });
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const handle3DSVerificationComplete = () => {
-    setShow3DSModal(false);
-    // Redirect to success page after 3DS verification
-    router.push("/checkout/success");
   };
 
   const shippingCost = useMemo(() => 16.32, []);

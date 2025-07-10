@@ -4,8 +4,8 @@ import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { motion } from "motion/react";
 import { CreditCard, Shield } from "lucide-react";
-import { FormField } from "@/components/auth/FormField";
-import { type CheckoutFormData } from "@/lib/schemas/checkout";
+import { FormField } from "@components/auth/FormField";
+import { type CheckoutFormData } from "@schemas/checkout";
 
 export function CreditCardForm() {
   const { control } = useFormContext<CheckoutFormData>();
@@ -63,7 +63,7 @@ export function CreditCardForm() {
         <Controller
           name="number"
           control={control}
-          render={({ field, fieldState: { error, invalid } }) => (
+          render={({ field, fieldState: { error } }) => (
             <FormField
               name="number"
               label="رقم البطاقة"
@@ -91,7 +91,7 @@ export function CreditCardForm() {
             <Controller
               name="month"
               control={control}
-              render={({ field, fieldState: { error, invalid } }) => (
+              render={({ field, fieldState: { error } }) => (
                 <FormField
                   name="month"
                   label="شهر الانتهاء"
@@ -112,7 +112,7 @@ export function CreditCardForm() {
             <Controller
               name="year"
               control={control}
-              render={({ field, fieldState: { error, invalid } }) => (
+              render={({ field, fieldState: { error } }) => (
                 <FormField
                   name="year"
                   label="سنة الانتهاء"

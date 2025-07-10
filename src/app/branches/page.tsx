@@ -1,5 +1,5 @@
-import { Branches } from "@/components/Branches";
-import { Breadcrumb } from "@/components/layout/Breadcrumb";
+import { Branches } from "@components/Branches";
+import { Breadcrumb } from "@components/layout/Breadcrumb";
 
 // export const metadata: Metadata = {
 //   title: "فروعنا - صحتي الآن",

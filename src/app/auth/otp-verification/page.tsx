@@ -3,21 +3,21 @@
 import { useState, useEffect, useCallback, memo } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import { AuthLayout } from "@/components/auth/AuthLayout";
-import { login, verifyOtp } from "@/lib/api/auth";
+import { Button } from "@components/ui/button";
+import { AuthLayout } from "@components/auth/AuthLayout";
+import { login, verifyOtp } from "@api/auth";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { OtpFormData, otpSchema } from "@/lib/schemas/auth";
+import { OtpFormData, otpSchema } from "@schemas/auth";
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
-} from "@/components/ui/input-otp";
-import { useAppDispatch } from "@/lib/redux/hooks";
-import { setCredentials } from "@/lib/redux/slices/authSlice";
+} from "@components/ui/input-otp";
+import { useAppDispatch } from "@redux/hooks";
+import { setCredentials } from "@redux/slices/authSlice";
 import { motion } from "motion/react";
-import { useCountdown } from "usehooks-ts";
+import { useCountdown, useReadLocalStorage } from "usehooks-ts";
 
 // Animation variants
 const containerVariants = {
@@ -142,17 +142,17 @@ export default function OTPVerificationPage() {
     intervalMs: 1000,
   });
   const router = useRouter();
-  const [mobile, setPhoneNumber] = useState<string | null>(null);
+  const mobile = useReadLocalStorage("mobile", {
+    deserializer(value) {
+      return value?.toString() || "";
+    },
+  });
   const [isInitialized, setIsInitialized] = useState(false);
   const dispatch = useAppDispatch();
 
-  const {
-    control,
-    handleSubmit,
-    formState: { isSubmitting },
-    setValue,
-  } = useForm<OtpFormData>({
+  const form = useForm<OtpFormData>({
     resolver: zodResolver(otpSchema),
+    mode: "all",
     defaultValues: {
       otp: "",
       mobile: "",
@@ -161,31 +161,38 @@ export default function OTPVerificationPage() {
 
   // Check if phone number exists
   useEffect(() => {
-    const storedPhoneNumber = sessionStorage.getItem("mobile");
-
-    if (!storedPhoneNumber) {
+    if (!mobile) {
       router.replace("/auth/login");
       return;
     }
 
-    const phone = storedPhoneNumber;
-    setPhoneNumber(phone);
-    setValue("mobile", phone || "");
+    form.setValue("mobile", mobile, { shouldValidate: true });
     setIsInitialized(true);
 
     // Set countdown timer
     startCountdown();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mobile]);
 
   const onSubmit = async (data: OtpFormData) => {
     try {
-      const verifyRes = await verifyOtp({ ...data });
+      const verifyRes = await verifyOtp({
+        ...data,
+        mobile: data.mobile.startsWith("+966")
+          ? data.mobile
+          : `+966${data.mobile}`,
+      });
       if (!verifyRes.exists) {
         toast.info("جاري إنشاء حساب جديد");
         router.replace("/auth/register");
         return;
       }
-      const res = await login({ ...data });
+      const res = await login({
+        ...data,
+        mobile: data.mobile.startsWith("+966")
+          ? data.mobile
+          : `+966${data.mobile}`,
+      });
       dispatch(
         setCredentials({
           accessToken: res.accessToken,
@@ -195,7 +202,8 @@ export default function OTPVerificationPage() {
 
       toast.success("تم التحقق بنجاح");
       router.push("/");
-    } catch (error) {
+    } catch (err) {
+      console.log(err);
       toast.error("رمز التحقق غير صحيح");
     }
   };
@@ -205,7 +213,7 @@ export default function OTPVerificationPage() {
     if (count > 0) return;
     resetCountdown();
     toast.success("تم إرسال رمز جديد");
-  }, [resetCountdown]);
+  }, [resetCountdown, count]);
 
   if (!isInitialized) {
     return null;
@@ -215,13 +223,18 @@ export default function OTPVerificationPage() {
     <AuthLayout
       title="أدخل رمز التحقق المرسل إلى جوالك"
       description={
-        mobile
-          ? `لقد أرسلنا رمز تحقق مكون من 6 أرقام إلى الرقم: +966${mobile}`
-          : undefined
+        mobile ? (
+          <p>
+            لقد أرسلنا رمز تحقق مكون من 6 أرقام إلى الرقم:{" "}
+            <span className="font-bold" dir="ltr">
+              {mobile.startsWith("+966") ? mobile : `+966${mobile}`}
+            </span>
+          </p>
+        ) : undefined
       }
     >
       <motion.form
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-4 sm:space-y-6 px-4 sm:px-0"
         initial="hidden"
         animate="visible"
@@ -233,7 +246,7 @@ export default function OTPVerificationPage() {
           className="flex justify-center mb-6 sm:mb-8"
           variants={itemVariants}
         >
-          <OTPInput control={control} />
+          <OTPInput control={form.control} />
         </motion.div>
 
         {/* Resend Timer - isolated to prevent full page re-renders */}
@@ -242,9 +255,11 @@ export default function OTPVerificationPage() {
         <Button
           type="submit"
           className="w-full h-11 sm:h-12 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm sm:text-base font-semibold mt-6 sm:mt-8"
-          disabled={isSubmitting}
+          disabled={form.formState.isSubmitting || !form.formState.isValid}
         >
-          {isSubmitting ? "جاري التحقق..." : "تحقق وأكمل التسجيل"}
+          {form.formState.isSubmitting
+            ? "جاري التحقق..."
+            : "تحقق وأكمل التسجيل"}
         </Button>
       </motion.form>
     </AuthLayout>

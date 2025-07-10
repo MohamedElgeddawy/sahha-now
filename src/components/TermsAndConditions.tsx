@@ -203,35 +203,3 @@ function AnimatedContactSection() {
     </motion.div>
   );
 }
-
-function Section({
-  number,
-  title,
-  items,
-}: {
-  number: string;
-  title: string;
-  items: string[];
-}) {
-  return (
-    <div>
-      <h2 className="text-xl sm:text-2xl md:text-3xl mb-2 md:mb-3 flex items-center gap-1">
-        <span className="text-[#2C3E50]">{number}.</span>
-        <span className="text-[#2C3E50]">{title}</span>
-      </h2>
-      <ul className="space-y-1 md:space-y-2 text-[#2C3E50] text-sm sm:text-base list-inside">
-        {items.map((item, index) => (
-          <li
-            key={index}
-            className="flex items-start gap-1 px-0 sm:px-2 text-right"
-          >
-            <span className="text-[#2C3E50] mt-1 px-1 sm:px-2 flex-shrink-0">
-              •
-            </span>
-            <span className="leading-snug">{item}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}

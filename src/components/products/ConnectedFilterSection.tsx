@@ -1,11 +1,11 @@
 import React, { useMemo } from "react";
-import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
-import { setFilter } from "@/lib/redux/slices/filtersSlice";
+import { useAppDispatch, useAppSelector } from "@redux/hooks";
+import { setFilter } from "@redux/slices/filtersSlice";
 import FilterSection from "./FilterSection";
 import RatingFilterSection from "./RatingFilterSection";
-import { Input } from "@/components/ui/input";
-import { useFilterParams } from "@/lib/hooks/use-filter-params";
-import { Checkbox } from "../ui/checkbox";
+import { Input } from "@components/ui/input";
+import { useFilterParams } from "@hooks/use-filter-params";
+import { Checkbox } from "@components/ui/checkbox";
 
 export function CategoryFilterSection() {
   const dispatch = useAppDispatch();

@@ -2,24 +2,24 @@
 
 import { useState, useEffect, useRef } from "react";
 import { X, CloudCheck } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from "@components/ui/dialog";
 import {
   Drawer,
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "@/components/ui/drawer";
+} from "@components/ui/drawer";
 import { useMediaQuery } from "usehooks-ts";
 import Image from "next/image";
-import { cn } from "@/lib/utils";
+import { cn } from "@utils";
 
 interface CameraDialogDrawerProps {
   children: React.ReactNode;
@@ -34,7 +34,7 @@ export function CameraDialogDrawer({
 }: CameraDialogDrawerProps) {
   const [isOpen, setIsOpen] = useState(open || false);
   const isMobile = useMediaQuery("(max-width: 768px)");
-  const [file, setFile] = useState<File | null>(null);
+  const [_, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isDragOver, setIsDragOver] = useState(false);
   const ref = useRef<HTMLInputElement>(null);

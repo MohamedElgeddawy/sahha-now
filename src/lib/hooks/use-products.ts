@@ -14,9 +14,9 @@ import {
   FiltersMetadata,
   fetchBrands,
   fetchPopularCategories,
-} from "../api/products";
-import { useAppSelector } from "../redux/hooks";
-import { selectIsAuthenticated } from "../redux/slices/authSlice";
+} from "@api/products";
+import { useAppSelector } from "@redux/hooks";
+import { selectIsAuthenticated } from "@redux/slices/authSlice";
 
 export const productKeys = {
   all: ["products"] as const,
@@ -159,7 +159,7 @@ export function useInfiniteBrands(limit: number = 10) {
     queryFn: async ({ pageParam = 1 }) =>
       fetchBrands({ page: pageParam as number, limit }),
     select: (data) => data.pages.flatMap((page) => page.brands),
-    getNextPageParam: (lastPage, allPages) => {
+    getNextPageParam: (lastPage) => {
       if (lastPage.page < lastPage.totalPages) {
         return lastPage.page + 1;
       }

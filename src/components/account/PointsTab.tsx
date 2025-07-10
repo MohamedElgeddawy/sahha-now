@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@components/ui/badge";
 import {
   Table,
   TableHeader,
@@ -9,7 +9,7 @@ import {
   TableRow,
   TableHead,
   TableCell,
-} from "@/components/ui/table";
+} from "@components/ui/table";
 import {
   Pagination,
   PaginationContent,
@@ -18,18 +18,15 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination";
+} from "@components/ui/pagination";
 import Image from "next/image";
-import { Button } from "../ui/button";
-import {
-  useLoyaltyTransactions,
-  useLoyaltyBalance,
-} from "@/lib/hooks/use-loyalty";
+import { Button } from "@components/ui/button";
+import { useLoyaltyTransactions, useLoyaltyBalance } from "@hooks/use-loyalty";
 import {
   CardLoading,
   ProfileLoadingMessages,
-} from "@/components/ui/LoadingComponent";
-import { LoyaltyTransaction } from "@/lib/api/loyalty";
+} from "@components/ui/LoadingComponent";
+import { LoyaltyTransaction } from "@api/loyalty";
 import { RedeemPointsModal } from "./RedeemPointsModal";
 import { RedeemSuccessModal } from "./RedeemSuccessModal";
 import { useRouter } from "next/navigation";
@@ -114,7 +111,7 @@ export function PointsTab() {
     isError: transactionsError,
   } = useLoyaltyTransactions({ page: currentPage, limit });
 
-  const { data: balanceData, isLoading: balanceLoading } = useLoyaltyBalance();
+  const { data: balanceData } = useLoyaltyBalance();
 
   // Loading state
   if (transactionsLoading) {

@@ -1,17 +1,17 @@
 "use client";
 
 import React from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { AnimatePresence, motion } from "motion/react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@components/ui/tabs";
 import {
   Carousel,
   CarouselApi,
   CarouselContent,
   CarouselItem,
-} from "@/components/ui/carousel";
+} from "@components/ui/carousel";
 import ProductCardGrid from "./ProductCardGrid";
-import { usePopularCategories } from "@/lib/hooks/use-products";
-import { Product } from "@/lib/api/products";
+import { usePopularCategories } from "@hooks/use-products";
+import { Product } from "@api/products";
 
 const CategoryProductList = ({ products }: { products: Product[] }) => {
   const [api, setApi] = React.useState<CarouselApi>();

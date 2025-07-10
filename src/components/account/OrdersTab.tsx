@@ -8,8 +8,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
+} from "@components/ui/table";
+import { Badge } from "@components/ui/badge";
 import {
   Pagination,
   PaginationContent,
@@ -18,16 +18,15 @@ import {
   PaginationNext,
   PaginationPrevious,
   PaginationEllipsis,
-} from "@/components/ui/pagination";
-import { useRouter } from "next/navigation";
-import { useOrders } from "@/lib/hooks/use-orders";
-import { Order } from "@/lib/api/orders";
+} from "@components/ui/pagination";
+import { useOrders } from "@hooks/use-orders";
+import { Order } from "@api/orders";
 import Link from "next/link";
 import {
   CardLoading,
   ProfileLoadingMessages,
-} from "@/components/ui/LoadingComponent";
-import { Button } from "@/components/ui/button";
+} from "@components/ui/LoadingComponent";
+import { Button } from "@components/ui/button";
 import Image from "next/image";
 
 // Status mapping from English to Arabic
@@ -70,7 +69,6 @@ const getStatusColor = (status: Order["status"]): string => {
 };
 
 export function OrdersTab() {
-  const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 5;
 
@@ -78,7 +76,6 @@ export function OrdersTab() {
     data: ordersData,
     isLoading,
     isError,
-    error,
   } = useOrders({
     page: currentPage,
     limit,

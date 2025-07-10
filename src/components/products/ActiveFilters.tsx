@@ -1,9 +1,9 @@
 import React, { useMemo } from "react";
 import { X } from "lucide-react";
-import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
-import { resetFilters, setFilter } from "@/lib/redux/slices/filtersSlice";
-import { Button } from "@/components/ui/button";
-import { useFilterParams } from "@/lib/hooks/use-filter-params";
+import { useAppDispatch, useAppSelector } from "@redux/hooks";
+import { resetFilters, setFilter } from "@redux/slices/filtersSlice";
+import { Button } from "@components/ui/button";
+import { useFilterParams } from "@hooks/use-filter-params";
 
 export function ActiveFilters() {
   const dispatch = useAppDispatch();
@@ -38,12 +38,12 @@ export function ActiveFilters() {
     updateURL({ ...activeFilters, brandIds: newBrands });
   };
 
-  const handleRemoveFilter = (filterKey: keyof typeof activeFilters) => {
-    const newFilters = { ...activeFilters };
-    delete newFilters[filterKey];
-    dispatch(setFilter(newFilters));
-    updateURL({ ...activeFilters, [filterKey]: undefined });
-  };
+  // const handleRemoveFilter = (filterKey: keyof typeof activeFilters) => {
+  //   const newFilters = { ...activeFilters };
+  //   delete newFilters[filterKey];
+  //   dispatch(setFilter(newFilters));
+  //   updateURL({ ...activeFilters, [filterKey]: undefined });
+  // };
 
   const handleClearAll = () => {
     dispatch(resetFilters());

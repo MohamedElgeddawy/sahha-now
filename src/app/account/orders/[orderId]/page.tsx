@@ -1,5 +1,5 @@
-import { OrderDetails } from "@/components/account/OrderDetails";
-import { Breadcrumb } from "@/components/layout/Breadcrumb";
+import { OrderDetails } from "@components/account/OrderDetails";
+import { Breadcrumb } from "@components/layout/Breadcrumb";
 import { use } from "react";
 
 interface OrderDetailsPageProps {

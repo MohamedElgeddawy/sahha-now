@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Share2 } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Product } from "@/lib/api/products";
+import { cn } from "@utils";
+import { Product } from "@api/products";
 import FavoriteButton from "./FavoriteButton";
 import {
   Carousel,
@@ -13,7 +13,7 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "@/components/ui/carousel";
+} from "@components/ui/carousel";
 import { useCopyToClipboard } from "usehooks-ts";
 import { toast } from "sonner";
 import { motion } from "motion/react";

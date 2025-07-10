@@ -2,16 +2,16 @@
 
 import React, { useState } from "react";
 import { Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "@components/ui/button";
+import { Input } from "@components/ui/input";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from "@/components/ui/dialog";
-import { useRedeemPoints } from "@/lib/hooks/use-loyalty";
+} from "@components/ui/dialog";
+import { useRedeemPoints } from "@hooks/use-loyalty";
 
 const POINTS_PER_SAR = 50;
 
@@ -65,10 +65,6 @@ export function RedeemPointsModal({
     if (value === "" || /^\d+$/.test(value)) {
       setPointsToRedeem(value);
     }
-  };
-
-  const handleClose = () => {
-    onOpenChange(false);
   };
 
   return (

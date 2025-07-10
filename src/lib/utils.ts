@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { ProductFilters } from "./api/products";
+import { ProductFilters } from "@api/products";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

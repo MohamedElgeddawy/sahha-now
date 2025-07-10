@@ -2,15 +2,15 @@
 "use client";
 
 import { use } from "react";
-import { ProductGallery } from "@/components/products/ProductGallery";
-import { ProductInfo } from "@/components/products/ProductInfo";
-import { ProductTabs } from "@/components/products/ProductTabs";
-import ProductCarousel from "@/components/products/ProductCarousel";
-import { Breadcrumb } from "@/components/layout/Breadcrumb";
-import { useFeaturedProducts, useProduct } from "@/lib/hooks/use-products";
-import Loader from "@/app/loading";
+import { ProductGallery } from "@components/products/ProductGallery";
+import { ProductInfo } from "@components/products/ProductInfo";
+import { ProductTabs } from "@components/products/ProductTabs";
+import ProductCarousel from "@components/products/ProductCarousel";
+import { Breadcrumb } from "@components/layout/Breadcrumb";
+import { useFeaturedProducts, useProduct } from "@hooks/use-products";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import Loader from "@app/loading";
 
 export default function ProductPage({
   params,

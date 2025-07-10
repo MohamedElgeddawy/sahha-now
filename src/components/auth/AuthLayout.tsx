@@ -1,6 +1,6 @@
 // components/auth/AuthLayout.jsx
 import { ReactNode } from "react";
-import { Breadcrumb } from "../layout/Breadcrumb";
+import { Breadcrumb } from "@components/layout/Breadcrumb";
 
 interface AuthLayoutProps {
   children: ReactNode;

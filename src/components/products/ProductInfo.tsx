@@ -1,20 +1,20 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@components/ui/button";
 import { Star, Truck, Zap, Gift, MessageSquare, Loader2 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "@/lib/utils";
-import { Product, ProductVariant } from "@/lib/api/products";
+import { motion, AnimatePresence } from "motion/react";
+import { cn } from "@utils";
+import { Product, ProductVariant } from "@api/products";
 import Image from "next/image";
-import QuantityCounter from "../ui/QuantityCounter";
-import { VariantSelector } from "../ui/VariantSelector";
-import { useCart } from "@/lib/hooks/use-cart";
+import QuantityCounter from "@components/ui/QuantityCounter";
+import { VariantSelector } from "@components/ui/VariantSelector";
+import { useCart } from "@hooks/use-cart";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { sendContactMessage } from "@/lib/api/contactUs";
+import { sendContactMessage } from "@api/contactUs";
 
 interface ProductInfoProps {
   product: Product;

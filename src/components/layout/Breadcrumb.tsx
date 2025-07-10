@@ -8,7 +8,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+} from "@components/ui/breadcrumb";
 import { motion } from "motion/react";
 
 interface BreadcrumbItem {

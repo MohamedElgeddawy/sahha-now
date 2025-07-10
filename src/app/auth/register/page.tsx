@@ -1,22 +1,23 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@components/ui/button";
+import { Checkbox } from "@components/ui/checkbox";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { AuthLayout } from "@/components/auth/AuthLayout";
-import { SocialLoginButtons } from "@/components/auth/SocialLoginButtons";
-import { AuthSeparator } from "@/components/auth/AuthSeparator";
+import { AuthLayout } from "@components/auth/AuthLayout";
+import { SocialLoginButtons } from "@components/auth/SocialLoginButtons";
+import { AuthSeparator } from "@components/auth/AuthSeparator";
 import { toast } from "sonner";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { RegisterFormData, registerSchema } from "@/lib/schemas/auth";
-import { FormField } from "@/components/auth/FormField";
-import { register as registerApi } from "@/lib/api/auth";
+import { RegisterFormData, registerSchema } from "@schemas/auth";
+import { FormField } from "@components/auth/FormField";
+import { register as registerApi } from "@api/auth";
 import { motion } from "motion/react";
-import { setCredentials } from "@/lib/redux/slices/authSlice";
+import { setCredentials } from "@redux/slices/authSlice";
 import { useDispatch } from "react-redux";
+import { useReadLocalStorage } from "usehooks-ts";
 
 // Define animation variants
 const containerVariants = {
@@ -66,7 +67,11 @@ export default function RegisterPage() {
   const [agreeTerms, setAgreeTerms] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();
-  const [mobile, setMobile] = useState("");
+  const mobile = useReadLocalStorage("mobile", {
+    deserializer(value) {
+      return value?.toString() || "";
+    },
+  });
 
   const onSubmit = async (data: RegisterFormData) => {
     if (!agreeTerms) {
@@ -77,7 +82,7 @@ export default function RegisterPage() {
     try {
       const res = await registerApi({
         ...data,
-        mobile,
+        mobile: mobile || "",
       });
 
       dispatch(
@@ -102,16 +107,13 @@ export default function RegisterPage() {
   };
 
   useEffect(() => {
-    const storedPhoneNumber = sessionStorage.getItem("mobile");
-
-    if (!storedPhoneNumber) {
+    if (!mobile) {
       router.replace("/auth/login");
       return;
     }
 
-    const phone = storedPhoneNumber;
-    setMobile(phone);
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mobile]);
 
   const socialLoginSection = (
     <div className="hidden md:block">

@@ -1,8 +1,8 @@
 import React from "react";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox } from "@components/ui/checkbox";
 import { motion, AnimatePresence } from "motion/react";
 import { Minus, Plus, Star } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@utils";
 
 type RatingFilterProps = {
   title: string;

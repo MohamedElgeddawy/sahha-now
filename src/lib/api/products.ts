@@ -1,5 +1,5 @@
 import sahhaInstance from "./sahhaInstance";
-import { truthyParams } from "../utils";
+import { truthyParams } from "@utils";
 
 export interface Product {
   id: string;

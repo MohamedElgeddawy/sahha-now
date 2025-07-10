@@ -3,7 +3,7 @@ import {
   fetchProductReviews,
   fetchProductStats,
   ReviewStats,
-} from "../api/reviews";
+} from "@api/reviews";
 import { productKeys } from "./use-products";
 
 export const reviewKeys = {

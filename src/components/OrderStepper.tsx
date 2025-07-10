@@ -10,8 +10,8 @@ import {
   HomeIcon,
   CircleIcon,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import { Badge } from "@components/ui/badge";
+import { cn } from "@utils";
 
 // Enhanced step interface
 export interface OrderStep {

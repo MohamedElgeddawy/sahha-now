@@ -1,6 +1,6 @@
 import axios from "axios";
-import { store } from "../redux/store";
-import { clearCredentials, setCredentials } from "../redux/slices/authSlice";
+import { store } from "@redux/store";
+import { clearCredentials, setCredentials } from "@redux/slices/authSlice";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://sahha-now.live/api";
 

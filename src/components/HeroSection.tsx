@@ -1,25 +1,25 @@
 "use client";
 import Image from "next/image";
-import MotherChildCareIcon from "../../public/icons/home/mother&child-care.svg";
-import HairCareIcon from "../../public/icons/home/hair-care.svg";
-import MakeupIcon from "../../public/icons/home/makeup.svg";
-import PersonalCareIcon from "../../public/icons/home/personal-care.svg";
-import SkinCareIcon from "../../public/icons/home/skin-care.svg";
-import VitaminIcon from "../../public/icons/home/vitamin.svg";
-import MedicineIcon from "../../public/icons/home/medicine.svg";
-import { cn } from "@/lib/utils";
+import MotherChildCareIcon from "@icons/home/mother&child-care.svg";
+import HairCareIcon from "@icons/home/hair-care.svg";
+import MakeupIcon from "@icons/home/makeup.svg";
+import PersonalCareIcon from "@icons/home/personal-care.svg";
+import SkinCareIcon from "@icons/home/skin-care.svg";
+import VitaminIcon from "@icons/home/vitamin.svg";
+import MedicineIcon from "@icons/home/medicine.svg";
+import { cn } from "@utils";
 import { Button } from "./ui/button";
 import { motion } from "motion/react";
 import { Star } from "lucide-react";
 import Link from "next/link";
-import { useCategories } from "@/lib/hooks/use-products";
-import { useHeroAnnouncements } from "@/lib/hooks/use-announcements";
+import { useCategories } from "@hooks/use-products";
+import { useHeroAnnouncements } from "@hooks/use-announcements";
 import {
   Carousel,
   CarouselApi,
   CarouselContent,
   CarouselItem,
-} from "@/components/ui/carousel";
+} from "@components/ui/carousel";
 import { useEffect, useState } from "react";
 
 // Simple useMediaQuery hook
@@ -124,15 +124,6 @@ export default function HeroSection() {
     ...cat,
     id: categories?.categories.find((c) => c.arabicName === cat.label)?.id,
   }));
-
-  // Helper to chunk array
-  function chunkArray(arr: any[], size: number) {
-    const result = [];
-    for (let i = 0; i < arr.length; i += size) {
-      result.push(arr.slice(i, i + size));
-    }
-    return result;
-  }
 
   // Responsive slides: custom overlapping for desktop and mobile
   const validCategories = heroCategoriesWithId.filter((cat) => cat.id);

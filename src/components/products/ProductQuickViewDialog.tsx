@@ -1,8 +1,8 @@
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@components/ui/dialog";
 import ProductQuickView from "./ProductQuickView";
-import { Product } from "@/lib/api/products";
+import { Product } from "@api/products";
 import { useIsClient, useMediaQuery } from "usehooks-ts";
-import { Drawer, DrawerContent } from "../ui/drawer";
+import { Drawer, DrawerContent } from "@components/ui/drawer";
 
 interface ProductQuickViewDialogProps {
   product: Product | null;

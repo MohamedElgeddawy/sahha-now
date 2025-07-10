@@ -1,10 +1,9 @@
 "use client";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { Button } from "@components/ui/button";
 
-
-import { SahhaNowArabicLogo } from "@/components/layout/icons/brand-logos/SahhaNowArabicLogo";
-import { SahhaNowEnglishLogo } from "@/components/layout/icons/brand-logos/SahhaNowEnglishLogo";
+import { SahhaNowArabicLogo } from "@components/layout/icons/brand-logos/SahhaNowArabicLogo";
+import { SahhaNowEnglishLogo } from "@components/layout/icons/brand-logos/SahhaNowEnglishLogo";
 import {
   Heart,
   ShoppingCart,
@@ -15,14 +14,12 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { motion } from "motion/react";
-import { MobileNav } from "@/components/layout/mobile-nav";
-import { useCartItemsCount } from "@/lib/hooks/use-cart";
-import {
-  useFavoriteProductsCount,
-} from "@/lib/hooks/use-products";
+import { MobileNav } from "@components/layout/mobile-nav";
+import { useCartItemsCount } from "@hooks/use-cart";
+import { useFavoriteProductsCount } from "@hooks/use-products";
 import { useIsClient } from "usehooks-ts";
-import { useAppSelector } from "@/lib/redux/hooks";
-import { selectIsAuthenticated } from "@/lib/redux/slices/authSlice";
+import { useAppSelector } from "@redux/hooks";
+import { selectIsAuthenticated } from "@redux/slices/authSlice";
 import { SearchBar } from "./SearchBar";
 
 export function MainHeader() {

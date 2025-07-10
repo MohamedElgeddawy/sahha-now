@@ -1,10 +1,10 @@
 import { Loader2, ShoppingCart } from "lucide-react";
 import { motion } from "motion/react";
 import React from "react";
-import { cartKeys, useCart } from "@/lib/hooks/use-cart";
-import { Product, ProductVariant } from "@/lib/api/products";
+import { cartKeys, useCart } from "@hooks/use-cart";
+import { Product, ProductVariant } from "@api/products";
 import { useQueryClient } from "@tanstack/react-query";
-import { cn } from "@/lib/utils";
+import { cn } from "@utils";
 
 interface AddToCartProps {
   product: Product;
@@ -15,7 +15,6 @@ interface AddToCartProps {
 
 const AddToCart = ({
   product,
-  variant = null,
   quantity = 1,
   className = "",
 }: AddToCartProps) => {

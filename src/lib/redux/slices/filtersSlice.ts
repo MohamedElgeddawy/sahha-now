@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ProductFilters, FiltersMetadata } from "@/lib/api/products";
+import { ProductFilters, FiltersMetadata } from "@api/products";
 
 interface FiltersState {
   activeFilters: ProductFilters;

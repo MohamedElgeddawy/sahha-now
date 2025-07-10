@@ -1,15 +1,15 @@
 import React from "react";
 import { Heart, Loader2 } from "lucide-react";
-import { useAppSelector } from "@/lib/redux/hooks";
+import { useAppSelector } from "@redux/hooks";
 
-import { selectIsAuthenticated } from "@/lib/redux/slices/authSlice";
+import { selectIsAuthenticated } from "@redux/slices/authSlice";
 import { motion } from "motion/react";
 import { useRouter } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import sahhaInstance from "@/lib/api/sahhaInstance";
-import { productKeys } from "@/lib/hooks/use-products";
+import sahhaInstance from "@api/sahhaInstance";
+import { productKeys } from "@hooks/use-products";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils";
+import { cn } from "@utils";
 
 interface FavoriteButtonProps {
   productId: string;

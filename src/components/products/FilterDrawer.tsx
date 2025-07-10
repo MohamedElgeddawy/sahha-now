@@ -6,8 +6,8 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "@/components/ui/drawer";
-import { Button } from "@/components/ui/button";
+} from "@components/ui/drawer";
+import { Button } from "@components/ui/button";
 import { SlidersHorizontal } from "lucide-react";
 import {
   CategoryFilterSection,

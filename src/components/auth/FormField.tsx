@@ -1,5 +1,5 @@
-import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+import { Input } from "@components/ui/input";
+import { cn } from "@utils";
 import { FieldError } from "react-hook-form";
 import { motion } from "motion/react";
 import { forwardRef } from "react";

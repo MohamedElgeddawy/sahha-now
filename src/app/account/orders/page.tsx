@@ -1,5 +1,5 @@
 "use client";
-import { OrdersTab } from "@/components/account/OrdersTab";
+import { OrdersTab } from "@components/account/OrdersTab";
 import { motion } from "motion/react";
 import Banner from "../components/Banner";
 

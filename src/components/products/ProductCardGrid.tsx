@@ -1,8 +1,8 @@
 import React, { useRef, useState } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@utils";
 import { Eye, Star } from "lucide-react";
 import Image from "next/image";
-import { Product } from "@/lib/api/products";
+import { Product } from "@api/products";
 import Link from "next/link";
 import { motion } from "motion/react";
 import FavoriteButton from "./FavoriteButton";

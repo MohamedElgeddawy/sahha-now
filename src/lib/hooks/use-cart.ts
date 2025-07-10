@@ -1,10 +1,10 @@
-import { Product } from "../api/products";
-import { Cart, cartApi } from "../api/cart";
+import { Product } from "@api/products";
+import { Cart, cartApi } from "@api/cart";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useLocalStorage } from "usehooks-ts";
-import { useAppSelector } from "../redux/hooks";
-import { selectIsAuthenticated } from "../redux/slices/authSlice";
+import { useAppSelector } from "@redux/hooks";
+import { selectIsAuthenticated } from "@redux/slices/authSlice";
 
 export const cartKeys = {
   all: ["cart"] as const,
@@ -96,7 +96,7 @@ export const useCart = () => {
       queryClient.invalidateQueries({ queryKey: cartKeys.itemsCount() });
       toast.success("تمت الإضافة إلى السلة");
     },
-    onError: (error) => {
+    onError: () => {
       const errorMessage = "حدث خطأ أثناء إضافة المنتج إلى السلة";
       toast.error(errorMessage);
     },
@@ -114,11 +114,11 @@ export const useCart = () => {
       const { data } = await cartApi.removeFromCart(variantId, quantity);
       return data;
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: cartKeys.all });
       queryClient.invalidateQueries({ queryKey: cartKeys.itemsCount() });
     },
-    onError: (error) => {
+    onError: () => {
       const errorMessage = "حدث خطأ أثناء إزالة المنتج من السلة";
       toast.error(errorMessage);
     },

@@ -1,20 +1,20 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
-import { useCart } from "@/lib/hooks/use-cart";
+import { Button } from "@components/ui/button";
+import { Input } from "@components/ui/input";
+import { Separator } from "@components/ui/separator";
+import { useCart } from "@hooks/use-cart";
 import Image from "next/image";
 import { ChevronRight, X } from "lucide-react";
-import QuantityCounter from "@/components/ui/QuantityCounter";
+import QuantityCounter from "@components/ui/QuantityCounter";
 import Link from "next/link";
 import React, { useCallback, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Switch } from "@/components/ui/switch";
-import { Breadcrumb } from "@/components/layout/Breadcrumb";
-import ProductCarousel from "@/components/products/ProductCarousel";
-import { useFeaturedProducts } from "@/lib/hooks/use-products";
-import Loader from "../loading";
+import { Switch } from "@components/ui/switch";
+import { Breadcrumb } from "@components/layout/Breadcrumb";
+import ProductCarousel from "@components/products/ProductCarousel";
+import { useFeaturedProducts } from "@hooks/use-products";
+import Loader from "@app/loading";
 
 export default function CartPage() {
   const { cart, addToCart, removeFromCart } = useCart();
@@ -35,28 +35,19 @@ export default function CartPage() {
     [serviceFee]
   );
 
-  // Calculate total
-  const total = useMemo(
-    () => totalPrice + serviceFeeFormatted,
-    [totalPrice, serviceFeeFormatted]
-  );
-
   // Format currency
   const formatCurrency = useCallback((amount: number) => {
     return `${amount.toFixed(2)} ر.س`;
   }, []);
 
   // Handle quantity update
-  const handleQuantityChange = useCallback(
-    (variantId: string, quantity: number) => {
-      if (quantity < 0) {
-        removeFromCart.mutate({ variantId, quantity: 1 });
-      } else {
-        addToCart.mutate({ variantId, quantity });
-      }
-    },
-    []
-  );
+  const handleQuantityChange = (variantId: string, quantity: number) => {
+    if (quantity < 0) {
+      removeFromCart.mutate({ variantId, quantity: 1 });
+    } else {
+      addToCart.mutate({ variantId, quantity });
+    }
+  };
 
   // Show loading state
   if (cart.isLoading) {
@@ -90,7 +81,7 @@ export default function CartPage() {
         items={[
           { label: "الرئيسية", href: "/" },
           { label: "المتجر", href: "/products" },
-          { label: "عربة التسوق", href: "/cart" },
+          { label: "عربة التسوق" },
         ]}
       />
 
@@ -143,7 +134,7 @@ export default function CartPage() {
                         <div className="relative h-20 w-20 rounded-md overflow-hidden flex-shrink-0">
                           <Image
                             src={
-                              item.variant.product.media[0]?.url ||
+                              item.variant.product.media[0]?.thumbnailUrl ||
                               "/images/product.jpg"
                             }
                             alt={
@@ -205,7 +196,7 @@ export default function CartPage() {
                         <div className="relative h-24 w-24 rounded-md overflow-hidden flex-shrink-0">
                           <Image
                             src={
-                              item.variant.product.media[0]?.url ||
+                              item.variant.product.media[0]?.thumbnailUrl ||
                               "/images/product.jpg"
                             }
                             alt={

@@ -1,11 +1,11 @@
-import { Product } from "@/lib/api/products";
+import { Product } from "@api/products";
 import { Star, Zap, Loader2 } from "lucide-react";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
+import { Button } from "@components/ui/button";
 import { useState } from "react";
-import QuantityCounter from "../ui/QuantityCounter";
-import { useCart } from "@/lib/hooks/use-cart";
-import { cn } from "@/lib/utils";
+import QuantityCounter from "@components/ui/QuantityCounter";
+import { useCart } from "@hooks/use-cart";
+import { cn } from "@utils";
 
 interface ProductQuickViewProps {
   product: Product;

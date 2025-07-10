@@ -1,5 +1,5 @@
 "use client";
-import { PointsTab } from "@/components/account/PointsTab";
+import { PointsTab } from "@components/account/PointsTab";
 import { motion } from "motion/react";
 import Banner from "../components/Banner";
 

@@ -1,24 +1,24 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@components/ui/dropdown-menu";
 import {
   Drawer,
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "@/components/ui/drawer";
-import { CategoryResponse } from "@/lib/api/products";
+} from "@components/ui/drawer";
+import { CategoryResponse } from "@api/products";
 import { ChevronDown } from "lucide-react";
 import React from "react";
 import { useIsClient, useMediaQuery } from "usehooks-ts";
-import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
-import { setFilter } from "@/lib/redux/slices/filtersSlice";
-import { useFilterParams } from "@/lib/hooks/use-filter-params";
+import { useAppDispatch, useAppSelector } from "@redux/hooks";
+import { setFilter } from "@redux/slices/filtersSlice";
+import { useFilterParams } from "@hooks/use-filter-params";
 import { useRouter } from "next/navigation";
 
 const CategoriesFilter = ({

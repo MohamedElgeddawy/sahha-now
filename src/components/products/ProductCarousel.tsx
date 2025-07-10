@@ -6,11 +6,11 @@ import {
   CarouselApi,
   CarouselContent,
   CarouselItem,
-} from "@/components/ui/carousel";
-import { cn } from "@/lib/utils";
+} from "@components/ui/carousel";
+import { cn } from "@utils";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import ProductCardGrid from "./ProductCardGrid";
-import type { Product } from "@/lib/api/products";
+import type { Product } from "@api/products";
 import { motion } from "motion/react";
 
 interface ProductCarouselProps {
@@ -59,7 +59,7 @@ export default function ProductCarousel({
   const displayProducts = useMemo(() => {
     if (isLoading) return skeletonProducts;
     return products;
-  }, [isLoading, products]);
+  }, [isLoading, products, skeletonProducts]);
 
   return (
     <div className={cn("w-full", className)}>

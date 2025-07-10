@@ -1,14 +1,14 @@
-import { Product } from "@/lib/api/products";
 import React, { useState } from "react";
 import { Eye, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
 import { motion } from "motion/react";
 import FavoriteButton from "./FavoriteButton";
 import AddToCart from "./AddToCart";
-import QuantityCounter from "../ui/QuantityCounter";
+import QuantityCounter from "@components/ui/QuantityCounter";
 import ProductQuickViewDialog from "./ProductQuickViewDialog";
+import { Product } from "@api/products";
+import { cn } from "@utils";
 
 type Props = {
   product: Partial<Product>;

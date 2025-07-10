@@ -1,8 +1,8 @@
 "use client";
 import Link from "next/link";
 import { useIsClient, useMediaQuery } from "usehooks-ts";
-import { useAppSelector } from "@/lib/redux/hooks";
-import { selectIsAuthenticated } from "@/lib/redux/slices/authSlice";
+import { useAppSelector } from "@redux/hooks";
+import { selectIsAuthenticated } from "@redux/slices/authSlice";
 import { LanguagesIcon, MapPin, Smartphone, UserRound } from "lucide-react";
 
 export function TopNav() {

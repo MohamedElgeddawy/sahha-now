@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { DynamicIcon, IconName } from "lucide-react/dynamic";
 import React from "react";
 

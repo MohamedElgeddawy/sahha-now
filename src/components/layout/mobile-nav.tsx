@@ -9,13 +9,13 @@ import {
   Download,
   LanguagesIcon,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@components/ui/button";
 import {
   Drawer,
   DrawerContent,
   DrawerClose,
   DrawerTrigger,
-} from "@/components/ui/drawer";
+} from "@components/ui/drawer";
 import { SahhaNowArabicLogo } from "./icons/brand-logos/SahhaNowArabicLogo";
 import { SahhaNowEnglishLogo } from "./icons/brand-logos/SahhaNowEnglishLogo";
 import { SearchBar } from "./header/SearchBar";

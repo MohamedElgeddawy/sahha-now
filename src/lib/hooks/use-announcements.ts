@@ -7,7 +7,7 @@ import {
   fetchSectionAnnouncements,
   type AnnouncementData,
   type AnnouncementsResponse,
-} from "@/lib/api/announcements";
+} from "@api/announcements";
 
 // Query keys for announcements
 export const announcementKeys = {

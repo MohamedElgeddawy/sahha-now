@@ -10,13 +10,13 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { OrderStepper } from "@/components/OrderStepper";
-import { useOrderById } from "@/lib/hooks/use-orders";
+} from "@components/ui/table";
+import { OrderStepper } from "@components/OrderStepper";
+import { useOrderById } from "@hooks/use-orders";
 import {
   CardLoading,
   ProfileLoadingMessages,
-} from "@/components/ui/LoadingComponent";
+} from "@components/ui/LoadingComponent";
 
 type OrderDetailsProps = {
   orderId: string;
@@ -43,7 +43,7 @@ const getStatusInArabic = (status: string): string => {
 };
 
 export function OrderDetails({ orderId }: OrderDetailsProps) {
-  const { data: order, isLoading, isError, error } = useOrderById(orderId);
+  const { data: order, isLoading, isError } = useOrderById(orderId);
 
   // Loading state
   if (isLoading) {

@@ -1,15 +1,15 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "@components/ui/button";
+import { Input } from "@components/ui/input";
 import { Search, Mic, Camera } from "lucide-react";
 import { motion } from "motion/react";
 import CategoriesFilter from "./CategoriesFilter";
-import { useCategories } from "@/lib/hooks/use-products";
+import { useCategories } from "@hooks/use-products";
 import { useState } from "react";
-import { useFilterParams } from "@/lib/hooks/use-filter-params";
-import { useAppDispatch } from "@/lib/redux/hooks";
-import { setFilter } from "@/lib/redux/slices/filtersSlice";
+import { useFilterParams } from "@hooks/use-filter-params";
+import { useAppDispatch } from "@redux/hooks";
+import { setFilter } from "@redux/slices/filtersSlice";
 import { useRouter } from "next/navigation";
-import { CameraDialogDrawer } from "@/components/CameraDialogDrawer";
+import { CameraDialogDrawer } from "@components/CameraDialogDrawer";
 
 interface SearchBarProps {
   variant?: "desktop" | "mobile";
