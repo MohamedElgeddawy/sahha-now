@@ -6,6 +6,7 @@ import { useState } from "react";
 import QuantityCounter from "@components/ui/QuantityCounter";
 import { useCart } from "@hooks/use-cart";
 import { cn } from "@utils";
+import Link from "next/link";
 
 interface ProductQuickViewProps {
   product: Product;
@@ -42,9 +43,12 @@ export default function ProductQuickView({ product }: ProductQuickViewProps) {
         <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
           <span>
             <span>العلامة التجارية:</span>
-            <span className="text-gray-900 ml-1">
+            <Link
+              href={`/products?brandIds=${product.brand?.id}`}
+              className="text-gray-900 hover:underline"
+            >
               {product.brand?.arabicName}
-            </span>
+            </Link>
           </span>
           <span className="flex items-center gap-1">
             {Array(5)

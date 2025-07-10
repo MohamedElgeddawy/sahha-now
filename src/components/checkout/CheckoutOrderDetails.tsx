@@ -7,7 +7,6 @@ import { Breadcrumb } from "@components/layout/Breadcrumb";
 import { Button } from "@components/ui/button";
 import { motion, AnimatePresence } from "motion/react";
 import {
-  CreditCard,
   MapPin,
   User,
   Phone,
@@ -21,55 +20,55 @@ interface OrderDetailsProps {
 }
 
 // Enhanced payment method icon component
-const PaymentMethodIcon = ({ company }: { company: string }) => {
-  const iconMap: Record<string, string> = {
-    visa: "/icons/payment/VISA.svg",
-    mastercard: "/icons/payment/MASTERCARD.svg",
-    mada: "/icons/payment/MADA.svg",
-  };
+// const PaymentMethodIcon = ({ company }: { company: string }) => {
+//   const iconMap: Record<string, string> = {
+//     visa: "/icons/payment/VISA.svg",
+//     mastercard: "/icons/payment/MASTERCARD.svg",
+//     mada: "/icons/payment/MADA.svg",
+//   };
 
-  const icon = iconMap[company.toLowerCase()];
+//   const icon = iconMap[company.toLowerCase()];
 
-  if (icon) {
-    return (
-      <motion.div
-        initial={{ scale: 0, rotate: -180 }}
-        animate={{ scale: 1, rotate: 0 }}
-        transition={{ delay: 1.2, type: "spring", stiffness: 200 }}
-        className="inline-flex items-center gap-2"
-      >
-        <Image
-          src={icon}
-          alt={company}
-          width={32}
-          height={20}
-          className="object-contain"
-        />
-        <span>
-          {company === "visa"
-            ? "فيزا"
-            : company === "mastercard"
-            ? "ماستركارد"
-            : company === "mada"
-            ? "مدى"
-            : "بطاقة ائتمان"}
-        </span>
-      </motion.div>
-    );
-  }
+//   if (icon) {
+//     return (
+//       <motion.div
+//         initial={{ scale: 0, rotate: -180 }}
+//         animate={{ scale: 1, rotate: 0 }}
+//         transition={{ delay: 1.2, type: "spring", stiffness: 200 }}
+//         className="inline-flex items-center gap-2"
+//       >
+//         <Image
+//           src={icon}
+//           alt={company}
+//           width={32}
+//           height={20}
+//           className="object-contain"
+//         />
+//         <span>
+//           {company === "visa"
+//             ? "فيزا"
+//             : company === "mastercard"
+//             ? "ماستركارد"
+//             : company === "mada"
+//             ? "مدى"
+//             : "بطاقة ائتمان"}
+//         </span>
+//       </motion.div>
+//     );
+//   }
 
-  return (
-    <motion.div
-      initial={{ scale: 0 }}
-      animate={{ scale: 1 }}
-      transition={{ delay: 1.2, type: "spring", stiffness: 200 }}
-      className="flex items-center gap-2"
-    >
-      <CreditCard className="w-5 h-5" />
-      <span>بطاقة ائتمان</span>
-    </motion.div>
-  );
-};
+//   return (
+//     <motion.div
+//       initial={{ scale: 0 }}
+//       animate={{ scale: 1 }}
+//       transition={{ delay: 1.2, type: "spring", stiffness: 200 }}
+//       className="flex items-center gap-2"
+//     >
+//       <CreditCard className="w-5 h-5" />
+//       <span>بطاقة ائتمان</span>
+//     </motion.div>
+//   );
+// };
 
 export const CheckoutOrderDetails = ({ order }: OrderDetailsProps) => {
   const router = useRouter();

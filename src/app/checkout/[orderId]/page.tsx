@@ -1,7 +1,6 @@
 "use client";
 
-import React, { use, useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import React, { use } from "react";
 import { CheckoutOrderDetails } from "@components/checkout/CheckoutOrderDetails";
 import { LoadingOrderDetails } from "@components/checkout/LoadingOrderDetails";
 import { ErrorOrderDetails } from "@components/checkout/ErrorOrderDetails";

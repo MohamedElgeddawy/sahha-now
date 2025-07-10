@@ -63,7 +63,7 @@ export default function LoginPage() {
       mobile: "",
     },
   });
-  const [mobile, setMobile] = useLocalStorage("mobile", "", {
+  const [_mobile, setMobile] = useLocalStorage("mobile", "", {
     deserializer(value) {
       return value?.toString() || "";
     },
@@ -165,6 +165,7 @@ export default function LoginPage() {
 const SocialLoginSection = () => {
   const handleSocialLogin = (provider: "google" | "apple") => {
     // Social login logic
+    console.log(provider);
   };
   return (
     <div className="hidden md:block">

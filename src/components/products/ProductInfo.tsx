@@ -2,43 +2,19 @@
 
 import { useState, useEffect } from "react";
 import { Button } from "@components/ui/button";
-import { Star, Truck, Zap, Gift, MessageSquare, Loader2 } from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
+import { Star, Truck, Zap, Gift, MessageSquare } from "lucide-react";
 import { cn } from "@utils";
 import { Product, ProductVariant } from "@api/products";
 import Image from "next/image";
 import QuantityCounter from "@components/ui/QuantityCounter";
 import { VariantSelector } from "@components/ui/VariantSelector";
 import { useCart } from "@hooks/use-cart";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "sonner";
-import { sendContactMessage } from "@api/contactUs";
+import Link from "next/link";
+import { QuestionFormDialog } from "./QuestionFormDialog";
 
 interface ProductInfoProps {
   product: Product;
 }
-
-const questionFormSchema = z.object({
-  name: z.string().min(1, { message: "هذا الحقل مطلوب" }),
-  email: z
-    .string()
-    .min(1, { message: "هذا الحقل مطلوب" })
-    .email({ message: "بريد إلكتروني غير صالح" }),
-  phone: z
-    .string()
-    .or(z.literal(""))
-    .refine((val) => !val || /^\d{8,15}$/.test(val), {
-      message: "رقم هاتف غير صالح",
-    }),
-  message: z
-    .string()
-    .min(1, { message: "هذا الحقل مطلوب" })
-    .min(10, { message: "يجب أن تكون الرسالة على الأقل 10 أحرف" }),
-});
-
-type QuestionFormData = z.infer<typeof questionFormSchema>;
 
 export function ProductInfo({ product }: ProductInfoProps) {
   const [quantity, setQuantity] = useState(1);
@@ -48,16 +24,6 @@ export function ProductInfo({ product }: ProductInfoProps) {
   const { addToCart } = useCart();
   const [showQuestionForm, setShowQuestionForm] = useState(false);
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors, isSubmitting },
-  } = useForm<QuestionFormData>({
-    resolver: zodResolver(questionFormSchema),
-    defaultValues: { name: "", phone: "", email: "", message: "" },
-  });
-
   // Set default variant on component mount
   useEffect(() => {
     if (product.variants && product.variants.length > 0) {
@@ -66,17 +32,6 @@ export function ProductInfo({ product }: ProductInfoProps) {
       setSelectedVariant(defaultVariant);
     }
   }, [product.variants]);
-
-  const handleQuestionSubmit = async (data: QuestionFormData) => {
-    try {
-      await sendContactMessage(data);
-      setShowQuestionForm(false);
-      reset();
-      toast.success("تم إرسال رسالتك بنجاح");
-    } catch (error: any) {
-      toast.error(error?.message || "حدث خطأ أثناء إرسال الرسالة");
-    }
-  };
 
   // Calculate current price based on selected variant or product
   const price = Number(selectedVariant?.price ?? product.price);
@@ -93,7 +48,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
         <div className="flex items-center justify-between">
           <h1 className="text-2xl text-gray-900">{product.arabicName}</h1>
           <div className="text-sm text-gray-500">
-            رقم المنتج: ({selectedVariant?.sku || product.id})
+            رقم المنتج: ({selectedVariant?.sku})
           </div>
         </div>
 
@@ -150,7 +105,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
 
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="text-sm text-gray-500">
-            رقم المنتج: ({selectedVariant?.sku || product.id})
+            رقم المنتج: ({selectedVariant?.sku})
           </div>
 
           <div className="flex items-center gap-1">
@@ -187,7 +142,12 @@ export function ProductInfo({ product }: ProductInfoProps) {
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2 text-sm text-gray-600">
             <span>العلامة التجارية:</span>
-            <span className="text-gray-900">{product.brand?.arabicName}</span>
+            <Link
+              href={`/products?brandIds=${product.brand?.id}`}
+              className="text-gray-900 hover:underline"
+            >
+              {product.brand?.arabicName}
+            </Link>
           </div>
           <div className="flex items-center gap-1 text-sm text-gray-500">
             <Zap className="size-4 text-yellow-500 fill-yellow-500" />
@@ -262,7 +222,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
         >
           {addToCart.isPending ? (
             <span className="flex items-center gap-2">
-              <Loader2 className="w-5 h-5 text-white animate-spin" />
+              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
               جاري الإضافة...
             </span>
           ) : (
@@ -282,8 +242,8 @@ export function ProductInfo({ product }: ProductInfoProps) {
         </div>
 
         <button
-          onClick={() => setShowQuestionForm(!showQuestionForm)}
-          className="flex items-center gap-1 text-sm text-gray-600 transition-colors hover:text-gray-800"
+          onClick={() => setShowQuestionForm(true)}
+          className="cursor-pointer hover:underline flex items-center gap-1 text-sm text-gray-600 transition-colors hover:text-gray-800"
         >
           <MessageSquare className="size-4" />
           <span>ترغب فى طرح سؤال؟</span>
@@ -320,149 +280,11 @@ export function ProductInfo({ product }: ProductInfoProps) {
         </div>
       </div>
 
-      {/* Modal Popup for Question Form */}
-      <AnimatePresence>
-        {showQuestionForm && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-end bg-black/40 backdrop-blur-sm md:items-center md:justify-center"
-            onClick={() => setShowQuestionForm(false)}
-          >
-            <motion.div
-              initial={{ y: "100%", opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: "100%", opacity: 0 }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              onClick={(e) => e.stopPropagation()}
-              className="relative w-full max-h-[90vh] overflow-y-auto rounded-t-2xl bg-white p-6 pb-8 shadow-lg md:max-w-2xl md:rounded-2xl md:p-8"
-            >
-              {/* Mobile Handle */}
-              <div className="mx-auto mb-4 h-1.5 w-12 rounded-full bg-gray-300 md:hidden" />
-
-              {/* Close Button (Desktop) */}
-              <button
-                onClick={() => setShowQuestionForm(false)}
-                className="absolute right-6 top-6 hidden text-3xl text-gray-500 hover:text-gray-700 focus:outline-none md:block"
-                aria-label="إغلاق"
-              >
-                &times;
-              </button>
-
-              {/* Title */}
-              <h2 className="mb-6 text-center text-2xl font-bold text-gray-800 md:text-3xl">
-                ترغب فى طرح سؤال؟
-              </h2>
-
-              <form
-                onSubmit={handleSubmit(handleQuestionSubmit)}
-                className="mx-auto w-full max-w-lg space-y-4 text-right"
-              >
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
-                  <div>
-                    <label
-                      htmlFor="name"
-                      className="mb-2 block text-sm font-medium text-gray-700"
-                    >
-                      الاسم<span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      {...register("name")}
-                      className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-green-500"
-                      placeholder="برجاء إدخال الاسم"
-                      required
-                    />
-                    {errors.name && (
-                      <p className="text-sm text-red-500 mt-1">
-                        {errors.name.message}
-                      </p>
-                    )}
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="email"
-                      className="mb-2 block text-sm font-medium text-gray-700"
-                    >
-                      البريد الإلكتروني<span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      {...register("email")}
-                      className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-green-500"
-                      placeholder="برجاء إدخال البريد الإلكتروني"
-                      required
-                    />
-                    {errors.email && (
-                      <p className="text-sm text-red-500 mt-1">
-                        {errors.email.message}
-                      </p>
-                    )}
-                  </div>
-                </div>
-                <div>
-                  <label
-                    htmlFor="phone"
-                    className="mb-2 block text-sm font-medium text-gray-700"
-                  >
-                    رقم هاتف
-                  </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    {...register("phone")}
-                    className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-green-500"
-                    placeholder="برجاء إدخال رقم هاتفك"
-                  />
-                  {errors.phone && (
-                    <p className="text-sm text-red-500 mt-1">
-                      {errors.phone.message}
-                    </p>
-                  )}
-                </div>
-                <div>
-                  <label
-                    htmlFor="message"
-                    className="mb-2 block text-sm font-medium text-gray-700"
-                  >
-                    الرسالة
-                  </label>
-                  <textarea
-                    id="message"
-                    rows={4}
-                    {...register("message")}
-                    className="w-full resize-none rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-green-500"
-                    placeholder="برجاء إدخال رسالتك"
-                    required
-                  />
-                  {errors.message && (
-                    <p className="text-sm text-red-500 mt-1">
-                      {errors.message.message}
-                    </p>
-                  )}
-                </div>
-                <Button
-                  type="submit"
-                  className="w-full rounded-lg bg-green-500 py-3 text-lg text-white hover:bg-green-600"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? (
-                    <span className="flex items-center gap-2">
-                      <Loader2 className="w-5 h-5 animate-spin" />
-                      جاري الإرسال...
-                    </span>
-                  ) : (
-                    "إرسال"
-                  )}
-                </Button>
-              </form>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Question Form Dialog */}
+      <QuestionFormDialog
+        isOpen={showQuestionForm}
+        onOpenChange={setShowQuestionForm}
+      />
     </div>
   );
 }
