@@ -12,6 +12,8 @@ import {
   Phone,
   Calendar,
   Package,
+  CreditCard,
+  HandCoins,
 } from "lucide-react";
 import { Order } from "@api/orders";
 
@@ -20,55 +22,55 @@ interface OrderDetailsProps {
 }
 
 // Enhanced payment method icon component
-// const PaymentMethodIcon = ({ company }: { company: string }) => {
-//   const iconMap: Record<string, string> = {
-//     visa: "/icons/payment/VISA.svg",
-//     mastercard: "/icons/payment/MASTERCARD.svg",
-//     mada: "/icons/payment/MADA.svg",
-//   };
+const PaymentMethodIcon = ({ company }: { company: string }) => {
+  const iconMap: Record<string, string> = {
+    visa: "/icons/payment/VISA.svg",
+    mastercard: "/icons/payment/MASTERCARD.svg",
+    mada: "/icons/payment/MADA.svg",
+  };
 
-//   const icon = iconMap[company.toLowerCase()];
+  const icon = iconMap[company.toLowerCase()];
 
-//   if (icon) {
-//     return (
-//       <motion.div
-//         initial={{ scale: 0, rotate: -180 }}
-//         animate={{ scale: 1, rotate: 0 }}
-//         transition={{ delay: 1.2, type: "spring", stiffness: 200 }}
-//         className="inline-flex items-center gap-2"
-//       >
-//         <Image
-//           src={icon}
-//           alt={company}
-//           width={32}
-//           height={20}
-//           className="object-contain"
-//         />
-//         <span>
-//           {company === "visa"
-//             ? "فيزا"
-//             : company === "mastercard"
-//             ? "ماستركارد"
-//             : company === "mada"
-//             ? "مدى"
-//             : "بطاقة ائتمان"}
-//         </span>
-//       </motion.div>
-//     );
-//   }
+  if (icon) {
+    return (
+      <motion.div
+        initial={{ scale: 0, rotate: -180 }}
+        animate={{ scale: 1, rotate: 0 }}
+        transition={{ delay: 1.2, type: "spring", stiffness: 200 }}
+        className="inline-flex items-center gap-2"
+      >
+        <Image
+          src={icon}
+          alt={company}
+          width={32}
+          height={20}
+          className="object-contain"
+        />
+        <span>
+          {company === "visa"
+            ? "فيزا"
+            : company === "mastercard"
+            ? "ماستركارد"
+            : company === "mada"
+            ? "مدى"
+            : "بطاقة ائتمان"}
+        </span>
+      </motion.div>
+    );
+  }
 
-//   return (
-//     <motion.div
-//       initial={{ scale: 0 }}
-//       animate={{ scale: 1 }}
-//       transition={{ delay: 1.2, type: "spring", stiffness: 200 }}
-//       className="flex items-center gap-2"
-//     >
-//       <CreditCard className="w-5 h-5" />
-//       <span>بطاقة ائتمان</span>
-//     </motion.div>
-//   );
-// };
+  return (
+    <motion.div
+      initial={{ scale: 0 }}
+      animate={{ scale: 1 }}
+      transition={{ delay: 1.2, type: "spring", stiffness: 200 }}
+      className="flex items-center gap-2"
+    >
+      <CreditCard className="w-5 h-5" />
+      <span>بطاقة ائتمان</span>
+    </motion.div>
+  );
+};
 
 export const CheckoutOrderDetails = ({ order }: OrderDetailsProps) => {
   const router = useRouter();
@@ -384,9 +386,17 @@ export const CheckoutOrderDetails = ({ order }: OrderDetailsProps) => {
                       طريقة الدفع
                     </span>
                     <span className="text-green-primary font-bold">
-                      {/* <PaymentMethodIcon
-                        company={order?.}
-                      /> */}
+                      {order?.transaction.method === "CARD" && (
+                        <CreditCard className="w-4 h-4" />
+                      )}
+                      {order?.transaction.method === "CASH_ON_DELIVERY" && (
+                        <HandCoins className="w-4 h-4" />
+                      )}
+                      {order?.transaction.paymentMethod.brand && (
+                        <PaymentMethodIcon
+                          company={order?.transaction.paymentMethod.brand}
+                        />
+                      )}
                     </span>
                   </motion.div>
                 </div>

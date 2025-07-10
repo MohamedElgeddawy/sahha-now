@@ -5,6 +5,13 @@ export interface Order {
   createdAt: string;
   updatedAt: string;
   orderNumber: string;
+
+  transaction: {
+    method: "CARD" | "CASH_ON_DELIVERY";
+    paymentMethod: {
+      brand?: string;
+    };
+  };
   status:
     | "PENDING"
     | "CONFIRMED"
