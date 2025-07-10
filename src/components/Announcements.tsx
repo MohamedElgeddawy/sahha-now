@@ -185,7 +185,7 @@ const AnnouncementCard = ({
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: index * 0.1 + 0.3 }}
-          className="text-base md:text-base lg:text-xl mb-6 md:mb-6 line-clamp-3 text-gray-400"
+          className="text-base md:text-base lg:text-xl mb-2 md:mb-6 line-clamp-3 text-gray-400"
         >
           {announcement.description}
         </motion.p>

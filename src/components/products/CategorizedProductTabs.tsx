@@ -112,9 +112,9 @@ const CategorizedProductTabs = () => {
         </div>
         {/* Skeleton for products */}
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {Array.from({ length: 4 }).map((_, index) => (
+        {Array.from({ length: 4 }).map((_, index) => (
             <ProductCardGrid key={index} product={{} as any} isLoading={true} />
-          ))}
+        ))}
         </div>
       </div>
     );

@@ -430,7 +430,7 @@ const CheckoutPage = () => {
                     />
                   </div>
                   <div className="flex-1 text-start space-y-1">
-                    <p className="font-medium">{item.variant.product.name}</p>
+                    <p className="font-medium">{item.variant.product.arabicName || item.variant.product.name}</p>
                     <p className="text-sm text-gray-500">
                       {item.variant.product.brandId || ""}
                     </p>

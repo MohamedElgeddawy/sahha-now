@@ -11,14 +11,16 @@ export default function TermsPage() {
   return (
     <main className="py-2 md:py-4 bg-gray-50">
       {/* Breadcrumb */}
-      <Breadcrumb
-        items={[
-          { label: "الرئيسية", href: "/" },
-          { label: "الشروط والأحكام", href: "/terms" },
-        ]}
-      />
+      <div className="container px-4 md:px-6">
+        <Breadcrumb
+          items={[
+            { label: "الرئيسية", href: "/" },
+            { label: "الشروط والأحكام", href: "/terms" },
+          ]}
+        />
 
-      <TermsAndConditions />
+        <TermsAndConditions />
+      </div>
     </main>
   );
 }

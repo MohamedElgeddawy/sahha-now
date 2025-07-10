@@ -7,7 +7,7 @@ import { useIntersectionObserver } from "usehooks-ts";
 export function TermsAndConditions() {
   return (
     <div className="w-full mx-auto">
-      <div className="bg-white px-4 sm:px-6 md:px-8 py-6 md:py-8">
+      <div className="bg-white px-2 sm:px-6 md:px-8 py-6 md:py-8">
         {/* Header */}
         <motion.div
           className="text-right mb-6 md:mb-8"
