@@ -1,5 +1,5 @@
 import { Product } from "@/lib/api/products";
-import { Star, Zap, Loader2 } from "lucide-react";
+import { Star, Zap, Loader2, Gift } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
@@ -87,18 +87,14 @@ export default function ProductQuickView({ product }: ProductQuickViewProps) {
               <span className="text-sm text-gray-400">ر.س</span>
             </div>
           ) : null}
+          {product.giftPoints && product.giftPoints > 0 && (
           <div className="flex items-center gap-2 bg-[#F2FBF6] rounded-lg px-3 py-1">
-            <span className="text-green-primary text-sm">20 نقطة</span>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path
-                d="M13.3332 4L5.99984 11.3333L2.6665 8"
-                stroke="#27AE60"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+              <Gift className="w-6 h-5 text-green-primary " />
+              <span className="text-green-primary text-sm">
+                {product.giftPoints * quantity} نقطة
+              </span>
           </div>
+          )}
         </div>
         {/* Third row: sales info */}
         <div className="flex items-center gap-2 text-sm text-gray-500 mt-2">

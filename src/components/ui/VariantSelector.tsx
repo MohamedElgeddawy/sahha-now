@@ -68,7 +68,7 @@ export function VariantSelector({
                   className={cn(
                     "w-12 h-12 rounded-full border-4 flex items-center justify-center transition-all duration-200 relative",
                     isSelected
-                      ? "border-white ring-4 ring-blue-500"
+                      ? "border-white ring-4 ring-green-500"
                       : "border-gray-200",
                     !isAvailable && "bg-gray-100"
                   )}

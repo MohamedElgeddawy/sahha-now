@@ -103,9 +103,9 @@ export default function FavoritesPage() {
           { label: "قائمة المفضلات", href: "/favorites" },
         ]}
       />
-      <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 md:mb-6 text-gray-800 rtl:text-right">
+      {/* <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 md:mb-6 text-gray-800 rtl:text-right">
         قائمة المفضلات
-      </h1>
+      </h1> */}
 
       {favoritesLoading ? (
         <div className="grid grid-cols-1 gap-4">
@@ -149,7 +149,7 @@ export default function FavoritesPage() {
         </div>
       )}
 
-      <div className="mt-12 md:mt-16">
+      <div className="mt-6 md:mt-12">
         {recommendationsError ? (
           <div className="bg-gray-50 rounded-lg p-6 text-center">
             <p className="text-gray-600 mb-4">لا يمكن تحميل التوصيات حالياً</p>

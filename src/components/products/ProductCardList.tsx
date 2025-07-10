@@ -73,7 +73,7 @@ const ProductCardList = ({
         onOpenChange={setShowQuickView}
       />
       <motion.div
-        className="group relative bg-white rounded-lg border border-gray-100 overflow-hidden w-full shadow-sm hover:shadow-md transition-all duration-300"
+        className="group relative bg-white rounded-lg border border-gray-100 overflow-hidden w-full shadow-sm hover:shadow-md transition-all duration-300 "
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
@@ -84,9 +84,9 @@ const ProductCardList = ({
         }}
       >
         {/* Clean layout - Simple for mobile, Enhanced design for desktop */}
-        <div className="flex flex-row p-2 sm:p-3 md:p-4 lg:p-4 gap-8 sm:gap-0">
+        <div className="flex flex-row p-2 sm:p-3 md:p-4 lg:p-4 gap-2 sm:gap-4">
           {/* Product Image */}
-          <div className="w-[140px] sm:w-[160px] md:w-[200px] lg:w-[240px] h-[140px] sm:h-[160px] md:h-[200px] lg:h-[240px] relative flex-shrink-0">
+          <div className="w-[180px] sm:w-[180px] md:w-[200px] lg:w-[240px] h-[140px] sm:h-[160px] md:h-[160px] lg:h-[160px] relative flex-shrink-0">
             <Link href={`/products/${product.id}`}>
               <div className="relative h-full w-full rounded-lg overflow-hidden bg-white">
                 {/* Discount Badge */}
@@ -123,7 +123,7 @@ const ProductCardList = ({
             </Link>
 
             {/* Action buttons overlay - Responsive for tablet and mobile */}
-            <div className="absolute top-2 right-2 items-center flex flex-col gap-1.5 sm:gap-2 z-10 md:hidden">
+            <div className="absolute top-2 right-1 items-center flex flex-col gap-2  z-10 md:hidden">
               <FavoriteButton
                 productId={product.id!}
                 isFavourite={product?.isFavourite || isFavorite}
@@ -260,7 +260,7 @@ const ProductCardList = ({
                 className="bg-white rounded-full p-2.5 shadow-md border border-gray-200 hover:shadow-lg hover:-translate-y-0.5 transition-all"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => {}}
+                onClick={() => setShowQuickView(true)}
                 aria-label="عرض سريع للمنتج"
               >
                 <Eye className="w-5 h-5 text-gray-600" />

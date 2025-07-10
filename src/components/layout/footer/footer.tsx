@@ -152,132 +152,131 @@ export default function Footer() {
           </div>
         </div>
 
-  {/* Copyright and footer bottom */}
-<div className="border-t pt-4 border-gray-300">
-  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-4">
-    {/* First line on mobile: App buttons and social icons */}
-    <div className="flex flex-row items-center gap-3 md:gap-6">
-      {/* App buttons */}
-      <div className="flex gap-3 md:gap-4">
-        {/* Google Play Button */}
-        <Link prefetch href="#" className="block">
-          <div className="bg-black text-white px-2 py-1.5 rounded-lg flex items-center gap-2 hover:bg-gray-800 transition-colors min-w-[130px] h-8 md:h-10">
-            <Image
-              src={"/icons/social/google-play.svg"}
-              alt="google play"
-              width={16}
-              height={16}
-              className="size-5"
-            />
-            <div className="text-left">
-              <div className="text-xs text-gray-300">Get it on</div>
-              <div className="text-sm font-medium">Google Play</div>
+        {/* Copyright and footer bottom */}
+        <div className="border-t pt-4 border-gray-300">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 md:gap-4">
+            {/* First line on mobile: App buttons and social icons */}
+            <div className="flex flex-row items-center gap-3 md:gap-6">
+              {/* App buttons */}
+              <div className="flex gap-3 md:gap-4">
+                {/* Google Play Button */}
+                <Link prefetch href="#" className="block">
+                  <div className="bg-black text-white px-2 py-1.5 rounded-lg flex items-center gap-4 hover:bg-gray-800 transition-colors min-w-[110px] md:min-w-[130px] h-8 md:h-10">
+                    <div className="text-left">
+                      <div className="text-xs text-gray-200">Get it on</div>
+                      <div className="text-xs md:text-sm">Google Play</div>
+                    </div>
+                    <Image
+                      src={"/icons/social/google-play.svg"}
+                      alt="google play"
+                      width={16}
+                      height={16}
+                      className="flex-end size-4 md:size-5 "
+                    />
+                  </div>
+                </Link>
+
+                {/* App Store Button */}
+                <Link prefetch href="#" className="block">
+                  <div className="bg-black text-white px-2 py-1.5 rounded-lg flex items-center gap-4 hover:bg-gray-800 transition-colors min-w-[110px] md:min-w-[130px] h-8 md:h-10">
+                    <div className="text-left">
+                      <div className="text-xs text-gray-200">Get it on</div>
+                      <div className="text-xs md:text-sm">App Store</div>
+                    </div>
+                    <Image
+                      src={"/icons/social/apple.svg"}
+                      alt="apple"
+                      width={16}
+                      height={16}
+                      className="flex-end size-4 md:size-5"
+                    />
+                  </div>
+                </Link>
+              </div>
+
+              {/* Social icons */}
+              <div className="flex gap-3">
+                <Link
+                  prefetch
+                  href="#"
+                  className="text-gray-500 hover:text-green-600 transition-colors"
+                >
+                  <Image
+                    src={"/icons/social/linkedin.svg"}
+                    alt="linkedin"
+                    width={20}
+                    height={20}
+                    className="size-5"
+                  />
+                </Link>
+                <Link
+                  prefetch
+                  href="#"
+                  className="text-gray-500 hover:text-green-600 transition-colors"
+                >
+                  <Image
+                    src={"/icons/social/instagram.svg"}
+                    alt="instagram"
+                    width={20}
+                    height={20}
+                    className="size-5"
+                  />
+                </Link>
+                <Link
+                  prefetch
+                  href="#"
+                  className="text-gray-500 hover:text-green-600 transition-colors"
+                >
+                  <Image
+                    src={"/icons/social/twitter.svg"}
+                    alt="twitter"
+                    width={20}
+                    height={20}
+                    className="size-5"
+                  />
+                </Link>
+                <Link
+                  prefetch
+                  href="#"
+                  className="text-gray-500 hover:text-green-600 transition-colors"
+                >
+                  <Image
+                    src={"/icons/social/facebook.svg"}
+                    alt="facebook"
+                    width={20}
+                    height={20}
+                    className="size-5"
+                  />
+                </Link>
+                <Link
+                  prefetch
+                  href="#"
+                  className="text-gray-500 hover:text-green-600 transition-colors"
+                >
+                  <Image
+                    src={"/icons/social/youtube.svg"}
+                    alt="youtube"
+                    width={20}
+                    height={20}
+                    className="size-5"
+                  />
+                </Link>
+              </div>
+            </div>
+
+            {/* Second line on mobile: Copyright and logo */}
+            <div className="flex items-center gap-18 md:gap-6">
+              <div className="text-gray-600 text-sm">
+                <p>© 2025 جميع الحقوق محفوظة لـ صحة ناو</p>
+              </div>
+              <div className="flex-shrink-0">
+                <Link prefetch href="/" className="flex items-center">
+                  <SahhaNowArabicLogo className="w-16 h-12 md:w-24" />
+                </Link>
+              </div>
             </div>
           </div>
-        </Link>
-
-        {/* App Store Button */}
-        <Link prefetch href="#" className="block">
-        
-          <div className="bg-black text-white px-2 py-1.5 rounded-lg flex items-center gap-2 hover:bg-gray-800 transition-colors min-w-[130px] h-8 md:h-10">
-            <Image
-              src={"/icons/social/apple.svg"}
-              alt="apple"
-            width={16}
-            height={16}
-              className="size-5"
-            />
-            <div className="text-left">
-              <div className="text-xs text-gray-200">Download on the</div>
-              <div className="text-xs md:text-sm font-medium">App Store</div>
-            </div>
-          </div>
-        </Link>
-      </div>
-
-      {/* Social icons */}
-      <div className="flex gap-3">
-        <Link
-          prefetch
-          href="#"
-          className="text-gray-500 hover:text-green-600 transition-colors"
-        >
-          <Image
-            src={"/icons/social/linkedin.svg"}
-            alt="linkedin"
-            width={20}
-            height={20}
-            className="w-5 h-5"
-          />
-        </Link>
-        <Link
-          prefetch
-          href="#"
-          className="text-gray-500 hover:text-green-600 transition-colors"
-        >
-          <Image
-            src={"/icons/social/instagram.svg"}
-            alt="instagram"
-            width={20}
-            height={20}
-            className="w-5 h-5"
-          />
-        </Link>
-        <Link
-          prefetch
-          href="#"
-          className="text-gray-500 hover:text-green-600 transition-colors"
-        >
-          <Image
-            src={"/icons/social/twitter.svg"}
-            alt="twitter"
-            width={20}
-            height={20}
-            className="w-5 h-5"
-          />
-        </Link>
-        <Link
-          prefetch
-          href="#"
-          className="text-gray-500 hover:text-green-600 transition-colors"
-        >
-          <Image
-            src={"/icons/social/facebook.svg"}
-            alt="facebook"
-            width={20}
-            height={20}
-            className="w-5 h-5"
-          />
-        </Link>
-        <Link
-          prefetch
-          href="#"
-          className="text-gray-500 hover:text-green-600 transition-colors"
-        >
-          <Image
-            src={"/icons/social/youtube.svg"}
-            alt="youtube"
-            width={20}
-            height={20}
-            className="w-5 h-5"
-          />
-        </Link>
-      </div>
-    </div>
-
-    {/* Second line on mobile: Copyright and logo */}
-    <div className="flex items-center gap-18 md:gap-6">
-      <div className="text-gray-600 text-sm">
-        <p>© 2025 جميع الحقوق محفوظة لـ صحة ناو</p>
-      </div>
-      <div className="flex-shrink-0">
-        <Link prefetch href="/" className="flex items-center">
-          <SahhaNowArabicLogo className="w-16 h-12 md:w-24" />
-        </Link>
-      </div>
-    </div>
-  </div>
-</div>
+        </div>
       </div>
     </footer>
   );

@@ -218,9 +218,8 @@ export function ContactUs() {
                   </span>
                 ) : (
                   <span className="flex items-center justify-center ">
-                    إرسال       await sendContactMessage(data);
-                    await sendContactMessage(data);
-
+                    إرسال await sendContactMessage(data); await
+                    sendContactMessage(data);
                   </span>
                 )}
               </Button>

@@ -221,7 +221,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
           <div className="flex items-center gap-2 bg-[#F2FBF6] rounded-lg px-3 py-1">
             <Gift className="w-6 h-5 text-green-primary " />
             <span className="text-green-primary text-sm">
-              {product.giftPoints} نقطة
+              {product.giftPoints * quantity} نقطة
             </span>
           </div>
         ) : null}
@@ -240,7 +240,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
       )}
 
       {/* Quantity and Add to Cart */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 md:gap-4">
         <QuantityCounter
           initialValue={quantity}
           onChange={(value) => setQuantity((prev) => prev + value)}
@@ -254,7 +254,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
             });
             setQuantity(1);
           }}
-          className="flex-1 bg-[#FF9B07] text-white hover:bg-[#F08C00]"
+          className="flex-1 px-2 text-sm md:text-base bg-[#FF9B07] text-white hover:bg-[#F08C00]"
           disabled={
             addToCart.isPending ||
             (selectedVariant ? !selectedVariant.isAvailable : false)
@@ -276,8 +276,10 @@ export function ProductInfo({ product }: ProductInfoProps) {
         <div className="flex items-center gap-1 text-sm text-gray-600">
           <Truck className="size-4 -scale-x-100" />
           <span>
-            توصيل مجاني
-            <span className="text-gray-400"> للطلبات فوق 375 ر.س</span>
+             توصيل مجاني
+            <span className="text-xs md:text-base gap-2 text-gray-400">
+              للطلبات فوق 375 ر.س
+            </span>
           </span>
         </div>
 
@@ -286,7 +288,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
           className="flex items-center gap-1 text-sm text-gray-600 transition-colors hover:text-gray-800"
         >
           <MessageSquare className="size-4" />
-          <span>ترغب فى طرح سؤال؟</span>
+          <span className="p-0">ترغب فى طرح سؤال؟</span>
         </button>
       </div>
 

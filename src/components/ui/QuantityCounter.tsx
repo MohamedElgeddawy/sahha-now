@@ -162,7 +162,7 @@ const QuantityCounter = ({
       whileHover="hover"
     >
       <motion.button
-        className="text-gray-800 cursor-pointer text-xl font-medium size-8 flex items-center justify-center focus:outline-none"
+        className="text-gray-800 cursor-pointer text-xl font-medium size-4 md:size-8 flex items-center justify-center focus:outline-none"
         onClick={decrement}
         variants={buttonVariants}
         whileHover={count > min ? "hover" : "disabled"}
@@ -214,7 +214,7 @@ const QuantityCounter = ({
       </div>
 
       <motion.button
-        className="text-gray-800 cursor-pointer text-xl font-medium size-8 flex items-center justify-center focus:outline-none"
+        className="text-gray-800 cursor-pointer text-xl font-medium size-4 md:size-8 flex items-center justify-center focus:outline-none"
         onClick={increment}
         variants={buttonVariants}
         whileHover={count < max ? "hover" : "disabled"}

@@ -243,7 +243,7 @@ export default function CartPage() {
                                 })
                               }
                             >
-                              <X className="size-4" />
+                              <X className="size-5 md:size-8 text-gray-600" />
                             </Button>
                           </div>
 
