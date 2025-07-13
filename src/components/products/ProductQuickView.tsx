@@ -15,6 +15,7 @@ interface ProductQuickViewProps {
 export default function ProductQuickView({ product }: ProductQuickViewProps) {
   const [quantity, setQuantity] = useState(1);
   const { addToCart } = useCart();
+  
 
   return (
     <div className=" bg-white rounded-2xl shadow-lg p-8 flex flex-col md:flex-row items-center md:items-stretch gap-8">
@@ -73,7 +74,7 @@ export default function ProductQuickView({ product }: ProductQuickViewProps) {
         {/* Divider */}
         <div className="h-[1px] w-full bg-[#E0E0E0] my-2" />
         {/* Second row: price, discount, points (inline) */}
-        <div className="flex flex-wrap items-center gap-4">
+        <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-2xl font-bold text-green-600">
               {Number(product.discount) > 0
@@ -82,8 +83,7 @@ export default function ProductQuickView({ product }: ProductQuickViewProps) {
                 : product.price}
             </span>
             <span className="text-sm font-medium text-green-600">ر.س</span>
-          </div>
-          {Number(product.discount) > 0 ? (
+            {Number(product.discount) > 0 ? (
             <div className="flex items-center gap-1">
               <span className="text-base text-gray-400 line-through">
                 {product.price}
@@ -91,14 +91,16 @@ export default function ProductQuickView({ product }: ProductQuickViewProps) {
               <span className="text-sm text-gray-400">ر.س</span>
             </div>
           ) : null}
-          {product.giftPoints && product.giftPoints > 0 && (
+          </div>
+          
+          {product.giftPoints && product.giftPoints > 0 ? (
             <div className="flex items-center gap-2 bg-[#F2FBF6] rounded-lg px-3 py-1">
               <Gift className="w-6 h-5 text-green-primary " />
               <span className="text-green-primary text-sm">
                 {product.giftPoints * quantity} نقطة
               </span>
             </div>
-          )}
+          ) : null}
         </div>
         {/* Third row: sales info */}
         <div className="flex items-center gap-2 text-sm text-gray-500 mt-2">
@@ -114,7 +116,7 @@ export default function ProductQuickView({ product }: ProductQuickViewProps) {
           <QuantityCounter
             initialValue={quantity}
             onChange={(value) =>
-              setQuantity((prev) => Math.max(1, prev + value))
+              setQuantity((prev) => (prev + value))
             }
           />
           <Button

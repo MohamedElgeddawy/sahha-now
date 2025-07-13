@@ -18,7 +18,7 @@ import { sendContactMessage } from "@api/contactUs";
 
 const questionFormSchema = z.object({
   name: z.string().min(2, "الاسم يجب أن يكون على الأقل حرفين"),
-  email: z.email("البريد الإلكتروني غير صحيح"),
+  email: z.string().email("البريد الإلكتروني غير صحيح"),
   phone: z
     .string()
     .regex(/^[\+]?[1-9][\d]{0,15}$/, "رقم الهاتف غير صحيح")

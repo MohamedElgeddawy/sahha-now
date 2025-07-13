@@ -2,7 +2,7 @@ import React from "react";
 
 export function AuthSeparator() {
   return (
-    <div className="relative w-full my-6">
+    <div className="relative w-full my-2">
       <div className="absolute inset-0 flex items-center">
         <div className="w-full border-t border-[#DADADA]" />
       </div>

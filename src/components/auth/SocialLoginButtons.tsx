@@ -13,7 +13,7 @@ export function SocialLoginButtons({
   width = 312,
 }: SocialLoginButtonsProps) {
   return (
-    <div className="flex flex-col md:flex-row justify-center gap-4 md:gap-6 mb-6">
+    <div className="flex flex-col md:flex-row justify-center gap-4 md:gap-6 mb-2">
       <Button
         variant="outline"
         className="text-base text-slate-800 border border-[#DADADA] rounded-[8px] flex items-center justify-center gap-2"

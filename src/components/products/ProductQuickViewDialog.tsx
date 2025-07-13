@@ -3,6 +3,7 @@ import ProductQuickView from "./ProductQuickView";
 import { Product } from "@api/products";
 import { useIsClient, useMediaQuery } from "usehooks-ts";
 import { Drawer, DrawerContent } from "@components/ui/drawer";
+import { useProduct } from "@hooks/use-products";
 
 interface ProductQuickViewDialogProps {
   product: Product | null;
@@ -17,13 +18,14 @@ export default function ProductQuickViewDialog({
 }: ProductQuickViewDialogProps) {
   const isMobile = useMediaQuery("(max-width: 768px)");
   const isClient = useIsClient();
+  const { data: fullProduct } = useProduct(product?.id || "");
 
   if (isMobile && isClient) {
     return (
       <Drawer direction="bottom" open={open} onOpenChange={onOpenChange}>
         <DrawerContent className="h-[80vh]">
           <div className="overflow-y-auto">
-            {product && <ProductQuickView product={product} />}
+            {fullProduct && <ProductQuickView product={fullProduct} />}
           </div>
         </DrawerContent>
       </Drawer>
@@ -37,7 +39,7 @@ export default function ProductQuickViewDialog({
         animationType="bounce"
         showCloseButton
       >
-        {product && <ProductQuickView product={product} />}
+        {fullProduct && <ProductQuickView product={fullProduct} />}
       </DialogContent>
     </Dialog>
   );

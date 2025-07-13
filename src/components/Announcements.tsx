@@ -195,13 +195,13 @@ const AnnouncementCard = ({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: index * 0.1 + 0.4 }}
-          className="flex justify-start mt-4 md:mt-0"
+          className="flex justify-start mt-2 md:mt-0"
         >
           <Button
             asChild
-            className={`font-semibold h-10 md:h-12 md:w-auto px-6 py-0 md:py-3 text-sm md:text-base rounded-lg shadow-md transition-all duration-300 hover:shadow-lg hover:scale-105 ${
+            className={`font-semibold h-10 md:h-12 md:w-auto px-4 py-0 md:py-3 text-sm md:text-base rounded-lg shadow-md transition-all duration-300 hover:shadow-lg hover:scale-105 ${
               isRightSection
-                ? "bg-[#F4A261] text-white hover:bg-gray-100"
+                ? " bg-[#FF9B07] text-white hover:bg-[#F08C00]"
                 : "bg-green-600 text-white hover:bg-green-700"
             }`}
           >
