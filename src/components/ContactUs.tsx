@@ -68,7 +68,7 @@ export function ContactUs() {
     try {
       await mutate(data); // <--- Call the mutation function
       toast.success("تم إرسال رسالتك بنجاح");
-      reset();
+        reset();
     } catch (err: any) {
       console.error("Submission error:", err);
       toast.error(
@@ -150,13 +150,13 @@ export function ContactUs() {
                       label="البريد الإلكتروني"
                       {...field}
                       error={fieldState.error}
-                      type="email"
+            type="email"
                       placeholder="برجاء إدخال البريد الإلكتروني"
                       required
                     />
                   )}
                 />
-              </div>
+        </div>
 
               <Controller
                 name="phone"
@@ -166,7 +166,7 @@ export function ContactUs() {
                     label="رقم الهاتف"
                     {...field}
                     error={fieldState.error}
-                    type="tel"
+            type="tel"
                     placeholder="برجاء إدخال رقم الهاتف"
                     required
                   />
@@ -183,9 +183,9 @@ export function ContactUs() {
                       className="block text-sm font-medium text-gray-700"
                     >
                       الرسالة <span className="text-red-500">*</span>
-                    </label>
-                    <Textarea
-                      id="message"
+          </label>
+          <Textarea
+            id="message"
                       {...field}
                       placeholder="برجاء إدخال رسالتك"
                       className="w-full min-h-[80px] sm:min-h-[100px] md:min-h-[120px] text-right text-sm md:text-base md:mb-4"
@@ -194,13 +194,13 @@ export function ContactUs() {
                       <p className="text-sm text-red-500 text-right">
                         {fieldState.error.message}
                       </p>
-                    )}
-                  </div>
+          )}
+        </div>
                 )}
               />
 
-              <Button
-                type="submit"
+        <Button
+          type="submit"
                 className="w-full bg-green-500 hover:bg-green-600 text-white h-12 text-lg"
                 disabled={isPending} // <--- Use isPending from React Query hook
               >

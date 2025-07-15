@@ -7,7 +7,7 @@ import { z } from "zod";
 export const userProfileSchema = z.object({
   fullname: z.string().min(2, { message: "الاسم يجب أن يكون أكثر من حرفين" }),
   mobile: z.string().min(10, { message: "رقم الهاتف غير صحيح" }),
-  email: z.email({ message: "البريد الإلكتروني غير صحيح" }),
+  email: z.string().email({ message: "البريد الإلكتروني غير صحيح" }),
   age: z.number().min(13, { message: "يجب أن يكون العمر 13 سنة على الأقل" }),
 });
 

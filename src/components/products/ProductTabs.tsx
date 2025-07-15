@@ -108,13 +108,19 @@ export function ProductTabs({ product }: ProductTabsProps) {
 
       // Refresh reviews data
       queryClient.invalidateQueries({
-        queryKey: reviewKeys.reviewStats(product.id),
+        queryKey: reviewKeys.reviews(product.id),
       });
     } catch (error: any) {
       console.error("Error submitting review:", error);
 
+      // Handle conflict error (already reviewed)
+      if (error.response?.status === 409) {
+        toast.error(
+            "لقد قمت بتقييم هذا المنتج بالفعل"
+        );
+      }
       // Handle authentication errors
-      if (
+      else if (
         error.message?.includes("Authentication") ||
         error.response?.status === 401 ||
         error.response?.status === 403

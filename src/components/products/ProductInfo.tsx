@@ -45,39 +45,39 @@ export function ProductInfo({ product }: ProductInfoProps) {
     <div className="space-y-6">
       {/* Desktop Layout */}
       <div className="hidden md:block">
-        <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between">
           <h1 className="text-2xl text-gray-900">{product.arabicName}</h1>
           <div className="text-sm text-gray-500">
             رقم المنتج: ({selectedVariant?.sku})
           </div>
-        </div>
+      </div>
 
         <div className="flex items-center justify-between mt-4">
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600">العلامة التجارية:</span>
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-gray-600">العلامة التجارية:</span>
             <span className="text-sm text-gray-900">
               {product.brand?.arabicName}
             </span>
-          </div>
+        </div>
 
-          <div className="flex items-center gap-1">
-            {Array(5)
-              .fill(0)
-              .map((_, i) => (
-                <Star
-                  key={i}
-                  className={cn("size-4", {
-                    "text-yellow-400 fill-yellow-400":
-                      i < parseInt(product.averageRating),
-                    "text-gray-300 fill-gray-300":
-                      i >= parseInt(product.averageRating),
-                  })}
-                />
-              ))}
-            <span className="text-sm text-gray-500">
-              ({product?._count?.reviews || 0})
-            </span>
-          </div>
+        <div className="flex items-center gap-1">
+          {Array(5)
+            .fill(0)
+            .map((_, i) => (
+              <Star
+                key={i}
+                className={cn("size-4", {
+                  "text-yellow-400 fill-yellow-400":
+                    i < parseInt(product.averageRating),
+                  "text-gray-300 fill-gray-300":
+                    i >= parseInt(product.averageRating),
+                })}
+              />
+            ))}
+          <span className="text-sm text-gray-500">
+            ({product?._count?.reviews || 0})
+          </span>
+        </div>
 
           <span
             className={cn("text-sm font-medium", {
@@ -90,7 +90,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
               : "غير متوفر"}
           </span>
 
-          <div className="flex items-center gap-1 text-sm text-gray-500">
+        <div className="flex items-center gap-1 text-sm text-gray-500">
             <Zap className="size-4 text-yellow-500 fill-yellow-500" />
             <span>تم البيع 18 مرة خلال اليوم</span>
           </div>
@@ -151,7 +151,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
           </div>
           <div className="flex items-center gap-1 text-sm text-gray-500">
             <Zap className="size-4 text-yellow-500 fill-yellow-500" />
-            <span>تم البيع 18 مرة خلال اليوم</span>
+          <span>تم البيع 18 مرة خلال اليوم</span>
           </div>
         </div>
       </div>
@@ -178,12 +178,12 @@ export function ProductInfo({ product }: ProductInfoProps) {
           ) : null}
         </div>
         {product.giftPoints && product.giftPoints > 0 ? (
-          <div className="flex items-center gap-2 bg-[#F2FBF6] rounded-lg px-3 py-1">
+        <div className="flex items-center gap-2 bg-[#F2FBF6] rounded-lg px-3 py-1">
             <Gift className="w-6 h-5 text-green-primary " />
             <span className="text-green-primary text-sm">
               {product.giftPoints * quantity} نقطة
             </span>
-          </div>
+        </div>
         ) : null}
       </div>
 
@@ -235,7 +235,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
       <div className="flex items-center justify-between gap-2 p-1">
         <div className="flex items-center gap-1 text-sm text-gray-600">
           <Truck className="size-4 -scale-x-100" />
-          <span>
+          <span className="flex items-center gap-1">
              توصيل مجاني
             <span className="text-xs md:text-base gap-2 text-gray-400">
               للطلبات فوق 375 ر.س
@@ -243,13 +243,13 @@ export function ProductInfo({ product }: ProductInfoProps) {
           </span>
         </div>
 
-        <button
+          <button
           onClick={() => setShowQuestionForm(true)}
           className="cursor-pointer hover:underline flex items-center gap-1 text-sm text-gray-600 transition-colors hover:text-gray-800"
-        >
+          >
           <MessageSquare className="size-4" />
           <span className="p-0">ترغب فى طرح سؤال؟</span>
-        </button>
+          </button>
       </div>
 
       {/* Divider after Question Section */}

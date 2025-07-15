@@ -161,70 +161,70 @@ export default function HeroSection() {
           animate={{ opacity: 0.18 }}
           transition={{ duration: 1 }}
         >
-          <Image
-            src="/images/hero-image-bg.png"
-            alt=""
-            fill
+      <Image
+        src="/images/hero-image-bg.png"
+        alt=""
+        fill
             className="object-cover object-center"
             priority
-          />
+      />
         </motion.div>
 
-        {/* Text Content */}
-        <motion.div
+      {/* Text Content */}
+      <motion.div
           key={`hero-content-${currentHeroIndex}`}
           className="relative z-10 flex-1 flex flex-col items-start text-right gap-2 sm:gap-3 md:gap-4 lg:gap-6 md:pl-4 lg:pl-8 w-full md:w-1/2"
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
-        >
+        initial={{ opacity: 0, x: 50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5 }}
+      >
           {/* Badge */}
-          <motion.div
+        <motion.div
             className="flex items-center gap-1 md:gap-2 text-xs sm:text-sm md:text-base text-gray-500"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
             <span className="flex items-center gap-1 bg-white rounded-full px-2 py-1 shadow-md text-green-600 font-bold border border-gray-100">
               <Star className="fill-yellow-400 text-yellow-400 h-3 w-3 md:h-4 md:w-4" />
               4.9
-            </span>
+          </span>
             <span className="font-medium">أفضل ١٠ ماركات تجميلية</span>
-          </motion.div>
+        </motion.div>
 
           {/* Dynamic Headline */}
-          <motion.h1
+        <motion.h1
             className="text-lg sm:text-xl md:text-3xl lg:text-4xl xl:text-5xl font-extrabold text-gray-900 leading-tight tracking-tight"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+        >
             {isLoadingHero ? (
               <div className="h-12 bg-gray-200 rounded animate-pulse" />
             ) : (
               heroContent.title
             )}
-          </motion.h1>
+        </motion.h1>
 
           {/* Dynamic Subheadline */}
-          <motion.p
+        <motion.p
             className="text-sm sm:text-base md:text-xl lg:text-2xl text-gray-700 w-full font-medium"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-          >
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+        >
             {isLoadingHero ? (
               <span className="h-6 block w-full bg-gray-200 rounded animate-pulse" />
             ) : (
               heroContent.description
             )}
-          </motion.p>
+        </motion.p>
 
           {/* Dynamic CTA Button */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.5 }}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.5 }}
             className=""
           >
             {isLoadingHero ? (
@@ -233,24 +233,24 @@ export default function HeroSection() {
               <Link href={heroContent.redirectUrl}>
                 <Button className="bg-green-500 hover:bg-green-600 text-white  rounded-lg text-sm sm:text-base md:text-lg mb-2 w-[120px] h-[40px] transition-colors duration-200 shadow-md flex items-center justify-center">
                   {heroContent.buttonText || "اشترى الآن"}
-                </Button>
-              </Link>
+            </Button>
+          </Link>
             )}
           </motion.div>
-        </motion.div>
+      </motion.div>
 
         {/* Dynamic Hero Image */}
-        <motion.div
+      <motion.div
           key={`hero-image-${currentHeroIndex}`}
           className="relative z-10 flex-1 flex items-center justify-center md:justify-end mb-6 md:mb-0 w-full md:w-1/2"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6 }}
-        >
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.6 }}
+      >
           {isLoadingHero ? (
             <div className="w-[240px] sm:w-[240px] md:w-[260px] lg:w-[340px] xl:w-[200px] h-[220px] sm:h-[200px] md:h-[260px] lg:h-[340px] xl:h-[380px] bg-gray-200 rounded-lg animate-pulse" />
           ) : (
-            <Image
+        <Image
               src={heroContent.imageUrl}
               alt={heroContent.title}
               width={380}
@@ -259,7 +259,7 @@ export default function HeroSection() {
               priority
             />
           )}
-        </motion.div>
+      </motion.div>
       </div>
 
       {/* Categories Carousel */}
@@ -284,7 +284,7 @@ export default function HeroSection() {
                 <div className="grid grid-cols-4 md:grid-cols-5 gap-2 md:gap-3 lg:gap-4">
                   {slide.map((cat, index) => (
                     <Link key={cat.id} href={`/products?categoryIds=${cat.id}`}>
-                      <CategoryCard
+        <CategoryCard
                         icon={
                           <Image
                             src={cat.icon}

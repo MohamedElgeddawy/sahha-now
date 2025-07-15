@@ -82,7 +82,7 @@ export default function RegisterPage() {
     try {
       const res = await registerApi({
         ...data,
-        mobile: mobile || "",
+        mobile: mobile?.startsWith("+966") ? mobile : `+966${mobile}` || "",
       });
 
       dispatch(
@@ -93,11 +93,17 @@ export default function RegisterPage() {
       );
       toast.success("تم إنشاء الحساب بنجاح");
       router.push("/");
-    } catch (error: unknown) {
+    } catch (error: any) {
       console.error("Registration error:", error);
-      toast.error(
-        error instanceof Error ? error.message : "حدث خطأ أثناء إنشاء الحساب"
-      );
+      if (error.response?.status === 409) {
+        toast.error(
+            "هذا البريد الإلكتروني مسجل بالفعل"
+        );
+      } else {
+        toast.error(
+          error instanceof Error ? error.message : "حدث خطأ أثناء إنشاء الحساب"
+        );
+      }
     }
   };
 

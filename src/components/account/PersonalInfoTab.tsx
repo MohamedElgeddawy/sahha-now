@@ -104,24 +104,31 @@ export function PersonalInfoTab() {
           <Controller
             control={control}
             name="mobile"
-            render={({ field, fieldState: { error } }) => (
-              <FormField
-                label="رقم الهاتف"
-                startElement={
-                  <span
-                    dir="ltr"
-                    className="text-gray-500 select-none pointer-events-none"
-                  >
-                    +966
-                  </span>
-                }
-                error={error}
-                {...field}
-                required
-                disabled
-                dir="ltr"
-              />
-            )}
+            render={({ field, fieldState: { error } }) => {
+              // Remove +966 if present for display
+              const value = field.value.startsWith("+966")
+                ? field.value.slice(4).trim()
+                : field.value;
+              return (
+                <FormField
+                  label="رقم الهاتف"
+                  startElement={
+                    <span
+                      dir="ltr"
+                      className="text-gray-500 select-none pointer-events-none"
+                    >
+                      +966
+                    </span>
+                  }
+                  error={error}
+                  {...field}
+                  value={value}
+                  required
+                  disabled
+                  dir="ltr"
+                />
+              );
+            }}
           />
 
           {/* Email Field */}
