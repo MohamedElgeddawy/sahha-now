@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { useLocalStorage } from "usehooks-ts";
 import { useAppSelector } from "@redux/hooks";
 import { selectIsAuthenticated } from "@redux/slices/authSlice";
+import { useRouter } from "next/navigation";
 
 export const cartKeys = {
   all: ["cart"] as const,
@@ -32,6 +33,7 @@ export const useCartItemsCount = () => {
 export const useCart = () => {
   const isAuth = useAppSelector(selectIsAuthenticated);
   const queryClient = useQueryClient();
+  const router = useRouter();
   const [localCart, setLocalCart] = useLocalStorage<Cart | null>("cart", null, {
     deserializer(value) {
       if (value) {
@@ -96,9 +98,14 @@ export const useCart = () => {
       queryClient.invalidateQueries({ queryKey: cartKeys.itemsCount() });
       toast.success("تمت الإضافة إلى السلة");
     },
-    onError: () => {
-      const errorMessage = "حدث خطأ أثناء إضافة المنتج إلى السلة";
-      toast.error(errorMessage);
+    onError: (error: any) => {
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        toast.error("من فضلك قم بتسجيل الدخول لإضافة المنتج إلى السله");
+        router.push("/auth/login");
+      } else {
+        const errorMessage = "حدث خطأ أثناء إضافة المنتج إلى السلة";
+        toast.error(errorMessage);
+      }
     },
   });
 
