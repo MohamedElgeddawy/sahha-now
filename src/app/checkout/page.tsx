@@ -15,6 +15,8 @@ import { useRouter } from "next/navigation";
 import { CreditCardForm } from "@components/checkout/CreditCardForm";
 import axios, { AxiosResponse } from "axios";
 import { useLocalStorage } from "usehooks-ts";
+import sahhaInstance from "@api/sahhaInstance";
+import { toast } from "sonner";
 
 type MoyasarTokenResponse = {
   id: string;
@@ -93,47 +95,65 @@ const CheckoutPage = () => {
 
   const onSubmit = async (data: CheckoutFormData) => {
     try {
-      const axiosInstance = axios.create({
-        baseURL: "https://api.moyasar.com/v1",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        auth: {
-          username: "pk_test_VNScH4SFaFiGb2A7Wa4GA1SdN9oDndUFbMJ8H8nF",
-          password: "",
-        },
-      });
-      const responseData = (await axiosInstance.post("/tokens", {
-        number: data.number.replace(/\s/g, ""),
-        callback_url: `${window.location.href}/confirming`,
-        cvc: data.cvc,
-        month: data.month,
-        year: data.year,
-        name: data.name,
-      })) as AxiosResponse<MoyasarTokenResponse>;
-      setLocalStorage({
-        fullname: data.fullname,
-        phoneNumber: data.phoneNumber,
-        city: data.city,
-        district: data.district,
-        street: data.street,
-        building: data.building,
-        paymentMethod: "CARD",
-        payWithWallet: true,
-        saveToken: true,
-        tokenData: {
-          token: responseData.data.id,
-          funding: responseData.data.funding,
-          brand: responseData.data.brand,
-          lastFour: responseData.data.last_four,
-          expiryMonth: responseData.data.month,
-          expiryYear: responseData.data.year,
-        },
-        cvc: data.cvc,
-      });
-      router.push(responseData.data.verification_url);
-    } catch (error) {
-      console.log(error);
+      if (paymentMethod === "CARD") {
+        const axiosInstance = axios.create({
+          baseURL: "https://api.moyasar.com/v1",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          auth: {
+            username: "pk_test_VNScH4SFaFiGb2A7Wa4GA1SdN9oDndUFbMJ8H8nF",
+            password: "",
+          },
+        });
+        const responseData = (await axiosInstance.post("/tokens", {
+          number: data.number?.replace(/\s/g, "") || "",
+          callback_url: `${window.location.href}/confirming`,
+          cvc: data.cvc,
+          month: data.month,
+          year: data.year,
+          name: data.name,
+        })) as AxiosResponse<MoyasarTokenResponse>;
+        setLocalStorage({
+          fullname: data.fullname,
+          phoneNumber: data.phoneNumber,
+          city: data.city,
+          district: data.district,
+          street: data.street,
+          building: data.building,
+          paymentMethod: "CARD",
+          payWithWallet: true,
+          saveToken: true,
+          tokenData: {
+            token: responseData.data.id,
+            funding: responseData.data.funding,
+            brand: responseData.data.brand,
+            lastFour: responseData.data.last_four,
+            expiryMonth: responseData.data.month,
+            expiryYear: responseData.data.year,
+          },
+          cvc: data.cvc || "",
+        });
+        router.push(responseData.data.verification_url);
+      } else if (paymentMethod === "CASH_ON_DELIVERY") {
+        // Handle Cash on Delivery
+        await sahhaInstance.post("/orders", {
+          fullname: data.fullname,
+          phoneNumber: data.phoneNumber,
+          city: data.city,
+          district: data.district,
+          street: data.street,
+          building: data.building,
+          paymentMethod: "CASH_ON_DELIVERY",
+        });
+        router.push("/order-confirmation"); // Redirect to a success page
+      }
+    } catch (error: any) {
+      console.error("Checkout error:", error);
+      toast.error(
+        error.response?.data?.message ||
+          "حدث خطأ أثناء إتمام الطلب. يرجى المحاولة مرة أخرى."
+      );
     }
   };
 

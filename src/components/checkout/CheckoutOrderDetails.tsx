@@ -392,9 +392,9 @@ export const CheckoutOrderDetails = ({ order }: OrderDetailsProps) => {
                       {order?.transaction.method === "CASH_ON_DELIVERY" && (
                         <HandCoins className="w-4 h-4" />
                       )}
-                      {order?.transaction.paymentMethod.brand && (
+                      {order?.transaction.paymentMethod?.brand && (
                         <PaymentMethodIcon
-                          company={order?.transaction.paymentMethod.brand}
+                          company={order?.transaction.paymentMethod?.brand}
                         />
                       )}
                     </span>

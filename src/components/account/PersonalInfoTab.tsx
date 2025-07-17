@@ -110,8 +110,8 @@ export function PersonalInfoTab() {
                 ? field.value.slice(4).trim()
                 : field.value;
               return (
-                <FormField
-                  label="رقم الهاتف"
+              <FormField
+                label="رقم الهاتف"
                   startElement={
                     <span
                       dir="ltr"
@@ -120,13 +120,13 @@ export function PersonalInfoTab() {
                       +966
                     </span>
                   }
-                  error={error}
-                  {...field}
+                error={error}
+                {...field}
                   value={value}
-                  required
-                  disabled
-                  dir="ltr"
-                />
+                required
+                disabled
+                dir="ltr"
+              />
               );
             }}
           />

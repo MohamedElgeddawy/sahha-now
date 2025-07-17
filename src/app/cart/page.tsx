@@ -101,7 +101,7 @@ export default function CartPage() {
               {cart.data?.cartItems.map((item) => {
                 const finalPrice =
                   parseFloat(item.variant.price) *
-                  (1 - parseFloat(item.variant.discount || "0") / 100);
+                  (1 - parseFloat(item.variant.product.discount || "0") / 100);
 
                 return (
                   <motion.div
@@ -164,7 +164,8 @@ export default function CartPage() {
                         <div className="font-semibold text-sm">
                           {formatCurrency(finalPrice)}
                         </div>
-                        {parseFloat(item.variant.discount || "0") > 0 && (
+                        {parseFloat(item.variant.product.discount || "0") >
+                          0 && (
                           <span className="text-xs text-gray-500 relative before:content-[''] before:absolute before:top-1/2 before:left-0 before:w-full before:h-[1px] before:bg-gray-500">
                             {formatCurrency(parseFloat(item.variant.price))}
                           </span>
@@ -248,7 +249,9 @@ export default function CartPage() {
                               <div className="font-semibold text-sm">
                                 {formatCurrency(finalPrice)}
                               </div>
-                              {parseFloat(item.variant.discount || "0") > 0 && (
+                              {parseFloat(
+                                item.variant.product.discount || "0"
+                              ) > 0 && (
                                 <span className="text-xs text-gray-500 relative before:content-[''] before:absolute before:top-1/2 before:left-0 before:w-full before:h-[1px] before:bg-gray-500">
                                   {formatCurrency(
                                     parseFloat(item.variant.price)
