@@ -137,7 +137,7 @@ const CheckoutPage = () => {
         router.push(responseData.data.verification_url);
       } else if (paymentMethod === "CASH_ON_DELIVERY") {
         // Handle Cash on Delivery
-        await sahhaInstance.post("/orders", {
+        const orderResponse = await sahhaInstance.post("/orders", {
           fullname: data.fullname,
           phoneNumber: data.phoneNumber,
           city: data.city,
@@ -146,7 +146,7 @@ const CheckoutPage = () => {
           building: data.building,
           paymentMethod: "CASH_ON_DELIVERY",
         });
-        router.push("/order-confirmation"); // Redirect to a success page
+        router.push(`/checkout/${orderResponse.data.updatedOrder.id}`); // Redirect to a success page
       }
     } catch (error: any) {
       console.error("Checkout error:", error);
@@ -450,7 +450,10 @@ const CheckoutPage = () => {
                     />
                   </div>
                   <div className="flex-1 text-start space-y-1">
-                    <p className="font-medium">{item.variant.product.arabicName || item.variant.product.name}</p>
+                    <p className="font-medium">
+                      {item.variant.product.arabicName ||
+                        item.variant.product.name}
+                    </p>
                     <p className="text-sm text-gray-500">
                       {item.variant.product.brandId || ""}
                     </p>
