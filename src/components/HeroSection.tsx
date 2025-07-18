@@ -7,7 +7,6 @@ import PersonalCareIcon from "@icons/home/personal-care.svg";
 import SkinCareIcon from "@icons/home/skin-care.svg";
 import VitaminIcon from "@icons/home/vitamin.svg";
 import MedicineIcon from "@icons/home/medicine.svg";
-import { cn } from "@utils";
 import { Button } from "./ui/button";
 import { motion } from "motion/react";
 import { Star } from "lucide-react";
