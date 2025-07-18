@@ -8,7 +8,8 @@ import { FormField } from "@components/auth/FormField";
 import { type CheckoutFormData } from "@schemas/checkout";
 
 export function CreditCardForm() {
-  const { control } = useFormContext<CheckoutFormData>();
+  const { control, formState: { errors } } = useFormContext<CheckoutFormData>();
+  console.log(errors);
 
   const formatCardNumber = (value: string) => {
     const v = value.replace(/\s+/g, "").replace(/[^0-9]/gi, "");

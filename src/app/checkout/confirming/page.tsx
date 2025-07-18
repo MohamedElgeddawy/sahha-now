@@ -4,9 +4,10 @@ import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useReadLocalStorage } from "usehooks-ts";
 import sahhaInstance from "@api/sahhaInstance";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { OrderCreationLoading } from "@components/checkout/OrderCreationLoading";
 import { OrderCreationError } from "@components/checkout/OrderCreationError";
+import { cartKeys } from "@hooks/use-cart";
 
 interface OrderResponse {
   updatedOrder: {
@@ -63,6 +64,7 @@ const CheckoutConfirmingPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
   const orderData = useReadLocalStorage("order-data", {
     deserializer(value) {
@@ -79,6 +81,8 @@ const CheckoutConfirmingPage = () => {
       return res.data;
     },
     onSuccess: (data: OrderResponse) => {
+      localStorage.removeItem("order-data");
+      queryClient.invalidateQueries({ queryKey: cartKeys.itemsCount() });
       router.push(`/checkout/${data.updatedOrder.id}`);
     },
     onError: (error: any) => {

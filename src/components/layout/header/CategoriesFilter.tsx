@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@components/ui/button";
 import {
   DropdownMenu,
@@ -14,7 +15,7 @@ import {
 } from "@components/ui/drawer";
 import { CategoryResponse } from "@api/products";
 import { ChevronDown } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 import { useIsClient, useMediaQuery } from "usehooks-ts";
 import { useAppDispatch, useAppSelector } from "@redux/hooks";
 import { setFilter } from "@redux/slices/filtersSlice";
@@ -28,6 +29,7 @@ const CategoriesFilter = ({
 }) => {
   const isMobile = useMediaQuery("(max-width: 768px)");
   const isClient = useIsClient();
+  const [isOpen, setIsOpen] = useState(false);
   const dispatch = useAppDispatch();
   const { updateURL } = useFilterParams();
   const router = useRouter();
@@ -41,7 +43,9 @@ const CategoriesFilter = ({
     updateURL({ ...activeFilters, categoryIds: [categoryId] });
 
     // Navigate to products page
-    router.push(`/products?categoryIds=${categoryId}`);
+    router.push(`/products?categoryIds=${categoryId}`, { scroll: false });
+
+    setIsOpen(false);
   };
 
   const triggerButton = (
@@ -66,7 +70,7 @@ const CategoriesFilter = ({
 
   if (isMobile && isClient) {
     return (
-      <Drawer direction="bottom">
+      <Drawer direction="bottom" open={isOpen} onOpenChange={setIsOpen}>
         <DrawerTrigger asChild>{triggerButton}</DrawerTrigger>
         <DrawerContent className="max-h-[60vh] bg-white">
           <DrawerHeader>
@@ -83,7 +87,7 @@ const CategoriesFilter = ({
   }
 
   return (
-    <DropdownMenu dir="rtl">
+    <DropdownMenu dir="rtl" open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>{triggerButton}</DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-56">
         {categoriesResponse?.categories?.map((category) => (

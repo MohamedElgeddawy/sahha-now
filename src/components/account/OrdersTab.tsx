@@ -28,6 +28,7 @@ import {
 } from "@components/ui/LoadingComponent";
 import { Button } from "@components/ui/button";
 import Image from "next/image";
+import { useMediaQuery, useIsClient } from "usehooks-ts";
 
 // Status mapping from English to Arabic
 const getStatusInArabic = (status: Order["status"]): string => {
@@ -71,6 +72,8 @@ const getStatusColor = (status: Order["status"]): string => {
 export function OrdersTab() {
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 5;
+  const isClient = useIsClient();
+  const isTablet = useMediaQuery("(max-width: 1024px)");
 
   const {
     data: ordersData,
@@ -148,61 +151,124 @@ export function OrdersTab() {
     <>
       {orders.length > 0 ? (
         <>
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="text-start min-w-[120px]">
-                    رقم الطلب
-                  </TableHead>
-                  <TableHead className="text-start min-w-[100px]">
-                    التاريخ
-                  </TableHead>
-                  <TableHead className="text-start min-w-[120px]">
-                    الحالة
-                  </TableHead>
-                  <TableHead className="text-start min-w-[100px]">
-                    الإجمالي
-                  </TableHead>
-                  <TableHead className="text-start min-w-[120px]">
-                    عرض التفاصيل
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {orders.map((order) => (
-                  <TableRow key={order.id}>
-                    <TableCell className="text-start font-medium">
-                      {order.orderNumber}
-                    </TableCell>
-                    <TableCell className="text-start text-sm text-gray-600">
-                      {new Date(order.createdAt).toLocaleDateString("ar-SA")}
-                    </TableCell>
-                    <TableCell className="text-start">
-                      <Badge
-                        className={`${getStatusColor(
-                          order.status
-                        )} border-none text-xs px-2 py-1`}
-                      >
-                        {getStatusInArabic(order.status)}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-start font-semibold">
-                      {parseFloat(order.totalPriceAfterFees).toFixed(2)} ر.س
-                    </TableCell>
-                    <TableCell className="text-start">
-                      <Link
-                        className="text-red-500 text-sm font-medium hover:underline"
-                        href={`/account/orders/${order.id}`}
-                      >
-                        عرض التفاصيل
-                      </Link>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+          {isClient && (
+            <>
+              {/* Desktop Table View */}
+              {!isTablet && (
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="text-start min-w-[120px]">
+                          رقم الطلب
+                        </TableHead>
+                        <TableHead className="text-start min-w-[100px]">
+                          التاريخ
+                        </TableHead>
+                        <TableHead className="text-start min-w-[120px]">
+                          الحالة
+                        </TableHead>
+                        <TableHead className="text-start min-w-[100px]">
+                          الإجمالي
+                        </TableHead>
+                        <TableHead className="text-start min-w-[120px]">
+                          عرض التفاصيل
+                        </TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {orders.map((order) => (
+                        <TableRow key={order.id}>
+                          <TableCell className="text-start font-medium">
+                            {order.orderNumber}
+                          </TableCell>
+                          <TableCell className="text-start text-sm text-gray-600">
+                            {new Date(order.createdAt).toLocaleDateString(
+                              "ar-SA"
+                            )}
+                          </TableCell>
+                          <TableCell className="text-start">
+                            <Badge
+                              className={`${getStatusColor(
+                                order.status
+                              )} border-none text-xs px-2 py-1`}
+                            >
+                              {getStatusInArabic(order.status)}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="text-start font-semibold">
+                            {parseFloat(order.totalPriceAfterFees).toFixed(2)}{" "}
+                            ر.س
+                          </TableCell>
+                          <TableCell className="text-start">
+                            <Link
+                              className="text-red-500 text-sm font-medium hover:underline"
+                              href={`/account/orders/${order.id}`}
+                            >
+                              عرض التفاصيل
+                            </Link>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
+
+              {/* Mobile Card View */}
+              {isTablet && (
+                <div className="space-y-4">
+                  {orders.map((order) => (
+                    <div
+                      key={order.id}
+                      className="bg-white border border-gray-200 rounded-lg p-4 space-y-3"
+                    >
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <p className="text-sm text-gray-500">رقم الطلب</p>
+                          <p className="font-medium">{order.orderNumber}</p>
+                        </div>
+                        <Badge
+                          className={`${getStatusColor(
+                            order.status
+                          )} border-none text-xs px-2 py-1`}
+                        >
+                          {getStatusInArabic(order.status)}
+                        </Badge>
+                      </div>
+
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <p className="text-sm text-gray-500">التاريخ</p>
+                          <p className="text-sm text-gray-600">
+                            {new Date(order.createdAt).toLocaleDateString(
+                              "ar-SA"
+                            )}
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-sm text-gray-500">الإجمالي</p>
+                          <p className="font-semibold">
+                            {parseFloat(order.totalPriceAfterFees).toFixed(2)}{" "}
+                            ر.س
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="pt-2 border-t border-gray-100">
+                        <Link
+                          className="text-red-500 text-sm font-medium hover:underline"
+                          href={`/account/orders/${order.id}`}
+                        >
+                          عرض التفاصيل
+                        </Link>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </>
+          )}
 
           {/* Pagination */}
           {totalPages > 1 && (

@@ -9,6 +9,7 @@ import QuantityCounter from "@components/ui/QuantityCounter";
 import ProductQuickViewDialog from "./ProductQuickViewDialog";
 import { Product } from "@api/products";
 import { cn } from "@utils";
+import { useMediaQuery, useIsClient } from "usehooks-ts";
 
 type Props = {
   product: Partial<Product>;
@@ -23,6 +24,9 @@ const ProductCardList = ({
 }: Props) => {
   const [quantity, setQuantity] = useState(1);
   const [showQuickView, setShowQuickView] = useState(false);
+  const isClient = useIsClient();
+  const isMobile = useMediaQuery("(max-width: 640px)");
+  const isTablet = useMediaQuery("(max-width: 1024px)");
   // Render skeleton UI when loading
   if (isLoading) {
     return (
@@ -83,16 +87,41 @@ const ProductCardList = ({
           y: -2,
         }}
       >
-        {/* Clean layout - Simple for mobile, Enhanced design for desktop */}
-        <div className="flex flex-row p-2 sm:p-3 md:p-4 lg:p-4 gap-2 sm:gap-4">
+        {/* Clean layout - Responsive design for all screen sizes */}
+        <div
+          className={cn(
+            "flex flex-row gap-2 sm:gap-4",
+            isClient && isMobile
+              ? "p-2"
+              : isClient && isTablet
+              ? "p-3"
+              : "p-3 md:p-4 lg:p-4"
+          )}
+        >
           {/* Product Image */}
-          <div className="w-[180px] sm:w-[180px] md:w-[200px] lg:w-[240px] h-[140px] sm:h-[160px] md:h-[160px] lg:h-[160px] relative flex-shrink-0">
+          <div
+            className={cn(
+              "relative flex-shrink-0",
+              isClient && isMobile
+                ? "w-[120px] h-[100px]"
+                : isClient && isTablet
+                ? "w-[160px] h-[140px]"
+                : "w-[200px] h-[160px]"
+            )}
+          >
             <Link href={`/products/${product.id}`}>
               <div className="relative h-full w-full rounded-lg overflow-hidden bg-white">
                 {/* Discount Badge */}
                 {discount > 0 && (
                   <motion.div
-                    className="absolute top-2 left-2 bg-red-50 text-red-600 px-2 py-1 rounded-md text-xs font-bold z-10"
+                    className={cn(
+                      "absolute bg-red-50 text-red-600 rounded-md font-bold z-10",
+                      isClient && isMobile
+                        ? "top-1 left-1 px-1.5 py-0.5 text-xs"
+                        : isClient && isTablet
+                        ? "top-1.5 left-1.5 px-2 py-1 text-xs"
+                        : "top-2 left-2 px-2 py-1 text-xs"
+                    )}
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 0.2 }}
@@ -123,7 +152,12 @@ const ProductCardList = ({
             </Link>
 
             {/* Action buttons overlay - Responsive for tablet and mobile */}
-            <div className="absolute top-2 right-1 items-center flex flex-col gap-2  z-10 md:hidden">
+            <div
+              className={cn(
+                "absolute top-2 right-1 items-center flex flex-col gap-2 z-10",
+                isClient && !isTablet ? "hidden" : "flex"
+              )}
+            >
               <FavoriteButton
                 productId={product.id!}
                 isFavourite={product?.isFavourite || isFavorite}
@@ -145,65 +179,137 @@ const ProductCardList = ({
             </div>
           </div>
 
-          {/* Product Content - Enhanced design for desktop */}
-          <div className="flex-1 px-3 sm:px-4 md:px-6 lg:px-8 flex flex-col justify-between">
-            <div className="space-y-2 md:space-y-3 lg:space-y-4">
-              {/* Product Title - Enhanced typography for desktop */}
-
+          {/* Product Content - Responsive design for all screen sizes */}
+          <div
+            className={cn(
+              "flex-1 flex flex-col justify-between",
+              isClient && isMobile
+                ? "px-2"
+                : isClient && isTablet
+                ? "px-3"
+                : "px-3 sm:px-4 md:px-6"
+            )}
+          >
+            <div
+              className={cn(
+                isClient && isMobile
+                  ? "space-y-1.5"
+                  : isClient && isTablet
+                  ? "space-y-2"
+                  : "space-y-2 md:space-y-3 lg:space-y-4"
+              )}
+            >
+              {/* Product Title - Responsive typography */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.2 }}
               >
                 <Link href={`/products/${product.id}`}>
-                  <h3 className="text-gray-900 text-sm sm:text-lg md:text-xl lg:text-2xl xl:text-3xl leading-tight rtl:text-right line-clamp-2 hover:text-gray-700 transition-colors">
+                  <h3
+                    className={cn(
+                      "text-gray-900 leading-tight rtl:text-right line-clamp-2 hover:text-gray-700 transition-colors",
+                      isClient && isMobile
+                        ? "text-sm line-clamp-1"
+                        : isClient && isTablet
+                        ? "text-base line-clamp-2"
+                        : "text-lg md:text-xl lg:text-2xl line-clamp-2"
+                    )}
+                  >
                     {productName}
                   </h3>
                 </Link>
               </motion.div>
 
-              {/* Brand - Enhanced design for desktop */}
+              {/* Brand - Responsive design */}
               {brandName && (
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.25 }}
-                  className="text-sm md:text-base lg:text-lg text-gray-400 font-medium rtl:text-right"
+                  className={cn(
+                    "text-gray-400 font-medium rtl:text-right",
+                    isClient && isMobile
+                      ? "text-xs"
+                      : isClient && isTablet
+                      ? "text-sm"
+                      : "text-sm md:text-base lg:text-lg"
+                  )}
                 >
                   {brandName}
                 </motion.div>
               )}
 
-              {/* Price - Enhanced design for desktop */}
+              {/* Price - Responsive design */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 }}
-                className="flex items-center gap-2 rtl:justify-start md:gap-3 lg:gap-4"
+                className={cn(
+                  "flex items-start flex-col rtl:justify-start",
+                  isClient && isMobile
+                    ? "gap-1 flex-wrap"
+                    : isClient && isTablet
+                    ? "gap-2"
+                    : "gap-2"
+                )}
               >
                 <div className="flex items-center gap-1">
-                  <span className="font-bold text-green-600 text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl">
+                  <span
+                    className={cn(
+                      "font-bold text-green-600",
+                      isClient && isMobile
+                        ? "text-sm"
+                        : isClient && isTablet
+                        ? "text-base"
+                        : "text-lg sm:text-xl md:text-2xl"
+                    )}
+                  >
                     {finalPrice.toFixed(2)}
                   </span>
-                  <span className="text-green-600 font-medium text-sm md:text-base lg:text-lg">
+                  <span
+                    className={cn(
+                      "text-green-600 font-medium",
+                      isClient && isMobile
+                        ? "text-xs"
+                        : isClient && isTablet
+                        ? "text-sm"
+                        : "text-sm md:text-base lg:text-lg"
+                    )}
+                  >
                     ر.س
                   </span>
                 </div>
 
                 {discount > 0 && (
-                  <div className="flex text-sm md:text-base lg:text-lg text-gray-400 items-center gap-1">
+                  <div
+                    className={cn(
+                      "flex text-gray-400 items-center gap-1",
+                      isClient && isMobile
+                        ? "text-xs"
+                        : isClient && isTablet
+                        ? "text-sm"
+                        : "text-sm md:text-base lg:text-lg"
+                    )}
+                  >
                     <span className="line-through font-medium">
                       {price.toFixed(2)}
                     </span>
-                    <span className="text-xs md:text-sm">ر.س</span>
+                    <span
+                      className={cn(
+                        isClient && isMobile ? "text-xs" : "text-xs md:text-sm"
+                      )}
+                    >
+                      ر.س
+                    </span>
                   </div>
                 )}
               </motion.div>
 
-              {/* Rating - desktop */}
+              {/* Rating - Responsive design */}
               {rating > 0 && (
                 <motion.div
-                  className="hidden md:flex items-center gap-1"
+                  className={cn("flex items-center gap-1")}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.4 }}
@@ -213,29 +319,59 @@ const ProductCardList = ({
                     .map((_, i) => (
                       <Star
                         key={i}
-                        className={cn("size-4 md:size-5", {
-                          "text-yellow-400 fill-yellow-400": i < rating,
-                          "text-gray-300 fill-gray-300": i >= rating,
-                        })}
+                        className={cn(
+                          isClient && isMobile
+                            ? "size-3"
+                            : isClient && isTablet
+                            ? "size-4"
+                            : "size-4 md:size-5",
+                          {
+                            "text-yellow-400 fill-yellow-400": i < rating,
+                            "text-gray-300 fill-gray-300": i >= rating,
+                          }
+                        )}
                       />
                     ))}
-                  <span className="text-xs md:text-sm text-gray-500 font-medium mr-1">
+                  <span
+                    className={cn(
+                      "text-gray-500 font-medium mr-1",
+                      isClient && isMobile
+                        ? "text-xs"
+                        : isClient && isTablet
+                        ? "text-xs"
+                        : "text-xs md:text-sm"
+                    )}
+                  >
                     ({reviewCount})
                   </span>
                 </motion.div>
               )}
             </div>
 
-            {/* Buy Button - Enhanced design Mobile/Tablet only) */}
+            {/* Buy Button - Responsive design for mobile/tablet */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="mt-3 md:mt-4 lg:hidden"
+              className={cn(
+                isClient && isMobile
+                  ? "mt-2"
+                  : isClient && isTablet
+                  ? "mt-3"
+                  : "mt-3 md:mt-4",
+                isClient && !isTablet ? "hidden" : "block"
+              )}
             >
               <Link
                 href={`/products/${product.id}`}
-                className="inline-block w-40 py-2 sm:py-2.5 md:py-3 px-4 sm:px-6 md:px-8 bg-gradient-to-r from-[#FF9B07] to-[#D35400] text-white text-center rounded-lg hover:from-[#F08C00] hover:to-[#E07B00] transition-all duration-300 font-bold text-sm md:text-base shadow-sm hover:shadow-md transform hover:scale-105"
+                className={cn(
+                  "inline-block bg-gradient-to-r from-[#FF9B07] to-[#D35400] text-white text-center rounded-lg hover:from-[#F08C00] hover:to-[#E07B00] transition-all duration-300 font-bold shadow-sm hover:shadow-md transform hover:scale-105",
+                  isClient && isMobile
+                    ? "w-full py-2 px-3 text-xs"
+                    : isClient && isTablet
+                    ? "w-40 py-2.5 px-4 text-sm"
+                    : "w-40 py-2.5 md:py-3 px-4 sm:px-6 md:px-8 text-sm md:text-base"
+                )}
               >
                 اشتري الآن
               </Link>
@@ -243,7 +379,13 @@ const ProductCardList = ({
           </div>
 
           {/* Desktop Right Section - Action Icons, Counter & Buy Button */}
-          <div className="hidden lg:flex flex-col justify-between items-end min-w-[180px] xl:min-w-[200px]">
+          <div
+            className={cn(
+              "flex flex-col justify-between items-end",
+              isClient && isTablet ? "hidden" : "flex",
+              isClient && !isTablet ? "min-w-[160px] xl:min-w-[180px]" : ""
+            )}
+          >
             {/* Top - Action Icons */}
             <motion.div
               className="flex items-center gap-4"
@@ -286,7 +428,7 @@ const ProductCardList = ({
               />
               <Link
                 href={`/products/${product.id}`}
-                className="w-64 h-12 flex items-center justify-center gap-2 bg-gradient-to-r from-[#FF9B07] to-[#F08C00] text-white rounded-lg hover:from-[#F08C00] hover:to-[#E07B00] transition-all duration-300 font-bold text-sm shadow-md hover:shadow-lg transform hover:scale-105 p-4"
+                className="max-w-64 w-full whitespace-nowrap h-12 flex items-center justify-center gap-2 bg-gradient-to-r from-[#FF9B07] to-[#F08C00] text-white rounded-lg hover:from-[#F08C00] hover:to-[#E07B00] transition-all duration-300 font-bold text-sm shadow-md hover:shadow-lg transform hover:scale-105 p-4"
               >
                 اشتري الآن
               </Link>

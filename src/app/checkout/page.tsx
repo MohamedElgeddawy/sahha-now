@@ -7,7 +7,7 @@ import { Breadcrumb } from "@components/layout/Breadcrumb";
 import { FormField } from "@components/auth/FormField";
 import { Button } from "@components/ui/button";
 import { checkoutSchema, type CheckoutFormData } from "@schemas/checkout";
-import { useCart } from "@hooks/use-cart";
+import { cartKeys, useCart } from "@hooks/use-cart";
 import Image from "next/image";
 import { cn } from "@utils";
 import { Input } from "@components/ui/input";
@@ -17,6 +17,7 @@ import axios, { AxiosResponse } from "axios";
 import { useLocalStorage } from "usehooks-ts";
 import sahhaInstance from "@api/sahhaInstance";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 
 type MoyasarTokenResponse = {
   id: string;
@@ -61,7 +62,7 @@ type OrderData = {
 const CheckoutPage = () => {
   const router = useRouter();
   const { cart } = useCart();
-
+  const queryClient = useQueryClient();
   const [couponCode, setCouponCode] = useState("");
   const [_, setLocalStorage] = useLocalStorage<OrderData | null>(
     "order-data",
@@ -146,6 +147,7 @@ const CheckoutPage = () => {
           building: data.building,
           paymentMethod: "CASH_ON_DELIVERY",
         });
+        queryClient.invalidateQueries({ queryKey: cartKeys.itemsCount() });
         router.push(`/checkout/${orderResponse.data.updatedOrder.id}`); // Redirect to a success page
       }
     } catch (error: any) {

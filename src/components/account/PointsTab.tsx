@@ -31,6 +31,7 @@ import { RedeemPointsModal } from "./RedeemPointsModal";
 import { RedeemSuccessModal } from "./RedeemSuccessModal";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useMediaQuery, useIsClient } from "usehooks-ts";
 
 // Transaction type mapping from English to Arabic
 const transactionTypeMap: Record<string, string> = {
@@ -105,6 +106,8 @@ export function PointsTab() {
   } | null>(null);
   const limit = 10;
   const router = useRouter();
+  const isClient = useIsClient();
+  const isTablet = useMediaQuery("(max-width: 1024px)");
   const {
     data: transactionsData,
     isLoading: transactionsLoading,
@@ -278,123 +281,203 @@ export function PointsTab() {
         </div>
       ) : (
         <>
-          {/* Points Table */}
-          <div className="rounded-lg overflow-x-auto border border-gray-300 mb-6">
-            <div>
-              <Table>
-                <TableHeader>
-                  <TableRow className="">
-                    <TableHead className="font-bold text-gray-700">
-                      النوع
-                    </TableHead>
-                    <TableHead className="font-bold text-gray-700">
-                      عدد النقاط
-                    </TableHead>
-                    <TableHead className="font-bold text-gray-700">
-                      التاريخ
-                    </TableHead>
-                    <TableHead className="font-bold text-gray-700">
-                      الحالة
-                    </TableHead>
-                    <TableHead className="font-bold text-gray-700">
-                      المرجع
-                    </TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
+          {isClient && (
+            <>
+              {/* Desktop Points Table */}
+              {!isTablet && (
+                <div className="rounded-lg overflow-x-auto border border-gray-300 mb-6">
+                  <div>
+                    <Table>
+                      <TableHeader>
+                        <TableRow className="">
+                          <TableHead className="font-bold text-gray-700">
+                            النوع
+                          </TableHead>
+                          <TableHead className="font-bold text-gray-700">
+                            عدد النقاط
+                          </TableHead>
+                          <TableHead className="font-bold text-gray-700">
+                            التاريخ
+                          </TableHead>
+                          <TableHead className="font-bold text-gray-700">
+                            الحالة
+                          </TableHead>
+                          <TableHead className="font-bold text-gray-700">
+                            المرجع
+                          </TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {transactions.map((transaction: LoyaltyTransaction) => (
+                          <TableRow key={transaction.id}>
+                            <TableCell className="font-medium">
+                              {transactionTypeMap[
+                                transaction.transactionType
+                              ] || transaction.transactionType}
+                            </TableCell>
+                            <TableCell
+                              className={getPointsColor(
+                                transaction.pointsChanged
+                              )}
+                            >
+                              {formatPoints(transaction.pointsChanged)}
+                            </TableCell>
+                            <TableCell className="text-gray-600">
+                              {formatDate(transaction.createdAt)}
+                            </TableCell>
+                            <TableCell>
+                              <Badge
+                                variant={
+                                  getBadgeVariant(
+                                    statusMap[transaction.status] ||
+                                      transaction.status
+                                  ).variant as any
+                                }
+                                className={
+                                  getBadgeVariant(
+                                    statusMap[transaction.status] ||
+                                      transaction.status
+                                  ).className
+                                }
+                              >
+                                {statusMap[transaction.status] ||
+                                  transaction.status}
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="text-gray-600">
+                              {transaction.notes}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                </div>
+              )}
+
+              {/* Mobile Points Cards */}
+              {isTablet && (
+                <div className="space-y-4 mb-6">
                   {transactions.map((transaction: LoyaltyTransaction) => (
-                    <TableRow key={transaction.id}>
-                      <TableCell className="font-medium">
-                        {transactionTypeMap[transaction.transactionType] ||
-                          transaction.transactionType}
-                      </TableCell>
-                      <TableCell
-                        className={getPointsColor(transaction.pointsChanged)}
-                      >
-                        {formatPoints(transaction.pointsChanged)}
-                      </TableCell>
-                      <TableCell className="text-gray-600">
-                        {formatDate(transaction.createdAt)}
-                      </TableCell>
-                      <TableCell>
-                        <Badge
-                          variant={
-                            getBadgeVariant(
-                              statusMap[transaction.status] ||
-                                transaction.status
-                            ).variant as any
-                          }
-                          className={
-                            getBadgeVariant(
-                              statusMap[transaction.status] ||
-                                transaction.status
-                            ).className
-                          }
-                        >
-                          {statusMap[transaction.status] || transaction.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-gray-600">
-                        {transaction.notes}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
+                    <div
+                      key={transaction.id}
+                      className="bg-white border border-gray-200 rounded-lg p-4 space-y-3"
+                    >
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1">
+                          <p className="text-sm text-gray-500">النوع</p>
+                          <p className="font-medium">
+                            {transactionTypeMap[transaction.transactionType] ||
+                              transaction.transactionType}
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-sm text-gray-500">عدد النقاط</p>
+                          <p
+                            className={`font-semibold ${getPointsColor(
+                              transaction.pointsChanged
+                            )}`}
+                          >
+                            {formatPoints(transaction.pointsChanged)}
+                          </p>
+                        </div>
+                      </div>
 
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <Pagination>
-                <PaginationContent>
-                  <PaginationItem>
-                    <PaginationPrevious
-                      onClick={() => {
-                        if (currentPage > 1) {
-                          setCurrentPage(currentPage - 1);
-                        }
-                      }}
-                      className={
-                        currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
-                      }
-                    />
-                  </PaginationItem>
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <p className="text-sm text-gray-500">التاريخ</p>
+                          <p className="text-sm text-gray-600">
+                            {formatDate(transaction.createdAt)}
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-sm text-gray-500">الحالة</p>
+                          <Badge
+                            variant={
+                              getBadgeVariant(
+                                statusMap[transaction.status] ||
+                                  transaction.status
+                              ).variant as any
+                            }
+                            className={
+                              getBadgeVariant(
+                                statusMap[transaction.status] ||
+                                  transaction.status
+                              ).className
+                            }
+                          >
+                            {statusMap[transaction.status] ||
+                              transaction.status}
+                          </Badge>
+                        </div>
+                      </div>
 
-                  {generatePageNumbers().map((page, index) => (
-                    <PaginationItem key={index}>
-                      {page === "ellipsis" ? (
-                        <PaginationEllipsis />
-                      ) : (
-                        <PaginationLink
-                          isActive={page === currentPage}
-                          onClick={() => {
-                            setCurrentPage(page as number);
-                          }}
-                        >
-                          {page}
-                        </PaginationLink>
+                      {transaction.notes && (
+                        <div className="pt-2 border-t border-gray-100">
+                          <p className="text-sm text-gray-500">المرجع</p>
+                          <p className="text-sm text-gray-600">
+                            {transaction.notes}
+                          </p>
+                        </div>
                       )}
-                    </PaginationItem>
+                    </div>
                   ))}
+                </div>
+              )}
+            </>
+          )}
 
-                  <PaginationItem>
-                    <PaginationNext
-                      onClick={() => {
-                        if (currentPage < totalPages) {
-                          setCurrentPage(currentPage + 1);
-                        }
-                      }}
-                      className={
-                        currentPage === totalPages
-                          ? "opacity-50 cursor-not-allowed"
-                          : ""
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    onClick={() => {
+                      if (currentPage > 1) {
+                        setCurrentPage(currentPage - 1);
                       }
-                    />
+                    }}
+                    className={
+                      currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
+                    }
+                  />
+                </PaginationItem>
+
+                {generatePageNumbers().map((page, index) => (
+                  <PaginationItem key={index}>
+                    {page === "ellipsis" ? (
+                      <PaginationEllipsis />
+                    ) : (
+                      <PaginationLink
+                        isActive={page === currentPage}
+                        onClick={() => {
+                          setCurrentPage(page as number);
+                        }}
+                      >
+                        {page}
+                      </PaginationLink>
+                    )}
                   </PaginationItem>
-                </PaginationContent>
-              </Pagination>
-            )}
-          </div>
+                ))}
+
+                <PaginationItem>
+                  <PaginationNext
+                    onClick={() => {
+                      if (currentPage < totalPages) {
+                        setCurrentPage(currentPage + 1);
+                      }
+                    }}
+                    className={
+                      currentPage === totalPages
+                        ? "opacity-50 cursor-not-allowed"
+                        : ""
+                    }
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          )}
         </>
       )}
 
